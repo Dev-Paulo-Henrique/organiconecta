@@ -1,10 +1,10 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { Title } from '~components/Title'
 
-export default function ErrorPage() {
+export default function Login() {
   return (
     <Box>
-      <Title name='404'/>
+      <Title name='Login'/>
       <Flex
         maxW="1120px"
         h="100vh"
@@ -14,10 +14,7 @@ export default function ErrorPage() {
         flexDir="column"
       >
         <Text fontSize="2rem" fontWeight="bold" lineHeight="4.5rem">
-          Página não encontrada!
-        </Text>
-        <Text color="green.900" fontWeight="bold">
-          OrganiConecta
+          Login
         </Text>
       </Flex>
     </Box>
