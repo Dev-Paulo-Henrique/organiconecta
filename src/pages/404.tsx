@@ -4,7 +4,7 @@ import { Title } from '~components/Title'
 export default function ErrorPage() {
   return (
     <Box>
-      <Title name='404'/>
+      <Title name="404" />
       <Flex
         maxW="1120px"
         h="100vh"

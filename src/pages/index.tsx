@@ -1,10 +1,14 @@
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { Title } from '~components/Title'
+import { useColorModeValue } from '~components/ui/color-mode'
 
 export default function App() {
+  const bg = useColorModeValue('gray.100', 'gray.800')
+  const color = useColorModeValue('gray.800', 'gray.100')
+
   return (
-    <Box>
-      <Title/>
+    <Box bg={bg}>
+      <Title />
       <Flex
         maxW="1120px"
         h="100vh"
@@ -13,7 +17,7 @@ export default function App() {
         justifyContent="center"
         flexDir="column"
       >
-        <Text fontSize="2rem" fontWeight="bold" lineHeight="4.5rem">
+        <Text fontSize="2rem" fontWeight="bold" lineHeight="4.5rem" color={color}>
           Página Inicial
         </Text>
       </Flex>

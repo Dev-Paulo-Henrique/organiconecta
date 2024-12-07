@@ -4,7 +4,7 @@ import { Title } from '~components/Title'
 export default function Login() {
   return (
     <Box>
-      <Title name='Login'/>
+      <Title name="Login" />
       <Flex
         maxW="1120px"
         h="100vh"
