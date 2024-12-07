@@ -1,3 +1,5 @@
+// Paulo Henrique
+
 import { ChakraProvider } from '@chakra-ui/react'
 import 'react-color-picker/index.css'
 

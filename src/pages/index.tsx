@@ -1,3 +1,5 @@
+// Paulo Henrique
+
 import { Box, Flex, Text } from '@chakra-ui/react'
 import { Title } from '~components/Title'
 import { useColorModeValue } from '~components/ui/color-mode'
@@ -17,7 +19,12 @@ export default function App() {
         justifyContent="center"
         flexDir="column"
       >
-        <Text fontSize="2rem" fontWeight="bold" lineHeight="4.5rem" color={color}>
+        <Text
+          fontSize="2rem"
+          fontWeight="bold"
+          lineHeight="4.5rem"
+          color={color}
+        >
           Página Inicial
         </Text>
       </Flex>

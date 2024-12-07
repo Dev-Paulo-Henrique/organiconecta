@@ -1,3 +1,5 @@
+// Paulo Henrique
+
 import type { IconButtonProps } from "@chakra-ui/react"
 import { IconButton } from "@chakra-ui/react"
 import { ThemeProvider, useTheme } from "next-themes"
