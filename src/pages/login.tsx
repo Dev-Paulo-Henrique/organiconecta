@@ -1,29 +1,29 @@
 // Paulo Henrique
 
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-  Stack,
-  Text,
-  Image
-} from '@chakra-ui/react'
-import { Title } from '~components/Title'
-import { useColorModeValue } from '~components/ui/color-mode'
-import Link from 'next/link'
-import { Input } from '~components/Input'
-import theme from '~styles/theme'
-import { RiGoogleFill } from 'react-icons/ri'
+  import {
+    Box,
+    Button,
+    Divider,
+    Flex,
+    Grid,
+    GridItem,
+    Icon,
+    Stack,
+    Text,
+    Image
+  } from '@chakra-ui/react'
+  import { Title } from '~components/Title'
+  import { useColorModeValue } from '~components/ui/color-mode'
+  import Link from 'next/link'
+  import { Input } from '~components/Input'
+  import theme from '~styles/theme'
+  import { RiGoogleFill } from 'react-icons/ri'
 
-export default function Login() {
-  const bg = useColorModeValue('gray.100', 'gray.800')
-  const color = useColorModeValue('gray.800', 'gray.100')
+  export default function Login() {
+    const bg = useColorModeValue('gray.100', 'gray.800')
+    const color = useColorModeValue('gray.800', 'gray.100')
 
-  return (
+    return (
     <Box bg={bg}>
       <Title />
       <Grid

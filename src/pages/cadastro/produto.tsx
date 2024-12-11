@@ -12,11 +12,13 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
 import { FiEdit3 } from 'react-icons/fi'
+import { Header } from '~components/Header'
 export default function productRegistration() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   return (
     <>
+    <Header/>
       <Box bg={bg}>
         <Grid
           templateAreas={`"img main"`}
@@ -53,11 +55,12 @@ export default function productRegistration() {
                       <IoEyeOutline />
                     </Icon>
                     <Icon boxSize={6}>
-                      <FiEdit3 />
-                    </Icon>
-                    <Icon boxSize={6}>
                       <PiTrash />
                     </Icon>
+                    <Icon boxSize={6}>
+                      <FiEdit3 />
+                    </Icon>
+                    
                   </Text>
                 </Flex>
               </Flex>
