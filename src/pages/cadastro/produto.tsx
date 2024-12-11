@@ -15,7 +15,7 @@ import { FiEdit3 } from 'react-icons/fi'
 import { Header } from '~components/Header'
 
 
-export default function productRegistration() {
+export default function ProductRegistration() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   return (
