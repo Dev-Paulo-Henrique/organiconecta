@@ -12,15 +12,15 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
 import { FiEdit3 } from 'react-icons/fi'
+import { Input } from '~components/Input'
 import { Header } from '~components/Header'
-
 
 export default function ProductRegistration() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   return (
     <>
-    <Header/>
+      <Header />
       <Box bg={bg}>
         <Grid
           templateAreas={`"img main"`}
@@ -51,18 +51,33 @@ export default function ProductRegistration() {
                 <Flex justifyContent="space-between" gap="1">
                   <Text>0001</Text>
                   <Text>Maçã Verde</Text>
-                  <Text>Quantidade</Text>
                   <Text>
-                    <Icon boxSize={6}>
-                      <IoEyeOutline />
-                    </Icon>
-                    <Icon boxSize={6}>
-                      <PiTrash />
-                    </Icon>
-                    <Icon boxSize={6}>
-                      <FiEdit3 />
-                    </Icon>
-                    
+                    <Input name="quantidade" type="number" w="70px" />
+                  </Text>
+                  <Text>
+                    <Flex justifyContent="space-between" gap="2">
+                      <Icon
+                        as={IoEyeOutline}
+                        boxSize={9}
+                        bg="#007BFF"
+                        borderRadius={4}
+                        p={1}
+                      />
+                      <Icon
+                        as={FiEdit3}
+                        boxSize={9}
+                        bg="#FFC106"
+                        borderRadius={4}
+                        p={1}
+                      ></Icon>
+                      <Icon
+                        as={PiTrash}
+                        boxSize={9}
+                        bg="#DC3645"
+                        borderRadius={4}
+                        p={1}
+                      ></Icon>
+                    </Flex>
                   </Text>
                 </Flex>
               </Flex>

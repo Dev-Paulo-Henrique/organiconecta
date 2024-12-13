@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
 
-export default function ClientRegistration() {
+export default function ClientContiRegist() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   return (
@@ -51,15 +51,23 @@ export default function ClientRegistration() {
             >
               <Stack spacing="2">
                 <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
-                <Input name="nomeCompleto" type="text" label="Nome Completo" />
-                <Input name="email" type="email" label="E-mail" />
-                <Input name="telefone" type="text" label="Telefone" />
-                <Input name="cpf" type="text" label="CPF" />
+
+                <Input
+                  name="datanacimento"
+                  type="date"
+                  label="Data de Nascimento"
+                />
+                <Input name="password" type="password" label="Crie uma senha" />
+                <Input
+                  name="password"
+                  type="password"
+                  label="Repita sua senha"
+                />
               </Stack>
-              <Flex justifyContent="space-between" alignItems="center">
-                <Link href="/clientContiRegis" passHref>
+              <Flex justifyContent="space-between" alignItems="center" gap="2">
+                <Link href="/cadastroCliente/cadastroCliente" passHref>
                   <Button
-                    w={350}
+                    w={140}
                     type="submit"
                     mt="6"
                     colorScheme="green"
@@ -73,26 +81,31 @@ export default function ClientRegistration() {
                       theme.colors.gray[100],
                     )}
                   >
-                    Prosseguir
+                    Voltar
+                  </Button>
+                </Link>
+                <Link href="/" passHref>
+                  <Button
+                    w={250}
+                    type="submit"
+                    mt="6"
+                    colorScheme="green"
+                    gap={1}
+                    bg={useColorModeValue(
+                      theme.colors.green[700],
+                      theme.colors.green[500],
+                    )}
+                    size="lg"
+                    color={useColorModeValue(
+                      theme.colors.gray[100],
+                      theme.colors.gray[100],
+                    )}
+                  >
+                    Concluir
                   </Button>
                 </Link>
               </Flex>
-              <Flex justifyContent="flex-end" mt="3" gap={10}>
-                <Link href="/login" passHref>
-                  <Text
-                    color={useColorModeValue(
-                      theme.colors.gray[700],
-                      theme.colors.gray[500],
-                    )}
-                    _hover={{
-                      color: theme.colors.green[800],
-                      transition: '0.25s',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Login
-                  </Text>
-                </Link>
+              <Flex justifyContent="flex-end" alignItems="center" mt="3">
                 <Link href="/" passHref>
                   <Text
                     color={useColorModeValue(
