@@ -18,6 +18,7 @@ import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
 import { RiGoogleFill } from 'react-icons/ri'
+import { sendEmail } from "../service/mail"
 
 export default function Login() {
     const bg = useColorModeValue('gray.100', 'gray.800')
@@ -43,8 +44,33 @@ export default function Login() {
                             borderRadius={8}
                             flexDir="column">
                             <Stack spacing='4'>
-                                <Image src='/images/logo.png' alt='logo' width={'100%'}/>
+                                <Image src='/images/logo.png' alt='logo' width={'100%'} />
                                 <Text>Para recuperar sua senha, digite o e-mail cadastrado.</Text>
+                            </Stack>
+                            <Stack>
+                                <Input name="email" type="email" label="E-mail"/>
+                            </Stack>
+                            <Stack>
+                                <Flex justifyContent={'center'}>
+                                    <Link href="/" passHref>
+                                        <Button
+                                            as="a"
+                                            w={140}
+                                            mt="6"
+                                            alignItems="center"
+                                            colorScheme="whiteAlpha"
+                                            bg={useColorModeValue(
+                                                theme.colors.green[300],
+                                                theme.colors.green[700],
+                                            )}
+                                            color={color}
+                                            size="lg"
+                                            //onClick={() => sendEmail()}
+                                        >
+                                            Enviar
+                                        </Button>
+                                    </Link>
+                                </Flex>
                             </Stack>
                         </Flex>
                     </Flex>

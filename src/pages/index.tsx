@@ -1,33 +1,11 @@
-// Paulo Henrique
+import React from "react";
+import { useDisclosure } from "@chakra-ui/react";
 
-import { Box, Flex, Text } from '@chakra-ui/react'
-import { Title } from '~components/Title'
-import { useColorModeValue } from '~components/ui/color-mode'
+import { Viewer } from "~components/Modal";
 
 export default function App() {
-  const bg = useColorModeValue('gray.100', 'gray.800')
-  const color = useColorModeValue('gray.800', 'gray.100')
 
   return (
-    <Box bg={bg}>
-      <Title />
-      <Flex
-        maxW="1120px"
-        h="100vh"
-        margin="auto"
-        alignItems="center"
-        justifyContent="center"
-        flexDir="column"
-      >
-        <Text
-          fontSize="2rem"
-          fontWeight="bold"
-          lineHeight="4.5rem"
-          color={color}
-        >
-          Página Inicial
-        </Text>
-      </Flex>
-    </Box>
-  )
+    <Viewer/>
+  );
 }

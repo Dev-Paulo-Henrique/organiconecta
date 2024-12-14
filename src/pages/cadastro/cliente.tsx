@@ -14,7 +14,7 @@ import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
 
-export default function ClientRegistration() {
+export default function Client() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   return (

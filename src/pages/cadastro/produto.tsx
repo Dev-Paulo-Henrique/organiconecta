@@ -1,13 +1,29 @@
-//Gisele Oliveira
+// Gisele Oliveira, LeonardoCampos
+
 import {
   Box,
+  Button,
+  Divider,
   Flex,
   Grid,
   GridItem,
-  Divider,
-  Text,
   Icon,
+  Stack,
+  Text,
+  Image,
+  useDisclosure,
 } from '@chakra-ui/react'
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from '@chakra-ui/react'
+
 import { useColorModeValue } from '~components/ui/color-mode'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
@@ -15,9 +31,11 @@ import { FiEdit3 } from 'react-icons/fi'
 import { Input } from '~components/Input'
 import { Header } from '~components/Header'
 
-export default function ProductRegistration() {
+export default function Product() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   return (
     <>
       <Header />
