@@ -2,7 +2,6 @@
   "name": "organiconecta",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "dependencies": {
     "@bugsnag/js": "^6.5.2",
     "@bugsnag/plugin-react": "^6.5.0",

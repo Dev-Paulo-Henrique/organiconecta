@@ -73,7 +73,11 @@ export default function Product() {
                     <Input name="quantidade" type="number" w="70px" />
                   </Text>
                   <Text>
-                    <Flex justifyContent="space-between" gap="2">
+                    <Flex
+                      justifyContent="space-between"
+                      gap="2"
+                      alignItems={'center'}
+                    >
                       <Icon
                         as={IoEyeOutline}
                         boxSize={9}

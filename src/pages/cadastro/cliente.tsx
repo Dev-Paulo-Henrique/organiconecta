@@ -9,14 +9,21 @@ import {
   Text,
   Image,
 } from '@chakra-ui/react'
+
 import { useColorModeValue } from '~components/ui/color-mode'
 import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
+import React, { useEffect, useState } from 'react'
 
-export default function Client() {
+export default function Cliente() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const [nome, setNome] = useState('')
+  const [email, setEmail] = useState('')
+  const [telefone, setTelefone] = useState<number>()
+  const [cpf, setCpf] = useState('')
+
   return (
     <Box bg={bg}>
       <Grid
@@ -51,10 +58,34 @@ export default function Client() {
             >
               <Stack spacing="2">
                 <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
-                <Input name="nomeCompleto" type="text" label="Nome Completo" />
-                <Input name="email" type="email" label="E-mail" />
-                <Input name="telefone" type="text" label="Telefone" />
-                <Input name="cpf" type="text" label="CPF" />
+                <Input
+                  name="nomeCompleto"
+                  type="text"
+                  label="Nome Completo"
+                  value={nome}
+                  onChange={e => setNome(e.target.value)}
+                />
+                <Input
+                  name="email"
+                  type="email"
+                  label="E-mail"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <Input
+                  name="telefone"
+                  type="text"
+                  label="Telefone"
+                  placeholder="(99) 99999-9999"
+                />
+                <Input
+                  name="cpf"
+                  type="text"
+                  label="CPF"
+                  placeholder="999-999-999-99"
+                  value={cpf}
+                  onChange={e => setCpf(e.target.value)}
+                />
               </Stack>
               <Flex justifyContent="space-between" alignItems="center">
                 <Link href="/cadastroCliente/clienteComplemento" passHref>
