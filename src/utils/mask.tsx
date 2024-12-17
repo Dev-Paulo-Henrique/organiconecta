@@ -1,5 +1,6 @@
+// Paulo Henrique
+
 import ReactInputMask from 'react-input-mask';
-import { ReactNode } from 'react';
 import "../../index"
 
 interface InputMaskProps {
