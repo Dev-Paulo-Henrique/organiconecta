@@ -1,31 +1,64 @@
 // Paulo Henrique
 
-  import {
-    Box,
-    Button,
-    Divider,
-    Flex,
-    Grid,
-    GridItem,
-    Icon,
-    Stack,
-    Text,
-    Image
-  } from '@chakra-ui/react'
-  import { Title } from '~components/Title'
-  import { useColorModeValue } from '~components/ui/color-mode'
-  import Link from 'next/link'
-  import { Input } from '~components/Input'
-  import theme from '~styles/theme'
-  import { RiGoogleFill } from 'react-icons/ri'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Grid,
+  GridItem,
+  Icon,
+  Stack,
+  Text,
+  Image,
+} from '@chakra-ui/react'
+import { Title } from '~components/Title'
+import { useColorModeValue } from '~components/ui/color-mode'
+import Link from 'next/link'
+import { Input } from '~components/Input'
+import theme from '~styles/theme'
+import { RiGoogleFill } from 'react-icons/ri'
+import { useState } from 'react'
+import { api } from '~services/api'
+import { isAxiosError } from 'axios'
+import { notifyError, notifySuccess } from '../utils/toastify'
 
-  export default function Login() {
-    const bg = useColorModeValue('gray.100', 'gray.800')
-    const color = useColorModeValue('gray.800', 'gray.100')
+export default function Login() {
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [loading, setLoading] = useState(false)
 
-    return (
+  const bg = useColorModeValue('gray.100', 'gray.800')
+  const color = useColorModeValue('gray.800', 'gray.100')
+
+  const handleLogin = async (e: any) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const response = await api.post('/usuario/login', {
+        email,
+        senha,
+      })
+
+      console.log(response.data)
+      notifySuccess(`Cliente ${response.data.id}`)
+    } catch (error) {
+      if (isAxiosError(error)) {
+        if (error.response) {
+          notifyError(error.response.data.message)
+        }
+      } else {
+        console.log('Erro desconhecido:', error)
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
     <Box bg={bg}>
-      <Title />
+      <Title name='Login'/>
       <Grid
         templateAreas={`"img main"`}
         gridTemplateColumns={'40vw 1fr'}
@@ -49,15 +82,22 @@
               p="8"
               borderRadius={8}
               flexDir="column"
+              onSubmit={handleLogin}
             >
               <Stack spacing="4">
-              <Image
-                src={'/images/logo.png'}
-                alt="logo"
-                width={"100%"}
-              />
-                <Input name="email" type="email" label="E-mail" />
-                <Input name="password" type="password" label="Senha" />
+                <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
+                <Input
+                  name="email"
+                  type="email"
+                  label="E-mail"
+                  onChange={e => setEmail(e.target.value)}
+                />
+                <Input
+                  name="password"
+                  type="password"
+                  label="Senha"
+                  onChange={e => setSenha(e.target.value)}
+                />
               </Stack>
               <Flex justifyContent="space-between" alignItems="center">
                 <Link href="/" passHref>
@@ -90,6 +130,7 @@
                     theme.colors.gray[100],
                     theme.colors.gray[100],
                   )}
+                  isLoading={loading}
                 >
                   Entrar
                 </Button>
