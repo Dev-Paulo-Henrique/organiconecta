@@ -25,26 +25,6 @@ export default function Produtor() {
     const bg = useColorModeValue('gray.100', 'gray.800')
     const color = useColorModeValue('gray.800', 'gray.100')
 
-    const [nome, setNome] = useState('')
-    const [email, setEmail] = useState('')
-    const [telefone, setTelefone] = useState('')
-    const [cpf, setCpf] = useState('')
-    const [senha, setSenha] = useState('')
-    const [dataNascimento, setDataNascimento] = useState('')
-    const [loading, setLoading] = useState(false)
-
-    const handleSubmit = async (e: any) => {
-        e.preventDefault()
-        setLoading(true)
-
-        const data = {
-            nome,
-            email,
-            telefone,
-            cpf,
-            senha,
-            dataNascimento,
-        }
 
         return (
             <Box bg={bg}>
@@ -78,7 +58,6 @@ export default function Produtor() {
                                 p="2"
                                 borderRadius={8}
                                 flexDir="column"
-                                onSubmit={handleSubmit}
                             >
                                 <Stack spacing="2">
                                     <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
@@ -87,24 +66,18 @@ export default function Produtor() {
                                         type="text"
                                         color={color}
                                         label="Nome Completo"
-                                        value={nome}
-                                        onChange={e => setNome(e.target.value)}
+
                                     />
                                     <Input
                                         name="email"
                                         type="email"
                                         label="E-mail"
                                         color={color}
-                                        value={email}
-                                        onChange={e => setEmail(e.target.value)}
+
                                     />
 
                                     <InputMask
                                         mask="(99) 99999-9999"
-                                        value={telefone}
-                                        onChange={(e: {
-                                            target: { value: React.SetStateAction<string> }
-                                        }) => setTelefone(e.target.value)}
                                     >
                                         {(inputProps: any) => (
                                             <Input
@@ -120,17 +93,11 @@ export default function Produtor() {
                                         name="senha"
                                         type="password"
                                         label="Senha"
-                                        value={senha}
                                         color={color}
-                                        onChange={e => setSenha(e.target.value)}
                                     />
                                     <Flex direction="row" gap={4} width="100%">
                                         <InputMask
                                             mask="999.999.999-99"
-                                            value={cpf}
-                                            onChange={(e: {
-                                                target: { value: React.SetStateAction<string> }
-                                            }) => setCpf(e.target.value)}
                                         >
                                             {(inputProps: any) => (
                                                 <Input
@@ -144,18 +111,12 @@ export default function Produtor() {
                                         </InputMask>
                                         <InputMask
                                             mask="99/99/9999"
-                                            value={dataNascimento}
-                                            onChange={(e: {
-                                                target: { value: React.SetStateAction<string> }
-                                            }) => setDataNascimento(e.target.value)}
                                         >
                                             {(inputProps: any) => (
                                                 <Input
                                                     name="dataNascimento"
                                                     label="Data de Nascimento"
-                                                    value={dataNascimento}
                                                     color={color}
-                                                    {...inputProps}
                                                 />
                                             )}
                                         </InputMask>
@@ -176,9 +137,7 @@ export default function Produtor() {
                                         color={useColorModeValue(
                                             theme.colors.gray[100],
                                             theme.colors.gray[100],
-                                        )}
-                                        isLoading={loading}
-                                    >
+                                        )}                                    >
                                         Prosseguir
                                     </Button>
                                     {/* </Link> */}
@@ -222,4 +181,3 @@ export default function Produtor() {
             </Box>
         )
     }
-}
