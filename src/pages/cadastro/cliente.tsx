@@ -177,7 +177,7 @@ export default function Cliente() {
                   )}
                 </InputMask>
               </Stack>
-              <Flex justifyContent="space-between" alignItems="center">
+              <Flex justifyContent="space-between" alignItems="center" mt="3">
                 {/* <Link href="/cadastroCliente/clienteComplemento" passHref> */}
                 <Button
                   w={350}
@@ -199,7 +199,7 @@ export default function Cliente() {
                 </Button>
                 {/* </Link> */}
               </Flex>
-              <Flex justifyContent="flex-end" mt="3" gap={10}>
+              <Flex justifyContent="space-between" alignItems="center" mt="3">
                 <Link href="/login" passHref>
                   <Text
                     color={useColorModeValue(

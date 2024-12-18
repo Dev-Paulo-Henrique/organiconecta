@@ -1,29 +1,25 @@
 //Alex William
 import {
-    Box,
-    Button,
-    Flex,
-    Grid,
-    GridItem,
-    Stack,
-    Text,
-    Image,
+  Box,
+  Button,
+  Flex,
+  Grid,
+  GridItem,
+  Stack,
+  Text,
+  Image,
 } from '@chakra-ui/react'
 
 import { useColorModeValue } from '~components/ui/color-mode'
 import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
-import React, { useEffect, useState } from 'react'
 import { Title } from '~components/Title'
-import { api } from '~services/api'
-import { notifyError, notifySuccess } from '~utils/toastify'
-import { isAxiosError } from 'axios'
 import InputMask from 'react-input-mask'
 
 export default function Produtor() {
-    const bg = useColorModeValue('gray.100', 'gray.800')
-    const color = useColorModeValue('gray.800', 'gray.100')
+  const bg = useColorModeValue('gray.100', 'gray.800')
+  const color = useColorModeValue('gray.800', 'gray.100')
 
 
         return (
