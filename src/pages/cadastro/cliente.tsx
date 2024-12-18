@@ -215,7 +215,7 @@ export default function Cliente() {
                     Login
                   </Text>
                 </Link>
-                <Link href="/" passHref>
+                <Link href="/cadastro/produtor" passHref>
                   <Text
                     color={useColorModeValue(
                       theme.colors.gray[700],

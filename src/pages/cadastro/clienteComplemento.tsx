@@ -66,7 +66,7 @@ export default function ClientContiRegist() {
                 />
               </Stack>
               <Flex justifyContent="space-between" alignItems="center" gap="2">
-                <Link href="/cadastroCliente/cadastroCliente" passHref>
+                <Link href="/cadastro/cliente" passHref>
                   <Button
                     w={140}
                     type="submit"
