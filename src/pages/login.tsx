@@ -44,9 +44,10 @@ export default function Login() {
       console.log(response.data)
       notifySuccess(`Cliente ${response.data.id}`)
     } catch (error) {
+      console.log(error)
       if (isAxiosError(error)) {
         if (error.response) {
-          notifyError(error.response.data.message)
+          notifyError(error.response.data.error)
         }
       } else {
         console.log('Erro desconhecido:', error)
@@ -58,7 +59,7 @@ export default function Login() {
 
   return (
     <Box bg={bg}>
-      <Title name='Login'/>
+      <Title name="Login" />
       <Grid
         templateAreas={`"img main"`}
         gridTemplateColumns={'40vw 1fr'}
@@ -90,17 +91,19 @@ export default function Login() {
                   name="email"
                   type="email"
                   label="E-mail"
+                  color={color}
                   onChange={e => setEmail(e.target.value)}
                 />
                 <Input
                   name="password"
                   type="password"
                   label="Senha"
+                  color={color}
                   onChange={e => setSenha(e.target.value)}
                 />
               </Stack>
               <Flex justifyContent="space-between" alignItems="center">
-                <Link href="/" passHref>
+                <Link href="/cadastro/cliente" passHref>
                   <Button
                     as="a"
                     w={140}
@@ -131,24 +134,27 @@ export default function Login() {
                     theme.colors.gray[100],
                   )}
                   isLoading={loading}
+                  disabled={!email || !senha}
                 >
                   Entrar
                 </Button>
               </Flex>
               <Flex justifyContent="flex-end" alignItems="center" mt="3">
-                <Text
-                  color={useColorModeValue(
-                    theme.colors.gray[700],
-                    theme.colors.gray[500],
-                  )}
-                  _hover={{
-                    color: theme.colors.green[800],
-                    transition: '0.25s',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Esqueceu a senha?
-                </Text>
+                <Link href="/recuperar" passHref>
+                  <Text
+                    color={useColorModeValue(
+                      theme.colors.gray[700],
+                      theme.colors.gray[500],
+                    )}
+                    _hover={{
+                      color: theme.colors.green[800],
+                      transition: '0.25s',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Esqueceu a senha?
+                  </Text>
+                </Link>
               </Flex>
               <Divider my="3" borderColor="gray.300" />
               <Button

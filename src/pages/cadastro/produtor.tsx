@@ -184,7 +184,7 @@ export default function Produtor() {
                 </Button>
                 {/* </Link> */}
               </Flex>
-              <Flex justifyContent="flex-end" mt="3" gap={10}>
+              <Flex justifyContent="space-between" alignItems="center" mt="3">
                 <Link href="/login" passHref>
                   <Text
                     color={useColorModeValue(

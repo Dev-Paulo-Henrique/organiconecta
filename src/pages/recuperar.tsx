@@ -23,7 +23,7 @@ export default function ResetPassword() {
   const color = useColorModeValue('gray.800', 'gray.100')
 
   return (
-    <Box>
+    <Box bg={bg}>
       <Title name="Recuperar senha" />
       <Grid
         templateAreas={`"img main"`}
@@ -41,23 +41,22 @@ export default function ResetPassword() {
               as="form"
               w="100%"
               maxWidth={360}
-              bg={bg}
               p="8"
               borderRadius={8}
               flexDir="column"
             >
               <Stack spacing="4">
                 <Image src="/images/logo.png" alt="logo" width={'100%'} />
-                <Text>
+                <Text color={color}>
                   Para recuperar sua senha, digite o e-mail cadastrado.
                 </Text>
               </Stack>
               <Stack>
-                <Input name="email" type="email" label="E-mail" />
+                <Input name="email" type="email" label="E-mail" color={color} />
               </Stack>
               <Stack>
-                <Flex justifyContent={'center'}>
-                  <Link href="/" passHref>
+                <Flex justifyContent={'space-between'}>
+                  <Link href="/login" passHref>
                     <Button
                       as="a"
                       w={140}
@@ -65,16 +64,34 @@ export default function ResetPassword() {
                       alignItems="center"
                       colorScheme="whiteAlpha"
                       bg={useColorModeValue(
-                        theme.colors.green[300],
-                        theme.colors.green[700],
+                        theme.colors.gray[300],
+                        theme.colors.gray[700],
                       )}
                       color={color}
+                      size="lg"
+                    >
+                      Voltar
+                    </Button>
+                  </Link>
+                    <Button
+                      type='submit'
+                      w={140}
+                      mt="6"
+                      alignItems="center"
+                      colorScheme="green"
+                      bg={useColorModeValue(
+                        theme.colors.green[700],
+                        theme.colors.green[500],
+                      )}
+                      color={useColorModeValue(
+                        theme.colors.gray[100],
+                        theme.colors.gray[100],
+                      )}
                       size="lg"
                       //onClick={() => sendEmail()}
                     >
                       Enviar
                     </Button>
-                  </Link>
                 </Flex>
               </Stack>
             </Flex>
