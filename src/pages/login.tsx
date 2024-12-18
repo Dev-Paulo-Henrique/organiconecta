@@ -22,6 +22,7 @@ import { useState } from 'react'
 import { api } from '~services/api'
 import { isAxiosError } from 'axios'
 import { notifyError, notifySuccess } from '../utils/toastify'
+import { TemplateGrid } from "../components/TemplateGrid"
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -60,152 +61,139 @@ export default function Login() {
   return (
     <Box bg={bg}>
       <Title name="Login" />
-      <Grid
-        templateAreas={`"img main"`}
-        gridTemplateColumns={'40vw 1fr'}
-        h={'100vh'}
-        gap="1"
-        color="blackAlpha.700"
-        fontWeight="bold"
-      >
-        <GridItem bg="green.500" area={'img'}>
-          <Flex align="center" justify="center" h="100vh">
-            <Text>IMAGEM</Text>
-          </Flex>
-        </GridItem>
-        <GridItem area={'main'}>
-          <Flex align="center" justify="center" h="100vh">
-            <Flex
-              as="form"
-              w="100%"
-              maxWidth={360}
-              bg={bg}
-              p="8"
-              borderRadius={8}
-              flexDir="column"
-              onSubmit={handleLogin}
-            >
-              <Stack spacing="4">
-                <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
-                <Input
-                  name="email"
-                  type="email"
-                  label="E-mail"
-                  color={color}
-                  onChange={e => setEmail(e.target.value)}
-                />
-                <Input
-                  name="password"
-                  type="password"
-                  label="Senha"
-                  color={color}
-                  onChange={e => setSenha(e.target.value)}
-                />
-              </Stack>
-              <Flex justifyContent="space-between" alignItems="center">
-                <Link href="/cadastro/cliente" passHref>
-                  <Button
-                    as="a"
-                    w={140}
-                    mt="6"
-                    colorScheme="whiteAlpha"
-                    bg={useColorModeValue(
-                      theme.colors.gray[300],
-                      theme.colors.gray[700],
-                    )}
-                    color={color}
-                    size="lg"
-                  >
-                    Cadastrar
-                  </Button>
-                </Link>
+      <TemplateGrid img='/images/Organic.png'>
+        <Flex align="center" justify="center" h="100vh">
+          <Flex
+            as="form"
+            w="100%"
+            maxWidth={360}
+            bg={bg}
+            p="8"
+            borderRadius={8}
+            flexDir="column"
+            onSubmit={handleLogin}
+          >
+            <Stack spacing="4">
+              <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
+              <Input
+                name="email"
+                type="email"
+                label="E-mail"
+                color={color}
+                onChange={e => setEmail(e.target.value)}
+              />
+              <Input
+                name="password"
+                type="password"
+                label="Senha"
+                color={color}
+                onChange={e => setSenha(e.target.value)}
+              />
+            </Stack>
+            <Flex justifyContent="space-between" alignItems="center">
+              <Link href="/cadastro/cliente" passHref>
                 <Button
+                  as="a"
                   w={140}
-                  type="submit"
                   mt="6"
-                  colorScheme="green"
+                  colorScheme="whiteAlpha"
                   bg={useColorModeValue(
-                    theme.colors.green[700],
-                    theme.colors.green[500],
+                    theme.colors.gray[300],
+                    theme.colors.gray[700],
                   )}
+                  color={color}
                   size="lg"
-                  color={useColorModeValue(
-                    theme.colors.gray[100],
-                    theme.colors.gray[100],
-                  )}
-                  isLoading={loading}
-                  disabled={!email || !senha}
                 >
-                  Entrar
+                  Cadastrar
                 </Button>
-              </Flex>
-              <Flex justifyContent="flex-end" alignItems="center" mt="3">
-                <Link href="/recuperar" passHref>
-                  <Text
-                    color={useColorModeValue(
-                      theme.colors.gray[700],
-                      theme.colors.gray[500],
-                    )}
-                    _hover={{
-                      color: theme.colors.green[800],
-                      transition: '0.25s',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Esqueceu a senha?
-                  </Text>
-                </Link>
-              </Flex>
-              <Divider my="3" borderColor="gray.300" />
+              </Link>
               <Button
-                type="button"
-                border={`2px solid ${theme.colors.green[500]}`}
-                color={theme.colors.gray[800]}
-                colorScheme="none"
-                bg={useColorModeValue(theme.colors.white, theme.colors.white)}
-                size="lg"
-              >
-                <Flex align={'center'} justify={'center'}>
-                  <Icon as={RiGoogleFill} fontSize="30" />
-                  <Text fontSize="0.8rem" align={'center'} ml={2}>
-                    Entrar com Google
-                  </Text>
-                </Flex>
-              </Button>
-              <Text
-                color={useColorModeValue(
-                  theme.colors.gray[700],
-                  theme.colors.gray[500],
+                w={140}
+                type="submit"
+                mt="6"
+                colorScheme="green"
+                bg={useColorModeValue(
+                  theme.colors.green[700],
+                  theme.colors.green[500],
                 )}
-                fontSize="0.8rem"
-                fontWeight={'normal'}
-                align={'center'}
-                mt="3"
+                size="lg"
+                color={useColorModeValue(
+                  theme.colors.gray[100],
+                  theme.colors.gray[100],
+                )}
+                isLoading={loading}
+                disabled={!email || !senha}
               >
-                Ao continuar, você concorda com os{' '}
-                <b>
-                  <Link href="/" passHref>
-                    <a>Termos de Serviço</a>
-                  </Link>
-                </b>
-                , com a{' '}
-                <b>
-                  <Link href="/" passHref>
-                    <a>Política de Privacidade </a>
-                  </Link>
-                </b>
-                e com o{' '}
-                <b>
-                  <Link href="/" passHref>
-                    <a>uso de cookies </a>
-                  </Link>
-                </b>
-                da OrganiConecta.
-              </Text>
+                Entrar
+              </Button>
             </Flex>
+            <Flex justifyContent="flex-end" alignItems="center" mt="3">
+              <Link href="/recuperar" passHref>
+                <Text
+                  color={useColorModeValue(
+                    theme.colors.gray[700],
+                    theme.colors.gray[500],
+                  )}
+                  _hover={{
+                    color: theme.colors.green[800],
+                    transition: '0.25s',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Esqueceu a senha?
+                </Text>
+              </Link>
+            </Flex>
+            <Divider my="3" borderColor="gray.300" />
+            <Button
+              type="button"
+              border={`2px solid ${theme.colors.green[500]}`}
+              color={theme.colors.gray[800]}
+              colorScheme="none"
+              bg={useColorModeValue(theme.colors.white, theme.colors.white)}
+              size="lg"
+              disabled
+            >
+              <Flex align={'center'} justify={'center'}>
+                <Icon as={RiGoogleFill} fontSize="30" />
+                <Text fontSize="0.8rem" align={'center'} ml={2}>
+                  Entrar com Google
+                </Text>
+              </Flex>
+            </Button>
+            <Text
+              color={useColorModeValue(
+                theme.colors.gray[700],
+                theme.colors.gray[500],
+              )}
+              fontSize="0.8rem"
+              fontWeight={'normal'}
+              align={'center'}
+              mt="3"
+            >
+              Ao continuar, você concorda com os{' '}
+              <b>
+                <Link href="/" passHref>
+                  <a>Termos de Serviço</a>
+                </Link>
+              </b>
+              , com a{' '}
+              <b>
+                <Link href="/" passHref>
+                  <a>Política de Privacidade </a>
+                </Link>
+              </b>
+              e com o{' '}
+              <b>
+                <Link href="/" passHref>
+                  <a>uso de cookies </a>
+                </Link>
+              </b>
+              da OrganiConecta.
+            </Text>
           </Flex>
-        </GridItem>
-      </Grid>
+        </Flex>
+      </TemplateGrid>
     </Box>
   )
 }

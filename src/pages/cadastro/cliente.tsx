@@ -20,6 +20,7 @@ import { api } from '~services/api'
 import { notifyError, notifySuccess } from '~utils/toastify'
 import { isAxiosError } from 'axios'
 import InputMask from 'react-input-mask'
+import { TemplateGrid } from '~components/TemplateGrid'
 
 export default function Cliente() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -67,174 +68,152 @@ export default function Cliente() {
   return (
     <Box bg={bg}>
       <Title name="Cadastrar cliente" />
-      <Grid
-        templateAreas={`"img main"`}
-        gridTemplateColumns={'40vw 1fr'}
-        h={'100vh'}
-        gap="1"
-        color="blackAlpha.700"
-        fontWeight="bold"
-      >
-        <GridItem bg="green.500" area={'img'}>
-          <Flex align="center" justify="center" h="100vh">
-            <Image
-              src={'/images/photo-clientCadastro.jpg'}
-              alt="logo"
-              width={'100%'}
-              objectFit="cover"
-              boxSize="100%"
-            ></Image>
-          </Flex>
-        </GridItem>
-        <GridItem area={'main'}>
-          <Flex align="center" justify="center" h="100vh">
-            <Flex
-              as="form"
-              w="100%"
-              maxWidth={360}
-              bg={bg}
-              p="8"
-              borderRadius={8}
-              flexDir="column"
-              onSubmit={handleSubmit}
-            >
-              <Stack spacing="2">
-                <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
-                <Input
-                  name="nomeCompleto"
-                  type="text"
-                  color={color}
-                  label="Nome Completo"
-                  value={nome}
-                  onChange={e => setNome(e.target.value)}
-                />
-                <Input
-                  name="email"
-                  type="email"
-                  label="E-mail"
-                  color={color}
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                />
+      <TemplateGrid img='/images/photo-clientCadastro.jpg'>
+        <Flex align="center" justify="center" h="100vh">
+          <Flex
+            as="form"
+            w="100%"
+            maxWidth={360}
+            bg={bg}
+            p="8"
+            borderRadius={8}
+            flexDir="column"
+            onSubmit={handleSubmit}
+          >
+            <Stack spacing="2">
+              <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
+              <Input
+                name="nomeCompleto"
+                type="text"
+                color={color}
+                label="Nome Completo"
+                value={nome}
+                onChange={e => setNome(e.target.value)}
+              />
+              <Input
+                name="email"
+                type="email"
+                label="E-mail"
+                color={color}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
 
-                <InputMask
-                  mask="(99) 99999-9999"
-                  value={telefone}
-                  onChange={(e: {
-                    target: { value: React.SetStateAction<string> }
-                  }) => setTelefone(e.target.value)}
-                >
-                  {(inputProps: any) => (
-                    <Input
-                      name="telefone"
-                      type="text"
-                      color={color}
-                      label="Telefone"
-                      {...inputProps}
-                    />
-                  )}
-                </InputMask>
-                <InputMask
-                  mask="999.999.999-99"
-                  value={cpf}
-                  onChange={(e: {
-                    target: { value: React.SetStateAction<string> }
-                  }) => setCpf(e.target.value)}
-                >
-                  {(inputProps: any) => (
-                    <Input
-                      name="cpf"
-                      type="text"
-                      label="CPF"
-                      color={color}
-                      {...inputProps}
-                    />
-                  )}
-                </InputMask>
-                <Input
-                  name="senha"
-                  type="password"
-                  label="Senha"
-                  value={senha}
-                  color={color}
-                  onChange={e => setSenha(e.target.value)}
-                />
-                <InputMask
-                  mask="99/99/9999"
-                  value={dataNascimento}
-                  onChange={(e: {
-                    target: { value: React.SetStateAction<string> }
-                  }) => setDataNascimento(e.target.value)}
-                >
-                  {(inputProps: any) => (
-                    <Input
-                      name="dataNascimento"
-                      label="Data de Nascimento"
-                      value={dataNascimento}
-                      color={color}
-                      {...inputProps}
-                    />
-                  )}
-                </InputMask>
-              </Stack>
-              <Flex justifyContent="space-between" alignItems="center" mt="3">
-                {/* <Link href="/cadastroCliente/clienteComplemento" passHref> */}
-                <Button
-                  w={350}
-                  type="submit"
-                  mt="6"
-                  colorScheme="green"
-                  bg={useColorModeValue(
-                    theme.colors.green[700],
-                    theme.colors.green[500],
-                  )}
-                  size="lg"
+              <InputMask
+                mask="(99) 99999-9999"
+                value={telefone}
+                onChange={(e: {
+                  target: { value: React.SetStateAction<string> }
+                }) => setTelefone(e.target.value)}
+              >
+                {(inputProps: any) => (
+                  <Input
+                    name="telefone"
+                    type="text"
+                    color={color}
+                    label="Telefone"
+                    {...inputProps}
+                  />
+                )}
+              </InputMask>
+              <InputMask
+                mask="999.999.999-99"
+                value={cpf}
+                onChange={(e: {
+                  target: { value: React.SetStateAction<string> }
+                }) => setCpf(e.target.value)}
+              >
+                {(inputProps: any) => (
+                  <Input
+                    name="cpf"
+                    type="text"
+                    label="CPF"
+                    color={color}
+                    {...inputProps}
+                  />
+                )}
+              </InputMask>
+              <Input
+                name="senha"
+                type="password"
+                label="Senha"
+                value={senha}
+                color={color}
+                onChange={e => setSenha(e.target.value)}
+              />
+              <InputMask
+                mask="99/99/9999"
+                value={dataNascimento}
+                onChange={(e: {
+                  target: { value: React.SetStateAction<string> }
+                }) => setDataNascimento(e.target.value)}
+              >
+                {(inputProps: any) => (
+                  <Input
+                    name="dataNascimento"
+                    label="Data de Nascimento"
+                    value={dataNascimento}
+                    color={color}
+                    {...inputProps}
+                  />
+                )}
+              </InputMask>
+            </Stack>
+            <Flex justifyContent="space-between" alignItems="center" mt="3">
+              <Button
+                w={350}
+                type="submit"
+                mt="6"
+                colorScheme="green"
+                bg={useColorModeValue(
+                  theme.colors.green[700],
+                  theme.colors.green[500],
+                )}
+                size="lg"
+                color={useColorModeValue(
+                  theme.colors.gray[100],
+                  theme.colors.gray[100],
+                )}
+                isLoading={loading}
+              >
+                Prosseguir
+              </Button>
+            </Flex>
+            <Flex justifyContent="space-between" alignItems="center" mt="3">
+              <Link href="/login" passHref>
+                <Text
                   color={useColorModeValue(
-                    theme.colors.gray[100],
-                    theme.colors.gray[100],
+                    theme.colors.gray[700],
+                    theme.colors.gray[500],
                   )}
-                  isLoading={loading}
+                  _hover={{
+                    color: theme.colors.green[800],
+                    transition: '0.25s',
+                    cursor: 'pointer',
+                  }}
                 >
-                  Prosseguir
-                </Button>
-                {/* </Link> */}
-              </Flex>
-              <Flex justifyContent="space-between" alignItems="center" mt="3">
-                <Link href="/login" passHref>
-                  <Text
-                    color={useColorModeValue(
-                      theme.colors.gray[700],
-                      theme.colors.gray[500],
-                    )}
-                    _hover={{
-                      color: theme.colors.green[800],
-                      transition: '0.25s',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Login
-                  </Text>
-                </Link>
-                <Link href="/cadastro/produtor" passHref>
-                  <Text
-                    color={useColorModeValue(
-                      theme.colors.gray[700],
-                      theme.colors.gray[500],
-                    )}
-                    _hover={{
-                      color: theme.colors.green[800],
-                      transition: '0.25s',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Cadastrar como Produtor
-                  </Text>
-                </Link>
-              </Flex>
+                  Login
+                </Text>
+              </Link>
+              <Link href="/cadastro/produtor" passHref>
+                <Text
+                  color={useColorModeValue(
+                    theme.colors.gray[700],
+                    theme.colors.gray[500],
+                  )}
+                  _hover={{
+                    color: theme.colors.green[800],
+                    transition: '0.25s',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Cadastrar como Produtor
+                </Text>
+              </Link>
             </Flex>
           </Flex>
-        </GridItem>
-      </Grid>
+        </Flex>
+      </TemplateGrid>
     </Box>
   )
 }

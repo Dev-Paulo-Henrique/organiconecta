@@ -39,6 +39,9 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         bgColor={bg}
         variant="filled"
         size="lg"
+        _hover={{ 
+          background: "transparent"
+         }}
         ref={ref}
         {...rest}
       />
