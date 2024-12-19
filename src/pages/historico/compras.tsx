@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
+import { Title } from '~components/Title'
 
 export default function Compras() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -19,6 +20,7 @@ export default function Compras() {
   return (
     <>
       <Header />
+      <Title name="Histórico de compras" />
       <Box bg={bg}>
         <Grid
           templateAreas={`"img main"`}
