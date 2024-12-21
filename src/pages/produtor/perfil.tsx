@@ -1,18 +1,11 @@
 // Gisele Oliveira
 
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Text,
-  Image,
-  Button,
-} from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
 
 import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
-import { Foto } from '~components/Foto'
+import { Posts } from '~components/Posts'
+import { BackgroundPerfil } from '~components/BackgroundPerfil'
 export default function Perfil() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   return (
@@ -23,17 +16,30 @@ export default function Perfil() {
           <GridItem area={'main'}>
             <Flex h="100vh">
               <Flex as="form" bg={bg} p="8" borderRadius={8} flexDir="column">
-                <Foto
+                <BackgroundPerfil
                   backgroundImg="/images/foto-fundo-produtor.png"
                   alt="Imagem de fundo produtor perfil"
                   profileImg="https://bit.ly/naruto-sage"
                 >
-                  {' '}
-                  <p>Fazenda Aprisco</p>
-                </Foto>
-
+                  <Text>Fazenda aprisco</Text>
+                </BackgroundPerfil>
+                <Posts
+                 images={[
+                  { src: "/images/organic-food.jpg", alt: "Primeira imagem" },
+                  { src: "/images/organic-food-image.jpg", alt: "Segunda imagem" },
+                  { src: "/images/organic-food-farm 1.jpg", alt: "Terceira imagem" },
+                ]}
+                 
+                > <Text>FRUTAS/VEGETAIS FRESCOS</Text>  </Posts>
+               <Posts
+                 images={[
+                  { src: "/images/organic-food-image.jpg", alt: "Primeira imagem" },
+                  { src: "/images/organic-food-image.jpg", alt: "Segunda imagem" },
+                  { src: "/images/organic-food-image.jpg", alt: "Terceira imagem" },
+                ]}
+                 
+                > <Text>DERIVADOS DE ANIMAIS</Text>  </Posts>
               </Flex>
-           
             </Flex>
           </GridItem>
         </Grid>

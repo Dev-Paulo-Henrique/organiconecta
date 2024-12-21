@@ -1,15 +1,16 @@
+//Gisele Oliveira
 import { Flex, Image, Text,  Button, } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 import Link from 'next/link'
 import { useColorModeValue } from '~components/ui/color-mode'
-interface FotoPros {
+interface FotoProps {
   backgroundImg: string
   profileImg: string
   alt: string
   children?: ReactNode
 }
 
-export function Foto({ backgroundImg, children, profileImg, alt }: FotoPros) {
+export function BackgroundPerfil({ backgroundImg, children, profileImg, alt }: FotoProps) {
     const bg = useColorModeValue('gray.100', 'gray.800')
   return (
     <Flex
