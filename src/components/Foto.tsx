@@ -1,5 +1,7 @@
-import { Flex, Image, Text } from '@chakra-ui/react'
+import { Flex, Image, Text,  Button, } from '@chakra-ui/react'
 import { ReactNode } from 'react'
+import Link from 'next/link'
+import { useColorModeValue } from '~components/ui/color-mode'
 interface FotoPros {
   backgroundImg: string
   profileImg: string
@@ -8,6 +10,7 @@ interface FotoPros {
 }
 
 export function Foto({ backgroundImg, children, profileImg, alt }: FotoPros) {
+    const bg = useColorModeValue('gray.100', 'gray.800')
   return (
     <Flex
       w="100%"
@@ -39,6 +42,22 @@ export function Foto({ backgroundImg, children, profileImg, alt }: FotoPros) {
         </Flex>
       
       </Flex>
+         <Flex justifyContent="space-between" alignItems="center">
+                <Link href="/cadastroCliente/clienteComplemento" passHref>
+                  <Button
+                    type="submit"
+                    position={'absolute'}
+                    right={10}
+                    mt="5"
+                    bg={useColorModeValue('green.700', 'green.500')}
+                    size="lg"
+                    fontSize={'17px'}
+                    color={useColorModeValue('gray.100', 'gray.100')}
+                  >
+                    Seguir
+                  </Button>
+                </Link>
+              </Flex>
     </Flex>
   )
 }
