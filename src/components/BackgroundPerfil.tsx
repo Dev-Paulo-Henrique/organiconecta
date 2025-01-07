@@ -47,7 +47,6 @@ export function BackgroundPerfil({
           />
           <Text fontSize={'40'}>{children}</Text>
 
-          <Flex></Flex>
         </Flex>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">
