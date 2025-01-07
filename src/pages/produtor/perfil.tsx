@@ -1,7 +1,6 @@
 // Gisele Oliveira
 
 import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react'
-
 import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
 import { Posts } from '~components/Posts'
@@ -15,30 +14,50 @@ export default function Perfil() {
         <Grid templateAreas={`"img main"`} h={'100vh'} color="blackAlpha.800">
           <GridItem area={'main'}>
             <Flex h="100vh">
-              <Flex as="form" bg={bg} p="8" borderRadius={8} flexDir="column">
+              <Flex bg={bg} borderRadius={8} flexDir="column">
                 <BackgroundPerfil
                   backgroundImg="/images/foto-fundo-produtor.png"
                   alt="Imagem de fundo produtor perfil"
                   profileImg="https://bit.ly/naruto-sage"
                 >
                   <Text>Fazenda aprisco</Text>
+                  <p>asasa</p>
                 </BackgroundPerfil>
                 <Posts
-                 images={[
-                  { src: "/images/organic-food.jpg", alt: "Primeira imagem" },
-                  { src: "/images/organic-food-image.jpg", alt: "Segunda imagem" },
-                  { src: "/images/organic-food-farm 1.jpg", alt: "Terceira imagem" },
-                ]}
-                 
-                > <Text>FRUTAS/VEGETAIS FRESCOS</Text>  </Posts>
-               <Posts
-                 images={[
-                  { src: "/images/organic-food-image.jpg", alt: "Primeira imagem" },
-                  { src: "/images/organic-food-image.jpg", alt: "Segunda imagem" },
-                  { src: "/images/organic-food-image.jpg", alt: "Terceira imagem" },
-                ]}
-                 
-                > <Text>DERIVADOS DE ANIMAIS</Text>  </Posts>
+                  images={[
+                    { src: '/images/organic-food.jpg', alt: 'Primeira imagem' },
+                    {
+                      src: '/images/organic-food-image.jpg',
+                      alt: 'Segunda imagem',
+                    },
+                    {
+                      src: '/images/organic-food-farm 1.jpg',
+                      alt: 'Terceira imagem',
+                    },
+                  ]}
+                >
+                  {' '}
+                  <Text>FRUTAS/VEGETAIS FRESCOS</Text>{' '}
+                </Posts>
+                <Posts
+                  images={[
+                    {
+                      src: '/images/organic-food-image.jpg',
+                      alt: 'Primeira imagem',
+                    },
+                    {
+                      src: '/images/organic-food-image.jpg',
+                      alt: 'Segunda imagem',
+                    },
+                    {
+                      src: '/images/organic-food-image.jpg',
+                      alt: 'Terceira imagem',
+                    },
+                  ]}
+                >
+                  {' '}
+                  <Text>DERIVADOS DE ANIMAIS</Text>{' '}
+                </Posts>
               </Flex>
             </Flex>
           </GridItem>

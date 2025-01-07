@@ -19,9 +19,9 @@ export function Compra({ images, children }: ComprasProps) {
   const buttonBg = useColorModeValue('green.700', 'green.500')
   const buttonColor = useColorModeValue('gray.100', 'gray.100')
   return (
-    <Flex  alignItems={'center'} justifyContent={"space-between"} >
-      <Flex  flexDir="column" > 
-        <Flex >
+    <Flex alignItems={'center'} justifyContent={'space-between'}>
+      <Flex flexDir="column">
+        <Flex>
           {images.map((image, index) => (
             <Flex key={index}>
               <Image
@@ -31,15 +31,13 @@ export function Compra({ images, children }: ComprasProps) {
                 objectFit="cover"
                 borderRadius="md"
                 flexDirection={'row'}
-             
-
               />
 
               <Flex
                 flexDirection={'row'}
-                gap={5}
                 alignItems={'center'}
-             
+                justifyContent={'space-between'}
+                gap={'20px'}
               >
                 <Text>{image.produto}</Text>
                 <Text>{image.tipo}</Text>

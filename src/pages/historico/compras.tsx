@@ -42,20 +42,12 @@ export default function Compras() {
         >
           <GridItem area={'main'}>
             <Flex justifyContent="space-between" h="100vh">
-              <Flex
-                as="form"
-                bg={bg}
-                p="8"
-                borderRadius={8}
-                flexDir="column"
-            
-              >
+              <Flex as="form" bg={bg} p="8" borderRadius={8} flexDir="column">
                 <Flex
                   justifyContent="space-between"
                   w="100%"
                   gap="3"
                   fontWeight="bold"
-                  
                 >
                   <Text>HISTÓRICO DE VENDAS</Text>
                 </Flex>
@@ -64,13 +56,18 @@ export default function Compras() {
                   borderColor="gray.900"
                   borderWidth="1px"
                   w={900}
-
                 />
-                <Flex flexDir={'column'}  justifyContent="space-between" w="100%" >
+                <Flex
+                  flexDir={'column'}
+                  justifyContent="space-between"
+                  w="100%"
+                  gap={20}
+                  backgroundColor={'#000'}
+                >
                   <Compra images={imageData} />
-                  </Flex>
                 </Flex>
               </Flex>
+            </Flex>
           </GridItem>
         </Grid>
       </Box>

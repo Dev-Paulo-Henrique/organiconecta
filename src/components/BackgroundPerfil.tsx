@@ -10,7 +10,7 @@ interface FotoProps {
   children?: ReactNode
 }
 
-export function BackgroundPerfil({ backgroundImg, children, profileImg, alt }: FotoProps) {
+export function BackgroundPerfil({ backgroundImg, children, profileImg, alt,infor }: FotoProps) {
     const bg = useColorModeValue('gray.100', 'gray.800')
   return (
     <Flex
@@ -29,7 +29,7 @@ export function BackgroundPerfil({ backgroundImg, children, profileImg, alt }: F
         w={'100vw'}
       ></Image>
       <Flex marginStart={10} flexDir="column" position={'absolute'}>
-        <Flex fontSize={'45'} alignItems={'center'} color={'#ffff'} gap={5}>
+        <Flex  alignItems={'center'} color={'#ffff'} gap={5}>
           <Image
             src={profileImg}
             alt={alt}
@@ -39,7 +39,10 @@ export function BackgroundPerfil({ backgroundImg, children, profileImg, alt }: F
             position="relative"
             zIndex={1}
           />
-          <Text>{children}</Text>
+          <Text fontSize={'40'}>{children}</Text>
+          <Flex > 
+        
+          </Flex>
         </Flex>
       
       </Flex>
