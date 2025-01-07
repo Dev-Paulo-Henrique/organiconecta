@@ -5,6 +5,7 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
 import { Posts } from '~components/Posts'
 import { BackgroundPerfil } from '~components/BackgroundPerfil'
+import { PiStarThin } from 'react-icons/pi'
 export default function Perfil() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   return (
@@ -21,7 +22,12 @@ export default function Perfil() {
                   profileImg="https://bit.ly/naruto-sage"
                 >
                   <Text>Fazenda aprisco</Text>
-                  <p>asasa</p>
+                  <Text fontSize="1rem" fontWeight={200}>
+                    ovelhanegra@gmail.com • Recife - PE • Desde 2024
+                  </Text>
+                  <Text fontSize="1rem" fontWeight={200}>
+                    Avaliações: (82 avaliações) 
+                  </Text>
                 </BackgroundPerfil>
                 <Posts
                   images={[

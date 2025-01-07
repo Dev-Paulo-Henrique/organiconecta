@@ -1,15 +1,6 @@
 // Gisele Oliveira
 
-import {
-  Box,
-  Flex,
-  Grid,
-  GridItem,
-  Divider,
-  Text,
-  Button,
-  Image,
-} from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, Divider, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
 import { Title } from '~components/Title'
@@ -59,10 +50,9 @@ export default function Compras() {
                 />
                 <Flex
                   flexDir={'column'}
-                  justifyContent="space-between"
-                  w="100%"
+                  justifyContent="space-evenly"
+                  w="100"
                   gap={20}
-                  backgroundColor={'#000'}
                 >
                   <Compra images={imageData} />
                 </Flex>

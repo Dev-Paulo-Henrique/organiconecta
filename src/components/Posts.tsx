@@ -11,7 +11,7 @@ export function Posts({ images, children }: PostsProps) {
       alignItems={'center'}
       justifyContent={'space-between'}
     >
-      <Flex flexDirection={'column'} alignItems={'start'} padding={3}>
+      <Flex flexDirection={'column'} alignItems={'start'} padding={5}>
         {children && <Text>{children}</Text>}
       </Flex>
       <Flex>
