@@ -14,8 +14,7 @@ export function BackgroundPerfil({
   backgroundImg,
   children,
   profileImg,
-  alt,
-  infor,
+  alt
 }: FotoProps) {
   const bg = useColorModeValue('gray.100', 'gray.800')
   return (
@@ -46,7 +45,6 @@ export function BackgroundPerfil({
             zIndex={1}
           />
           <Text fontSize={'40'}>{children}</Text>
-
         </Flex>
       </Flex>
       <Flex justifyContent="space-between" alignItems="center">

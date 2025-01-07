@@ -5,7 +5,6 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'
 import { Posts } from '~components/Posts'
 import { BackgroundPerfil } from '~components/BackgroundPerfil'
-import { PiStarThin } from 'react-icons/pi'
 export default function Perfil() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   return (
