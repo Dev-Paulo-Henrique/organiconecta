@@ -23,8 +23,8 @@ export function Header() {
     <Flex align={'center'} justify={'space-between'} p={"1rem 3rem"} bg={bg}>
       <Logo size={250} link='/' />
       <Flex gap={5} alignItems={"center"}>
-        {links.map(link => (
-          <Text as="a" href={link.href} fontWeight={router.pathname === link.href ? 'bold' : 'normal'}>
+      {links.map((link, index) => (
+          <Text key={index} as={"a"} href={link.href} fontWeight={router.pathname === link.href ? 'bold' : 'normal'}>
             {link.label}
           </Text>
         ))}
