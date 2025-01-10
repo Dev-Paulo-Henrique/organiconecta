@@ -23,10 +23,10 @@ export function Button({
   const buttonConfigs = buttonsUtils
 
   const {
-    text: typeText,
-    bg: typeBg,
-    color: typeColor,
-    colorScheme: typeColorScheme,
+    text: typeText = '',
+    bg: typeBg = '',
+    color: typeColor = '',
+    colorScheme: typeColorScheme = '',
     onClick: typeOnClick,
   } = type ? buttonConfigs[type] : {}
 
