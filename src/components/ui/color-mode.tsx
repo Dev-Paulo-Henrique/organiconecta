@@ -67,6 +67,7 @@ export const ColorModeButton = forwardRef<
       position={"fixed"}
       bottom={10}
       left={10}
+      zIndex={999}
       bg={bg}
       _hover={{
         bg: "gray.500"

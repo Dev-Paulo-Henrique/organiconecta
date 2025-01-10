@@ -8,6 +8,7 @@ import theme from '~styles/theme'
 import { ColorModeButton, ColorModeProvider } from '~components/ui/color-mode'
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { CartButton } from '~components/CartButton'
 
 export default function Main({ Component, pageProps }: AppProps) {
   return (
@@ -16,6 +17,7 @@ export default function Main({ Component, pageProps }: AppProps) {
       <ColorModeProvider>
         <ColorModeButton />
         <Component {...pageProps} />
+        <CartButton/>
       </ColorModeProvider>
     </ChakraProvider>
   )

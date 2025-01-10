@@ -1,56 +1,30 @@
-// Leonardo Campos
-
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-  Stack,
-  Text,
-  Image,
-  useDisclosure
-} from '@chakra-ui/react'
-
-import { useColorModeValue } from '~components/ui/color-mode'
+// Paulo Henrique
 
 import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react'
+import { AddProductForm } from './AddProductForm'
 
-export function Viewer() {
-  const bg = useColorModeValue('gray.100', 'gray.800')
-  const color = useColorModeValue('gray.800', 'gray.100')
-  const { isOpen, onOpen, onClose } = useDisclosure()
+interface ViewerProps {
+  isOpen: boolean
+  onClose: () => void
+  title: string
+}
+
+export function Viewer({ isOpen, onClose, title }: ViewerProps) {
   return (
-    <>
-      <Button onClick={onOpen}>Abrir Modal</Button>
-      
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Título do Modal</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {/* <Lorem count={2} /> */}
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={onClose}>
-              Fechar
-            </Button>
-            <Button variant="ghost" disabled>Botão secundário</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalCloseButton />
+        <ModalBody>
+          <AddProductForm title={title} />
+        </ModalBody>
+      </ModalContent>
+    </Modal>
   )
 }
