@@ -27,7 +27,7 @@ export function Button({
     bg: typeBg = '',
     color: typeColor = '',
     colorScheme: typeColorScheme = '',
-    onClick: typeOnClick,
+    onClick: typeOnClick = () => {},
   } = type ? buttonConfigs[type] : {}
 
   return (
