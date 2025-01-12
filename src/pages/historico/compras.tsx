@@ -1,5 +1,4 @@
 // Gisele Oliveira
-
 import { Box, Flex, Grid, GridItem, Divider, Text } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import { Header } from '~components/Header'

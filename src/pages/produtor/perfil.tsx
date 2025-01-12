@@ -41,8 +41,7 @@ export default function Perfil() {
                     },
                   ]}
                 >
-                  {' '}
-                  <Text>FRUTAS/VEGETAIS FRESCOS</Text>{' '}
+                  <Text>FRUTAS/VEGETAIS FRESCOS</Text>
                 </Posts>
                 <Posts
                   images={[
