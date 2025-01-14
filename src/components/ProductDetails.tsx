@@ -7,7 +7,7 @@ import theme from '~styles/theme'
 interface ProductDetailsProps {
   backgroundImg: string
   alt: string
-  children: string
+  children:React.ReactNode;
 }
 export function ProductDetails({
   children,

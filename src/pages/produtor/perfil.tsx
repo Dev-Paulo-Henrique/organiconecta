@@ -59,7 +59,6 @@ export default function Perfil() {
                     },
                   ]}
                 >
-                  {' '}
                   <Text>DERIVADOS DE ANIMAIS</Text>{' '}
                 </Posts>
               </Flex>
