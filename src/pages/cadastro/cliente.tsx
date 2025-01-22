@@ -68,8 +68,8 @@ export default function Cliente() {
   return (
     <Box bg={bg}>
       <Title name="Cadastrar cliente" />
-      <TemplateGrid img='/images/photo-clientCadastro.jpg'>
-        <Flex align="center" justify="center" h="100vh">
+      <TemplateGrid img="/images/photo-clientCadastro.jpg">
+        <Flex align="center" justify="center" h="100vh" overflowY="auto">
           <Flex
             as="form"
             w="100%"
@@ -79,6 +79,7 @@ export default function Cliente() {
             borderRadius={8}
             flexDir="column"
             onSubmit={handleSubmit}
+            overflowY="auto"
           >
             <Stack spacing="2">
               <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
@@ -116,23 +117,6 @@ export default function Cliente() {
                   />
                 )}
               </InputMask>
-              <InputMask
-                mask="999.999.999-99"
-                value={cpf}
-                onChange={(e: {
-                  target: { value: React.SetStateAction<string> }
-                }) => setCpf(e.target.value)}
-              >
-                {(inputProps: any) => (
-                  <Input
-                    name="cpf"
-                    type="text"
-                    label="CPF"
-                    color={color}
-                    {...inputProps}
-                  />
-                )}
-              </InputMask>
               <Input
                 name="senha"
                 type="password"
@@ -141,23 +125,42 @@ export default function Cliente() {
                 color={color}
                 onChange={e => setSenha(e.target.value)}
               />
-              <InputMask
-                mask="99/99/9999"
-                value={dataNascimento}
-                onChange={(e: {
-                  target: { value: React.SetStateAction<string> }
-                }) => setDataNascimento(e.target.value)}
-              >
-                {(inputProps: any) => (
-                  <Input
-                    name="dataNascimento"
-                    label="Data de Nascimento"
-                    value={dataNascimento}
-                    color={color}
-                    {...inputProps}
-                  />
-                )}
-              </InputMask>
+              <Flex gap={5}>
+                <InputMask
+                  mask="999.999.999-99"
+                  value={cpf}
+                  onChange={(e: {
+                    target: { value: React.SetStateAction<string> }
+                  }) => setCpf(e.target.value)}
+                >
+                  {(inputProps: any) => (
+                    <Input
+                      name="cpf"
+                      type="text"
+                      label="CPF"
+                      color={color}
+                      {...inputProps}
+                    />
+                  )}
+                </InputMask>
+                <InputMask
+                  mask="99/99/9999"
+                  value={dataNascimento}
+                  onChange={(e: {
+                    target: { value: React.SetStateAction<string> }
+                  }) => setDataNascimento(e.target.value)}
+                >
+                  {(inputProps: any) => (
+                    <Input
+                      name="dataNascimento"
+                      label="Nascimento"
+                      value={dataNascimento}
+                      color={color}
+                      {...inputProps}
+                    />
+                  )}
+                </InputMask>
+              </Flex>
             </Stack>
             <Flex justifyContent="space-between" alignItems="center" mt="3">
               <Button
@@ -179,7 +182,7 @@ export default function Cliente() {
                 Prosseguir
               </Button>
             </Flex>
-            <Flex justifyContent="space-between" alignItems="center" mt="3">
+            <Flex justifyContent="center" alignItems="center" mt="3">
               <Link href="/login" passHref>
                 <Text
                   color={useColorModeValue(
@@ -195,7 +198,7 @@ export default function Cliente() {
                   Login
                 </Text>
               </Link>
-              <Link href="/cadastro/produtor" passHref>
+              {/* <Link href="/cadastro/produtor" passHref>
                 <Text
                   color={useColorModeValue(
                     theme.colors.gray[700],
@@ -209,7 +212,7 @@ export default function Cliente() {
                 >
                   Cadastrar como Produtor
                 </Text>
-              </Link>
+              </Link> */}
             </Flex>
           </Flex>
         </Flex>

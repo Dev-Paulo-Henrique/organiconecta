@@ -35,7 +35,7 @@ export function Button({
       <Btn
         p={4}
         bg={bg || typeBg}
-        onClick={onClick || typeOnClick}
+        onClick={typeOnClick || onClick}
         colorScheme={colorScheme || typeColorScheme}
         w="full"
       >

@@ -48,7 +48,7 @@ export const buttonsUtils = {
       bg: "green.500",
       color: "white",
       colorScheme: "green",
-      onClick: () => alert("Você clicou no botão Voltar"),
+      onClick: () => window.history.back(),
     },
     8: {
       text: "Enviar",
@@ -73,17 +73,17 @@ export const buttonsUtils = {
     },
     11: {
       text: "Login",
-      bg: "green.500",
+      bg: "orange.900",
       color: "white",
-      colorScheme: "green",
-      onClick: () => alert("Você clicou no botão Login"),
+      colorScheme: "orange",
+      onClick: () => window.location.href = "/login",
     },
     12: {
       text: "Cadastro",
       bg: "green.500",
       color: "white",
       colorScheme: "green",
-      onClick: () => alert("Você clicou no botão Cadastro"),
+      onClick: () => window.location.href = "/cadastro/cliente",
     },
     13: {
       text: "Sim",
@@ -140,5 +140,12 @@ export const buttonsUtils = {
       color: "white",
       colorScheme: "green",
       onClick: () => alert("Você clicou no botão Visitar Loja"),
+    },
+    21: {
+      text: "+ Novo Produto",
+      bg: "orange.900",
+      color: "white",
+      colorScheme: "orange",
+      onClick: null,
     },
   }
