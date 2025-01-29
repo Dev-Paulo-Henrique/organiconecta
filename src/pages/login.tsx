@@ -18,37 +18,53 @@ import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
 import { RiGoogleFill } from 'react-icons/ri'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { api } from '~services/api'
 import { isAxiosError } from 'axios'
 import { notifyError, notifySuccess } from '../utils/toastify'
 import { TemplateGrid } from "../components/TemplateGrid"
+import { useAuth } from '~hooks/useAuth'
+import { useRouter } from 'next/router'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+  const router = useRouter()
+
+  const { token, setToken } = useAuth();
 
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+
+   useEffect(() => {
+    if (token) {
+      router.push("/");
+    }
+  }, [token, router]);
+
 
   const handleLogin = async (e: any) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const response = await api.post('/usuario/login', {
-        email,
-        senha,
+      const response = await api.post('/auth', {
+        username: email,
+        password: senha,
       })
 
-      console.log(response.data)
-      notifySuccess(`Cliente ${response.data.id}`)
+      const { token } = response.data;
+
+      setToken(token);
+      notifySuccess(`Usuário autenticado com sucesso!`)
     } catch (error) {
       console.log(error)
       if (isAxiosError(error)) {
         if (error.response) {
-          notifyError(error.response.data.error)
+          // notifyError(error.response.data)
+          notifyError("Erro, revise seus dados!")
         }
       } else {
         console.log('Erro desconhecido:', error)

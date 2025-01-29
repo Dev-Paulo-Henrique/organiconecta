@@ -6,7 +6,7 @@ export const buttonsUtils = {
       bg: "red.500",
       color: "white",
       colorScheme: "red",
-      onClick: () => alert("Você clicou no botão Sair"),
+      onClick: () => {localStorage.removeItem("token"); window.location.href = "/"},
     },
     2: {
       text: "Salvar",

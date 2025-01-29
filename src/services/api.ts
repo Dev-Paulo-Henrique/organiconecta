@@ -3,5 +3,5 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: 'https://sticky-wren-organiconecta-6ec16149.koyeb.app/api',
+  baseURL: 'http://localhost:8080/api',
 })

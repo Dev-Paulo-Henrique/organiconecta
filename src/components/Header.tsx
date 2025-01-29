@@ -5,11 +5,13 @@ import { useColorModeValue } from './ui/color-mode'
 import { useRouter } from 'next/router'
 import { Viewer } from './Modal'
 import { useState } from 'react'
+import { useAuth } from '~hooks/useAuth'
 
 export function Header() {
   const bg = useColorModeValue('white', 'gray.900')
   const color = useColorModeValue('gray.800', 'gray.100')
   const router = useRouter()
+  const { token } = useAuth()
   const { isOpen, onOpen, onClose } = useDisclosure()
     const [title, setTitle] = useState<string>("");
   
@@ -21,8 +23,8 @@ export function Header() {
   const links = [
     { href: '/', label: 'Início' },
     { href: '/cadastro/produto', label: 'Produtos' },
-    { href: '/clientes', label: 'Clientes' },
-    { href: '/pedidos', label: 'Pedidos' },
+    { href: '/admin/clientes', label: 'Clientes' },
+    { href: '/admin/pedidos', label: 'Pedidos' },
   ]
 
   const buttonType =
@@ -30,17 +32,19 @@ export function Header() {
       ? 11
       : router.pathname === '/cadastro/produto'
       ? 21
-      : router.pathname === '/clientes'
+      : router.pathname === '/admin/clientes'
       ? 3
-      : router.pathname === '/pedidos'
+      : router.pathname === '/admin/pedidos'
       ? 4
-      : 11
+      : token
+      ? 1
+      : 1
 
   return (
     <Flex align={'center'} justify={'space-between'} p={'1rem 3rem'} bg={bg}>
       <Logo size={250} link="/" />
       <Flex gap={5} alignItems={'center'}>
-        {links.map((link, index) => (
+        {token && links.map((link, index) => (
           <Text
             key={index}
             as={'a'}
@@ -51,8 +55,10 @@ export function Header() {
             {link.label}
           </Text>
         ))}
-        {router.pathname === "/" && <Button type={12} />}
-        <Button type={buttonType} onClick={buttonType === 21 ? () => handleOpen("Adicionar Produto") : undefined} />
+        {!token && router.pathname === "/" && <Button type={12} />}
+        {token && router.pathname !== "/" && <Button type={buttonType} onClick={buttonType === 21 ? () => handleOpen("Adicionar Produto") : undefined} />}
+        {!token && router.pathname === "/" && <Button type={buttonType} onClick={buttonType === 21 ? () => handleOpen("Adicionar Produto") : undefined} />}
+        {token && <Button type={1} />}
       </Flex>
       <Viewer isOpen={isOpen} onClose={onClose} title={title}/>
     </Flex>
