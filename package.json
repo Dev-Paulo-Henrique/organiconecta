@@ -19,6 +19,10 @@
     "codesandbox": "^2.1.11",
     "coloreact": "^0.3.1",
     "copy-to-clipboard": "^3.2.1",
+<<<<<<< HEAD
+=======
+    "cors": "^2.8.5",
+>>>>>>> f387ced59cc83ac923876d2ba45ae20eb0b1159e
     "framer-motion": "7.3.0",
     "immer": "^9.0.15",
     "lodash": "^4.17.15",

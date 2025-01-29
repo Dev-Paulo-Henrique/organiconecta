@@ -1,5 +1,5 @@
 // Paulo Henrique
-
+// integração Gisele Oliveira
 import {
   Box,
   Input,
@@ -12,20 +12,29 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
   VStack,
-  Icon,
   Text,
   HStack,
   Button,
   Flex,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Center,
 } from '@chakra-ui/react'
-import { IoIosAddCircleOutline } from 'react-icons/io'
-import {
-  HiOutlineCurrencyDollar,
-  HiOutlineCube,
-  HiOutlinePencil,
-  HiOutlineUpload,
-} from 'react-icons/hi'
-import { useRef, useState } from 'react'
+
+import { PiOrange } from 'react-icons/pi'
+
+import { RiMoneyDollarCircleLine } from 'react-icons/ri'
+
+import { FiBox } from 'react-icons/fi'
+
+import { TiPencil } from 'react-icons/ti'
+
+import { LuImage } from 'react-icons/lu'
+import { api } from '~services/api'
+
+import { useEffect, useRef, useState } from 'react'
+import axios from 'axios'
 // import { Button } from './Button'
 
 interface AddProductFormProps {
@@ -36,20 +45,45 @@ export function AddProductForm({ title }: AddProductFormProps) {
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
   const [description, setDescription] = useState('')
+  const [codigo, setCodigo] = useState(0)
   const [image, setImage] = useState<File | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    console.log('Componente montado ou alguma dependência mudou!')
+  }, [productName, price, quantity, description, image])
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const formData = {
-      productName,
-      price,
-      quantity,
-      description,
-      image,
+    const formData = new FormData()
+    formData.append('productName', productName)
+    formData.append('price', price.toString())
+    formData.append('quantity', quantity.toString())
+    formData.append('description', description)
+    formData.append('codigo', codigo.toString())
+
+    if (image) {
+      formData.append('image', image)
     }
 
     console.log('Dados do Formulário:', formData)
+    try {
+      const response = await api.post('/produto', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+
+      console.log('Dados enviado com sucesso', response.data)
+      setCodigo(0)
+      setDescription('')
+      setImage(null)
+      setPrice(0)
+      setProductName("")
+      setQuantity(0)
+    } catch (error) {
+      console.log('Erro ao enviar produto', error)
+    }
   }
 
   const handleFileClick = () => {
@@ -73,117 +107,138 @@ export function AddProductForm({ title }: AddProductFormProps) {
         <VStack spacing={4}>
           {/* Nome do Produto */}
           <FormControl id="productName" isRequired>
-            <FormLabel fontWeight="bold">
-              <Icon as={IoIosAddCircleOutline} mr={2} color="green.600" />
-              Nome do Produto
-            </FormLabel>
-            <Input
-              placeholder="Digite o nome do produto"
-              value={productName}
-              onChange={e => setProductName(e.target.value)}
-              focusBorderColor="green.500"
-              bg="white"
-            />
+            <FormLabel fontWeight="bold">Nome do Produto</FormLabel>
+            <InputGroup>
+              <InputLeftElement>
+                <PiOrange />
+              </InputLeftElement>
+              <Input
+                placeholder="Digite o nome do produto"
+                value={productName}
+                onChange={e => setProductName(e.target.value)}
+                focusBorderColor="green.500"
+                bg="white"
+              />
+            </InputGroup>
+          </FormControl>
+
+          {/* codigpo do produto */}
+          <FormControl id="price" isRequired>
+            
+          <FormLabel fontWeight="bold">Nome do Produto</FormLabel>
+            <InputGroup>
+              <NumberInput
+                value={codigo}
+                onChange={valueString => setCodigo(parseFloat(valueString))}
+                min={0}
+                precision={2}
+                focusBorderColor="green.500"
+              >
+                <InputLeftElement pointerEvents="none">
+                  <RiMoneyDollarCircleLine color="green.600" />
+                </InputLeftElement>
+                <NumberInputField bg="white" pl="30px" />
+              </NumberInput>
+            </InputGroup>
           </FormControl>
 
           {/* Preço */}
           <Flex gap={5}>
             <FormControl id="price" isRequired>
-              <FormLabel fontWeight="bold">
-                <Icon as={HiOutlineCurrencyDollar} mr={2} color="green.600" />
-                Preço
-              </FormLabel>
-              <NumberInput
-                value={price}
-                onChange={valueString => setPrice(parseFloat(valueString))}
-                min={0}
-                precision={2}
-                focusBorderColor="green.500"
-              >
-                <NumberInputField bg="white" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <InputGroup>
+                <NumberInput
+                  value={price}
+                  onChange={valueString => setPrice(parseFloat(valueString))}
+                  min={0}
+                  precision={2}
+                  focusBorderColor="green.500"
+                >
+                  <InputLeftElement pointerEvents="none">
+                    <RiMoneyDollarCircleLine color="green.600" />
+                  </InputLeftElement>
+                  <NumberInputField bg="white" pl="30px" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </InputGroup>
             </FormControl>
 
             {/* Quantidade */}
             <FormControl id="quantity" isRequired>
-              <FormLabel fontWeight="bold">
-                <Icon as={HiOutlineCube} mr={2} color="green.600" />
-                Quantidade
-              </FormLabel>
-              <NumberInput
-                value={quantity}
-                onChange={valueString => setQuantity(parseInt(valueString, 10))}
-                min={0}
-                focusBorderColor="green.500"
-              >
-                <NumberInputField bg="white" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <InputGroup>
+                <NumberInput
+                  value={quantity}
+                  onChange={valueString =>
+                    setQuantity(parseInt(valueString, 10))
+                  }
+                  min={0}
+                  focusBorderColor="green.500"
+                >
+                  <InputLeftElement pointerEvents="none">
+                    <FiBox color="green.600" />
+                  </InputLeftElement>
+                  <NumberInputField bg="white" pl="30px" />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </InputGroup>
             </FormControl>
           </Flex>
 
           {/* Descrição */}
           <FormControl id="description" borderColor="green.600">
-            <Box position="relative" w="full">
-              <Icon
-                as={HiOutlinePencil}
-                color="gren.600"
-                position="absolute"
-                fontSize={20}
-                top="15%"
-                left="12px"
-                // transform="translateY(-50%)"
-                pointerEvents="none"
-                zIndex={999}
-              />
-              <Textarea
-                placeholder="Escreva a descrição do produto"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                focusBorderColor="green.500"
-                borderColor="green.600"
-                _hover={{
-                  borderColor: "green.600"
-                }}
-                bg="white"
-                pl="40px"
-              />
-            </Box>
+            <InputGroup>
+              <Box position="relative" w="full">
+                <InputLeftElement pointerEvents="none">
+                  <TiPencil color="green.600" />
+                </InputLeftElement>
+                <Textarea
+                  placeholder="Escreva a descrição do produto"
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  focusBorderColor="green.500"
+                  borderColor="green.600"
+                  _hover={{
+                    borderColor: 'green.600',
+                  }}
+                  bg="white"
+                  pl="40px"
+                />
+              </Box>
+            </InputGroup>
           </FormControl>
 
           {/* Upload de Imagem */}
           <FormControl id="image">
-            <Box
-              border="2px dashed"
-              borderColor="gray.300"
-              p={4}
-              textAlign="center"
-              borderRadius="md"
-              cursor="pointer"
-              bg="gray.50"
-              _hover={{ bg: 'gray.100' }}
-              onClick={handleFileClick}
-            >
-              <Icon as={HiOutlineUpload} mr={2} />
-              Arraste e solte aqui para fazer upload <br />
-              <Text fontSize="sm" color="gray.500">
-                (.png, .jpg até 5MB)
-              </Text>
-            </Box>
-            <Input
-              type="file"
-              accept=".png, .jpg, .jpeg"
-              ref={fileInputRef}
-              hidden
-              onChange={handleFileUpload}
-            />
+            <InputGroup>
+              <Box
+                border="2px dashed"
+                borderColor="gray.300"
+                p={4}
+                textAlign="center"
+                borderRadius="md"
+                cursor="pointer"
+                bg="gray.50"
+                _hover={{ bg: 'gray.100' }}
+                onClick={handleFileClick}
+              >
+                Arraste e solte aqui para fazer upload <br />
+                <Text fontSize="sm" color="gray.500">
+                  (.png, .jpg até 5MB)
+                </Text>
+              </Box>
+              <Input
+                type="file"
+                accept=".png, .jpg, .jpeg"
+                ref={fileInputRef}
+                hidden
+                onChange={handleFileUpload}
+              />
+            </InputGroup>
           </FormControl>
 
           {/* Botão de Enviar */}
@@ -193,6 +248,7 @@ export function AddProductForm({ title }: AddProductFormProps) {
             size="lg"
             width="full"
             mt={4}
+            onClick={handleSubmit}
           >
             Adicionar
           </Button>
