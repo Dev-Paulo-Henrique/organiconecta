@@ -14,6 +14,7 @@ import React from 'react';
 import { Button } from '~components/Button';
 import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
+import { Title } from '~components/Title';
 
 interface Product {
   name: string;
@@ -34,7 +35,7 @@ export default function App() {
   return (
     <Box bg={bg} color={color} minH="100vh">
       <Header/>
-
+      <Title />
       <Flex bgImage="url('/images/ovelha.jpg')" alignItems={"center"} h={400} bgSize="cover" bgPos="center" p={8}>
         <Box bg="rgba(255, 255, 255, 0.8)" p={6} borderRadius="md" maxH={150} maxW="600px">
           <Heading size="lg">

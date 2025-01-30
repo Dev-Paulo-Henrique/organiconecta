@@ -30,7 +30,6 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [loading, setLoading] = useState(false)
-  const [isCheckingToken, setIsCheckingToken] = useState(true);
   const router = useRouter()
 
   const { token, setToken } = useAuth();

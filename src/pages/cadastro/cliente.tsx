@@ -21,6 +21,7 @@ import { notifyError, notifySuccess } from '~utils/toastify'
 import { isAxiosError } from 'axios'
 import InputMask from 'react-input-mask'
 import { TemplateGrid } from '~components/TemplateGrid'
+import { useRouter } from 'next/router'
 
 export default function Cliente() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -30,9 +31,10 @@ export default function Cliente() {
   const [email, setEmail] = useState('')
   const [telefone, setTelefone] = useState('')
   const [cpf, setCpf] = useState('')
-  const [senha, setSenha] = useState('')
+  const [password, setPassword] = useState('')
   const [dataNascimento, setDataNascimento] = useState('')
   const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const handleSubmit = async (e: any) => {
     e.preventDefault()
@@ -43,15 +45,16 @@ export default function Cliente() {
       email,
       telefone,
       cpf,
-      senha,
+      password,
       dataNascimento,
     }
 
     try {
-      const response = await api.post('/usuario', data)
+      const response = await api.post('/cliente', data)
 
       console.log(response.data)
-      notifySuccess(`Cliente cadastrado ${response.data.id}`)
+      notifySuccess(`${response.data.nome} cadastrado`)
+      router.push("/login");
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
@@ -121,9 +124,9 @@ export default function Cliente() {
                 name="senha"
                 type="password"
                 label="Senha"
-                value={senha}
+                value={password}
                 color={color}
-                onChange={e => setSenha(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
               />
               <Flex gap={5}>
                 <InputMask
