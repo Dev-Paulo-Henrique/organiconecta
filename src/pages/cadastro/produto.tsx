@@ -18,8 +18,12 @@ import { Viewer } from '~components/Modal'
 import { useState } from 'react'
 import { Title } from '~components/Title'
 import { ListItem } from '~components/ListItem'
+import { useAuth } from '~hooks/useAuth'
+import { useRouter } from 'next/router'
 
 export default function Product() {
+  const { token } = useAuth()
+  const router = useRouter()
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -29,6 +33,10 @@ export default function Product() {
     setTitle(newTitle);
     onOpen();
   };
+
+  // if(!token){
+  //   return router?.push("/")
+  // }
 
   return (
     <>

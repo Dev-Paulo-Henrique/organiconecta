@@ -1,5 +1,4 @@
 // Paulo Henrique
-// integração Gisele Oliveira
 import {
   Box,
   Input,
@@ -21,21 +20,16 @@ import {
   InputRightElement,
   Center,
 } from '@chakra-ui/react'
-
 import { PiOrange } from 'react-icons/pi'
-
 import { RiMoneyDollarCircleLine } from 'react-icons/ri'
-
 import { FiBox } from 'react-icons/fi'
-
 import { TiPencil } from 'react-icons/ti'
-
-import { LuImage } from 'react-icons/lu'
 import { api } from '~services/api'
-
 import { useEffect, useRef, useState } from 'react'
-import axios from 'axios'
 // import { Button } from './Button'
+import { storage } from '../services/firebaseConfig'; // Caminho correto para o serviço Firebase
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 
 interface AddProductFormProps {
   title: string
@@ -44,6 +38,8 @@ export function AddProductForm({ title }: AddProductFormProps) {
   const [productName, setProductName] = useState('')
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
+  const [uploading, setUploading] = useState(false)
+  const [progresspercent, setProgresspercent] = useState<number>(0);
   const [description, setDescription] = useState('')
   const [codigo, setCodigo] = useState(0)
   const [image, setImage] = useState<File | null>(null)
@@ -54,37 +50,91 @@ export function AddProductForm({ title }: AddProductFormProps) {
   }, [productName, price, quantity, description, image])
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append('productName', productName)
-    formData.append('price', price.toString())
-    formData.append('quantity', quantity.toString())
-    formData.append('description', description)
-    formData.append('codigo', codigo.toString())
-
+    e.preventDefault();
+  
     if (image) {
-      formData.append('image', image)
-    }
+      setUploading(true);
+  
+      // Criando uma referência no Firebase Storage
+      const storageRef = ref(storage, `products/${image.name}`);
 
-    console.log('Dados do Formulário:', formData)
-    try {
-      const response = await api.post('/produto', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      console.log(storageRef)
+  
+      const uploadTask = uploadBytesResumable(storageRef, image);
+  
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setProgresspercent(progress); // Atualizando o progresso do upload
         },
-      })
-
-      console.log('Dados enviado com sucesso', response.data)
-      setCodigo(0)
-      setDescription('')
-      setImage(null)
-      setPrice(0)
-      setProductName("")
-      setQuantity(0)
-    } catch (error) {
-      console.log('Erro ao enviar produto', error)
+        (error) => {
+          console.error('Erro ao fazer upload:', error);
+          setUploading(false);
+        },
+        () => {
+          // Obtendo a URL de download da imagem
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            // Dados do produto
+            const productData = {
+              produtoNome: productName,
+              produtoPreco: price,
+              quantity,
+              produtoDescricao: description,
+              codigo,
+              produtoCategoria: "Orgânico",
+              produtoImagem: downloadURL,  // Armazenando a URL da imagem no banco de dados
+            };
+  
+            console.log(productData)
+            // Enviando os dados para a API
+            api.post('/produto', productData, {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+            .then((response) => {
+              console.log('Produto enviado com sucesso!', response.data);
+              setCodigo(0);
+              setDescription('');
+              setImage(null);
+              setPrice(0);
+              setProductName('');
+              setQuantity(0);
+              setUploading(false);  // Resetando o estado de upload
+            })
+            .catch((error) => {
+              console.log('Erro ao enviar produto', error);
+              setUploading(false);
+            });
+          });
+        }
+      );
+    } else {
+      // Se a imagem não foi selecionada, envia os dados sem a imagem
+      const productData = {
+        productName,
+        price,
+        quantity,
+        description,
+        codigo,
+      };
+  
+      try {
+        const response = await api.post('/produto', productData);
+        console.log('Produto enviado com sucesso!', response.data);
+        setCodigo(0);
+        setDescription('');
+        setImage(null);
+        setPrice(0);
+        setProductName('');
+        setQuantity(0);
+      } catch (error) {
+        console.log('Erro ao enviar produto', error);
+      }
     }
-  }
+  };
+  
 
   const handleFileClick = () => {
     fileInputRef.current?.click()

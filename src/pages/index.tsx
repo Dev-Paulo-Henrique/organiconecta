@@ -10,11 +10,13 @@ import {
   // Button,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '~components/Button';
 import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
+import { api } from '~services/api';
+import { storage } from '~services/firebaseConfig';
 
 interface Product {
   name: string;
@@ -32,9 +34,19 @@ export default function App() {
   const bg = useColorModeValue('gray.50', 'gray.900');
   const color = useColorModeValue('gray.800', 'gray.50');
 
+  async function carregarCliente() {
+    await api.post("/tipocliente/inicializar")
+  }
+
+  useEffect(() => {
+    carregarCliente()
+  })
+
+  console.log(storage)
+
   return (
     <Box bg={bg} color={color} minH="100vh">
-      <Header/>
+      <Header />
       <Title />
       <Flex bgImage="url('/images/ovelha.jpg')" alignItems={"center"} h={400} bgSize="cover" bgPos="center" p={8}>
         <Box bg="rgba(255, 255, 255, 0.8)" p={6} borderRadius="md" maxH={150} maxW="600px">
@@ -64,26 +76,26 @@ export default function App() {
         </Flex>
       </Box>
 
-      <ProductsGrid products={products}/>
+      <ProductsGrid products={products} />
 
       <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4} p={8}>
         <Box bg="purple.100" p={4} borderRadius="md">
           <Heading size="sm" mb={2}>
             Semente ao solo, esperança ao futuro.
           </Heading>
-          <Button type={20}/>
+          <Button type={20} />
         </Box>
         <Box bg="pink.100" p={4} borderRadius="md">
           <Heading size="sm" mb={2}>
             Na terra, o trabalho se transforma em alimento.
           </Heading>
-          <Button type={20}/>
+          <Button type={20} />
         </Box>
         <Box bg="green.100" p={4} borderRadius="md">
           <Heading size="sm" mb={2}>
             Agricultura: a força que alimenta o mundo.
           </Heading>
-          <Button type={20}/>
+          <Button type={20} />
         </Box>
       </Grid>
     </Box>
