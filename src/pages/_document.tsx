@@ -6,7 +6,7 @@ export default class Document extends NextDocument {
   render() {
     return (
       <Html lang="pt-BR">
-      <link rel="icon" href="/images/logo.png" />
+      <link rel="icon" href="/images/icon.png" />
         <Head />
         <body>
           <Main />

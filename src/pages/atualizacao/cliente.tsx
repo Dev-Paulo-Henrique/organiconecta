@@ -1,13 +1,39 @@
 //Gisele Oliveira
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Image, Text,  } from '@chakra-ui/react'
+import { useState } from 'react'
 import { Header } from '~components/Header'
 import { Input } from '~components/Input'
 import { useColorModeValue } from '~components/ui/color-mode'
+import { api } from '~services/api'
 import theme from '~styles/theme'
 
 export default function Atualizacao() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const [editing, setEditing]= useState(null)
+  const [nome, setNome] = useState("")
+  const [telefone, setTelefone] = useState("")
+
+    async  function handleEditing (){
+      try{
+        if(editing){
+          await api.put("/cliente/${id}",{
+            nome,
+            telefone,
+
+          })
+        }else {
+                await api.post('/usuario', {
+                  nome,
+                  telefone,
+                });
+            }
+    }catch(erro){
+        console.log("erro ao atulizar dados", erro)
+    }
+  }
+  
+
 
   return (
     <>
