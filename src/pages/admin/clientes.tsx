@@ -1,3 +1,5 @@
+// Paulo Henrique
+
 import {
   Box,
   Divider,
@@ -75,13 +77,16 @@ export default function Clientes() {
 
   if (loading && token) {
     return (
-      <Loading/>
+      <Loading />
     )
   }
 
   if (!isProducer) {
     return <NotPermission />
   }
+
+  // Filtrar apenas clientes do tipo "Cliente" (não "Produtor")
+  const filteredClientes = clientes.filter(cliente => cliente.tipoCliente?.tipo !== 'Produtor')
 
   return (
     <>
@@ -118,7 +123,7 @@ export default function Clientes() {
                       </Td>
                     </Tr>
                   ) : (
-                    clientes.map(cliente => (
+                    filteredClientes.map(cliente => (
                       <Tr key={cliente.id}>
                         <Td>
                           {cliente.cpf.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}

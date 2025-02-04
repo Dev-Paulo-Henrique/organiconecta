@@ -32,6 +32,7 @@ export function Header() {
     { href: '/cadastro/produto', label: 'Produtos' },
     { href: '/admin/clientes', label: 'Clientes' },
     { href: '/admin/pedidos', label: 'Pedidos' },
+    { href: `/loja/${user?.id}`, label: 'Loja' },
   ]
 
   const buttonType =
@@ -42,6 +43,8 @@ export function Header() {
       : router.pathname === '/admin/clientes'
       ? 3
       : router.pathname === '/admin/pedidos'
+      ? 4
+      : router.pathname === `/loja/${user?.id}`
       ? 4
       : token
       ? 1

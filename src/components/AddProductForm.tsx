@@ -28,7 +28,9 @@ import { api } from '~services/api'
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 // import { Button } from './Button'
 import { storage } from '../services/firebase'
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage'
+import { v4 as uuidv4 } from 'uuid';
+import { useAuth } from '~hooks/useAuth'
 
 interface AddProductFormProps {
   title: string
@@ -41,10 +43,10 @@ export function AddProductForm({ title }: AddProductFormProps) {
   const [progresspercent, setProgresspercent] = useState<number>(0)
   const [description, setDescription] = useState('')
   const [codigo, setCodigo] = useState(0)
-  const [image, setImage] = useState<File | null>(null)
   const [files, setFiles] = useState<File[]>([])
   const [imgPreviews, setImgPreviews] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const { user, token } = useAuth()
 
   const handleRemoveFile = (index: number) => {
     const updatedFiles = [...files];
@@ -71,94 +73,105 @@ export function AddProductForm({ title }: AddProductFormProps) {
   }
 
   const handleSubmit = async (e: FormEvent<any>) => {
-    e.preventDefault()
-
-    console.log(image)
-    if (image) {
-      setUploading(true)
-
-      // Criando uma referência no Firebase Storage
-      const storageRef = ref(storage, `products/${image.name}`)
-
-      console.log("REF: ", storageRef)
-
-      const uploadTask = uploadBytesResumable(storageRef, image)
-
-      uploadTask.on(
-        'state_changed',
-        snapshot => {
-          const progress = Math.round(
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
-          )
-          setProgresspercent(progress) // Atualizando o progresso do upload
-        },
-        error => {
-          console.error('Erro ao fazer upload:', error)
-          setUploading(false)
-        },
-        () => {
-          // Obtendo a URL de download da imagem
-          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
-            // Dados do produto
-            const productData = {
-              produtoNome: productName,
-              produtoPreco: price,
-              quantity,
-              produtoDescricao: description,
-              codigo,
-              produtoCategoria: 'Orgânico',
-              produtoImagem: downloadURL, // Armazenando a URL da imagem no banco de dados
+    e.preventDefault();
+  
+    if (files.length > 0) {
+      setUploading(true);
+      const fileUrls: string[] = []; // Array para armazenar as URLs das imagens
+  
+      // Gerando o UUID para o produto antes do upload
+      const productUUID = uuidv4();
+  
+      // Para cada arquivo em files, faça o upload para o Firebase Storage
+      const uploadPromises = files.map((file) => {
+        const storageRef = ref(storage, `products/${user?.id}/${productUUID}/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+  
+        return new Promise<string>((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgresspercent(progress); // Atualizando o progresso do upload
+            },
+            (error) => {
+              console.error('Erro ao fazer upload:', error);
+              reject(error);
+            },
+            () => {
+              // Obtendo a URL de download após o upload
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                fileUrls.push(downloadURL); // Armazenando a URL do arquivo no array
+                resolve(downloadURL);
+              });
             }
-
-            console.log(productData)
-            // Enviando os dados para a API
-            api
-              .post('/produto', productData, {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              })
-              .then(response => {
-                console.log('Produto enviado com sucesso!', response.data)
-                setCodigo(0)
-                setDescription('')
-                setImage(null)
-                setPrice(0)
-                setProductName('')
-                setQuantity(0)
-                setUploading(false) // Resetando o estado de upload
-              })
-              .catch(error => {
-                console.log('Erro ao enviar produto', error)
-                setUploading(false)
-              })
-          })
-        },
-      )
+          );
+        });
+      });
+  
+      try {
+        // Aguardar o upload de todos os arquivos
+        await Promise.all(uploadPromises);
+  
+        // Dados do produto com as URLs das imagens
+        const productData = {
+          produtoNome: productName,
+          produtoPreco: price,
+          produtoQuantidade: quantity,
+          produtoDescricao: description,
+          produtoCodigo: productUUID,  // Usando o UUID gerado para o código do produto
+          produtoCategoria: 'Orgânico',
+          produtoImagens: fileUrls, // Armazenando as URLs das imagens no banco de dados
+        };
+  
+        console.log(productData);
+        // Enviar os dados para a API
+        const response = await api.post('/produto', productData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log('Produto enviado com sucesso!', response.data);
+  
+        // Resetando os estados após o envio
+        setCodigo(0);
+        setDescription('');
+        setFiles([]);
+        setPrice(0);
+        setProductName('');
+        setQuantity(0);
+        setUploading(false);
+      } catch (error) {
+        console.log('Erro ao enviar produto', error);
+        setUploading(false);
+      }
     } else {
-      // Se a imagem não foi selecionada, envia os dados sem a imagem
+      // Se não houver arquivos selecionados, envia os dados sem as imagens
       const productData = {
         productName,
         price,
         quantity,
         description,
         codigo,
-      }
-
+      };
+  
       try {
-        const response = await api.post('/produto', productData)
-        console.log('Produto enviado com sucesso!', response.data)
-        setCodigo(0)
-        setDescription('')
-        setImage(null)
-        setPrice(0)
-        setProductName('')
-        setQuantity(0)
+        const response = await api.post('/produto', productData);
+        console.log('Produto enviado com sucesso!', response.data);
+        setCodigo(0);
+        setDescription('');
+        setFiles([]);
+        setPrice(0);
+        setProductName('');
+        setQuantity(0);
       } catch (error) {
-        console.log('Erro ao enviar produto', error)
+        console.log('Erro ao enviar produto', error);
       }
     }
-  }
+  };
 
   const handleFileClick = () => {
     fileInputRef.current?.click()

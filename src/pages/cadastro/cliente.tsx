@@ -47,8 +47,10 @@ export default function Cliente() {
       cpf,
       password,
       dataNascimento,
+      clienteImagem: "/images/avatar.png"
     }
 
+    console.log(data)
     try {
       const response = await api.post('/cliente', data)
 
