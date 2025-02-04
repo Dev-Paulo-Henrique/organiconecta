@@ -1,6 +1,6 @@
 // Paulo Henrique
 
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
 import { Title } from '~components/Title'
 import { useColorModeValue } from '~components/ui/color-mode'
 
@@ -25,6 +25,7 @@ export default function ErrorPage() {
         <Text color="green.900" fontWeight="bold">
           OrganiConecta
         </Text>
+        <Button onClick={() => window.history.back()} mt={3}>Voltar</Button>
       </Flex>
     </Box>
   )

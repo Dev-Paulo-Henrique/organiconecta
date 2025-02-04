@@ -6,7 +6,7 @@ export const buttonsUtils = {
       bg: "red.500",
       color: "white",
       colorScheme: "red",
-      onClick: () => {localStorage.removeItem("token"); window.location.href = "/"},
+      onClick: () => {localStorage.removeItem("token"); localStorage.removeItem("email"); window.location.href = "/"},
     },
     2: {
       text: "Salvar",
@@ -146,6 +146,20 @@ export const buttonsUtils = {
       bg: "orange.900",
       color: "white",
       colorScheme: "orange",
+      onClick: null,
+    },
+    22: {
+      text: "Virar Produtor",
+      bg: "green.500",
+      color: "white",
+      colorScheme: "green",
+      onClick: null,
+    },
+    23: {
+      text: "Cancelar Plano",
+      bg: "red.400",
+      color: "white",
+      colorScheme: "red",
       onClick: null,
     },
   }

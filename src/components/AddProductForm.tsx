@@ -25,11 +25,10 @@ import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 import { FiBox } from 'react-icons/fi'
 import { TiPencil } from 'react-icons/ti'
 import { api } from '~services/api'
-import { useEffect, useRef, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 // import { Button } from './Button'
-import { storage } from '../services/firebaseConfig'; // Caminho correto para o serviço Firebase
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-
+import { storage } from '../services/firebase'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 interface AddProductFormProps {
   title: string
@@ -39,42 +38,67 @@ export function AddProductForm({ title }: AddProductFormProps) {
   const [price, setPrice] = useState(0)
   const [quantity, setQuantity] = useState(0)
   const [uploading, setUploading] = useState(false)
-  const [progresspercent, setProgresspercent] = useState<number>(0);
+  const [progresspercent, setProgresspercent] = useState<number>(0)
   const [description, setDescription] = useState('')
   const [codigo, setCodigo] = useState(0)
   const [image, setImage] = useState<File | null>(null)
+  const [files, setFiles] = useState<File[]>([])
+  const [imgPreviews, setImgPreviews] = useState<string[]>([])
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-  useEffect(() => {
-    console.log('Componente montado ou alguma dependência mudou!')
-  }, [productName, price, quantity, description, image])
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRemoveFile = (index: number) => {
+    const updatedFiles = [...files];
+    const updatedPreviews = [...imgPreviews];
   
+    updatedFiles.splice(index, 1);
+    updatedPreviews.splice(index, 1);
+  
+    setFiles(updatedFiles);
+    setImgPreviews(updatedPreviews);
+  };  
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = event.target.files
+    if (!selectedFiles) return
+
+    const newFiles = Array.from(selectedFiles)
+    const newImgPreviews = newFiles.map(file => URL.createObjectURL(file))
+
+    setImgPreviews(prev => [...prev, ...newImgPreviews])
+    setFiles(prev => [...prev, ...newFiles])
+
+    event.target.value = ''
+  }
+
+  const handleSubmit = async (e: FormEvent<any>) => {
+    e.preventDefault()
+
+    console.log(image)
     if (image) {
-      setUploading(true);
-  
-      // Criando uma referência no Firebase Storage
-      const storageRef = ref(storage, `products/${image.name}`);
+      setUploading(true)
 
-      console.log(storageRef)
-  
-      const uploadTask = uploadBytesResumable(storageRef, image);
-  
+      // Criando uma referência no Firebase Storage
+      const storageRef = ref(storage, `products/${image.name}`)
+
+      console.log("REF: ", storageRef)
+
+      const uploadTask = uploadBytesResumable(storageRef, image)
+
       uploadTask.on(
         'state_changed',
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setProgresspercent(progress); // Atualizando o progresso do upload
+        snapshot => {
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+          )
+          setProgresspercent(progress) // Atualizando o progresso do upload
         },
-        (error) => {
-          console.error('Erro ao fazer upload:', error);
-          setUploading(false);
+        error => {
+          console.error('Erro ao fazer upload:', error)
+          setUploading(false)
         },
         () => {
           // Obtendo a URL de download da imagem
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
             // Dados do produto
             const productData = {
               produtoNome: productName,
@@ -82,34 +106,35 @@ export function AddProductForm({ title }: AddProductFormProps) {
               quantity,
               produtoDescricao: description,
               codigo,
-              produtoCategoria: "Orgânico",
-              produtoImagem: downloadURL,  // Armazenando a URL da imagem no banco de dados
-            };
-  
+              produtoCategoria: 'Orgânico',
+              produtoImagem: downloadURL, // Armazenando a URL da imagem no banco de dados
+            }
+
             console.log(productData)
             // Enviando os dados para a API
-            api.post('/produto', productData, {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
-            .then((response) => {
-              console.log('Produto enviado com sucesso!', response.data);
-              setCodigo(0);
-              setDescription('');
-              setImage(null);
-              setPrice(0);
-              setProductName('');
-              setQuantity(0);
-              setUploading(false);  // Resetando o estado de upload
-            })
-            .catch((error) => {
-              console.log('Erro ao enviar produto', error);
-              setUploading(false);
-            });
-          });
-        }
-      );
+            api
+              .post('/produto', productData, {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              })
+              .then(response => {
+                console.log('Produto enviado com sucesso!', response.data)
+                setCodigo(0)
+                setDescription('')
+                setImage(null)
+                setPrice(0)
+                setProductName('')
+                setQuantity(0)
+                setUploading(false) // Resetando o estado de upload
+              })
+              .catch(error => {
+                console.log('Erro ao enviar produto', error)
+                setUploading(false)
+              })
+          })
+        },
+      )
     } else {
       // Se a imagem não foi selecionada, envia os dados sem a imagem
       const productData = {
@@ -118,33 +143,32 @@ export function AddProductForm({ title }: AddProductFormProps) {
         quantity,
         description,
         codigo,
-      };
-  
+      }
+
       try {
-        const response = await api.post('/produto', productData);
-        console.log('Produto enviado com sucesso!', response.data);
-        setCodigo(0);
-        setDescription('');
-        setImage(null);
-        setPrice(0);
-        setProductName('');
-        setQuantity(0);
+        const response = await api.post('/produto', productData)
+        console.log('Produto enviado com sucesso!', response.data)
+        setCodigo(0)
+        setDescription('')
+        setImage(null)
+        setPrice(0)
+        setProductName('')
+        setQuantity(0)
       } catch (error) {
-        console.log('Erro ao enviar produto', error);
+        console.log('Erro ao enviar produto', error)
       }
     }
-  };
-  
+  }
 
   const handleFileClick = () => {
     fileInputRef.current?.click()
   }
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      console.log('Arquivo selecionado:', e.target.files[0].name)
-    }
-  }
+  // const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     console.log('Arquivo selecionado:', e.target.files[0].name)
+  //   }
+  // }
 
   return (
     <Box p={8} borderRadius="lg" maxW="600px" mx="auto">
@@ -172,29 +196,10 @@ export function AddProductForm({ title }: AddProductFormProps) {
             </InputGroup>
           </FormControl>
 
-          {/* codigpo do produto */}
-          <FormControl id="price" isRequired>
-            
-          <FormLabel fontWeight="bold">Nome do Produto</FormLabel>
-            <InputGroup>
-              <NumberInput
-                value={codigo}
-                onChange={valueString => setCodigo(parseFloat(valueString))}
-                min={0}
-                precision={2}
-                focusBorderColor="green.500"
-              >
-                <InputLeftElement pointerEvents="none">
-                  <RiMoneyDollarCircleLine color="green.600" />
-                </InputLeftElement>
-                <NumberInputField bg="white" pl="30px" />
-              </NumberInput>
-            </InputGroup>
-          </FormControl>
-
           {/* Preço */}
           <Flex gap={5}>
             <FormControl id="price" isRequired>
+              <FormLabel fontWeight="bold">Preço</FormLabel>
               <InputGroup>
                 <NumberInput
                   value={price}
@@ -217,6 +222,7 @@ export function AddProductForm({ title }: AddProductFormProps) {
 
             {/* Quantidade */}
             <FormControl id="quantity" isRequired>
+              <FormLabel fontWeight="bold">Quantidade</FormLabel>
               <InputGroup>
                 <NumberInput
                   value={quantity}
@@ -240,7 +246,8 @@ export function AddProductForm({ title }: AddProductFormProps) {
           </Flex>
 
           {/* Descrição */}
-          <FormControl id="description" borderColor="green.600">
+          <FormControl id="description" borderColor="green.600" isRequired>
+            <FormLabel fontWeight="bold">Descrição</FormLabel>
             <InputGroup>
               <Box position="relative" w="full">
                 <InputLeftElement pointerEvents="none">
@@ -264,11 +271,13 @@ export function AddProductForm({ title }: AddProductFormProps) {
 
           {/* Upload de Imagem */}
           <FormControl id="image">
+            <FormLabel fontWeight="bold">Imagens</FormLabel>
             <InputGroup>
               <Box
                 border="2px dashed"
                 borderColor="gray.300"
                 p={4}
+                w="full"
                 textAlign="center"
                 borderRadius="md"
                 cursor="pointer"
@@ -285,13 +294,41 @@ export function AddProductForm({ title }: AddProductFormProps) {
                 type="file"
                 accept=".png, .jpg, .jpeg"
                 ref={fileInputRef}
+                multiple
                 hidden
-                onChange={handleFileUpload}
+                onChange={handleFileChange}
               />
             </InputGroup>
           </FormControl>
 
-          {/* Botão de Enviar */}
+          {files &&
+            files.map((file, index) => (
+              <HStack key={file.name} justify="space-between" w="full" align="center">
+                <HStack>
+                  <Box boxSize="50px" overflow="hidden" borderRadius="md">
+                    <img
+                      src={imgPreviews[index]}
+                      alt={file.name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  </Box>
+                  <Text>{file.name}</Text>
+                </HStack>
+                <Button
+                  size="sm"
+                  colorScheme="red"
+                  onClick={() => handleRemoveFile(index)}
+                  aria-label="Excluir imagem"
+                >
+                  X
+                </Button>
+              </HStack>
+            ))}
+
           <Button
             type="submit"
             colorScheme="green"
@@ -299,6 +336,7 @@ export function AddProductForm({ title }: AddProductFormProps) {
             width="full"
             mt={4}
             onClick={handleSubmit}
+            isLoading={uploading}
           >
             Adicionar
           </Button>

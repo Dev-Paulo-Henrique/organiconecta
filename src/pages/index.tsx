@@ -16,7 +16,7 @@ import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
 import { api } from '~services/api';
-import { storage } from '~services/firebaseConfig';
+import { storage } from '~services/firebase';
 
 interface Product {
   name: string;

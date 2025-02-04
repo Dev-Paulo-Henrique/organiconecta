@@ -79,6 +79,7 @@ export default function ResetPassword() {
                     theme.colors.gray[100],
                   )}
                   size="lg"
+                  disabled
                 //onClick={() => sendEmail()}
                 >
                   Enviar

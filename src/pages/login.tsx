@@ -57,6 +57,7 @@ export default function Login() {
       const { token } = response.data;
 
       setToken(token);
+      window.localStorage.setItem("email", email)
       notifySuccess(`Usuário autenticado com sucesso!`)
     } catch (error) {
       console.log(error)

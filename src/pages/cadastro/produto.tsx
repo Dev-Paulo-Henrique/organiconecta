@@ -20,22 +20,29 @@ import { Title } from '~components/Title'
 import { ListItem } from '~components/ListItem'
 import { useAuth } from '~hooks/useAuth'
 import { useRouter } from 'next/router'
+import { NotPermission } from '~components/NotPermission'
 
 export default function Product() {
-  const { token } = useAuth()
-  const router = useRouter()
-  const bg = useColorModeValue('gray.100', 'gray.800')
-  const color = useColorModeValue('gray.800', 'gray.100')
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { token, user } = useAuth();  // Agora estamos pegando o 'user' para verificar o tipo
+  const router = useRouter();
+  const bg = useColorModeValue('gray.100', 'gray.800');
+  const color = useColorModeValue('gray.800', 'gray.100');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [title, setTitle] = useState<string>("");
+
+  // Verifica se o usuário é um produtor
+  // const isProducer = user?.tipoCliente?.tipo === 'Produtor';  // Verifique a estrutura real dos dados
 
   const handleOpen = (newTitle: string) => {
     setTitle(newTitle);
     onOpen();
   };
 
-  // if(!token){
-  //   return router?.push("/")
+  // Se o usuário não for produtor, redireciona para a página inicial
+  // if (!isProducer) {
+  //   return (
+  //     <NotPermission/>
+  //   );
   // }
 
   return (
@@ -67,10 +74,8 @@ export default function Product() {
               </Flex>
 
               <Divider borderColor="gray.300" mb="4" />
+              {/* Coloque os campos para cadastrar produtos aqui */}
 
-              
-
-              
             </Flex>
           </GridItem>
         </Grid>
@@ -78,5 +83,5 @@ export default function Product() {
         <Viewer isOpen={isOpen} onClose={onClose} title={title}/>
       </Box>
     </>
-  )
+  );
 }
