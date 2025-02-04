@@ -11,6 +11,12 @@ import {
   useDisclosure,
   Input,
   useColorModeValue,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from '@chakra-ui/react'
 
 import { Header } from '~components/Header'
@@ -21,6 +27,8 @@ import { ListItem } from '~components/ListItem'
 import { useAuth } from '~hooks/useAuth'
 import { useRouter } from 'next/router'
 import { NotPermission } from '~components/NotPermission'
+import { FiEdit3 } from 'react-icons/fi'
+import { PiTrash } from 'react-icons/pi'
 
 export default function Product() {
   const { token, user } = useAuth();  // Agora estamos pegando o 'user' para verificar o tipo
@@ -31,7 +39,7 @@ export default function Product() {
   const [title, setTitle] = useState<string>("");
 
   // Verifica se o usuário é um produtor
-  // const isProducer = user?.tipoCliente?.tipo === 'Produtor';  // Verifique a estrutura real dos dados
+  const isProducer = user?.tipoCliente?.tipo === 'Produtor';  // Verifique a estrutura real dos dados
 
   const handleOpen = (newTitle: string) => {
     setTitle(newTitle);
@@ -39,11 +47,11 @@ export default function Product() {
   };
 
   // Se o usuário não for produtor, redireciona para a página inicial
-  // if (!isProducer) {
-  //   return (
-  //     <NotPermission/>
-  //   );
-  // }
+  if (!isProducer) {
+    return (
+      <NotPermission/>
+    );
+  }
 
   return (
     <>
@@ -61,26 +69,60 @@ export default function Product() {
               maxW="1200px"
               mx="auto"
             >
-              <Flex
-                justifyContent="space-between"
-                w="100%"
-                fontWeight="bold"
-                mb="4"
-              >
-                <Text>ID</Text>
-                <Text>Produto</Text>
-                <Text>Quantidade</Text>
-                <Text>Ações</Text>
-              </Flex>
-
-              <Divider borderColor="gray.300" mb="4" />
-              {/* Coloque os campos para cadastrar produtos aqui */}
-
+              {/* Tabela para mostrar os produtos */}
+              <Table variant="simple" colorScheme="gray">
+                <Thead>
+                  <Tr>
+                    <Th>ID</Th>
+                    <Th>Produto</Th>
+                    <Th>Quantidade</Th>
+                    <Th>Ações</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {/* Suponha que você tenha uma lista de produtos no estado */}
+                  {/* Exemplo de dados fictícios de produtos */}
+                  {[
+                    { id: 1, produto: "Produto 1", quantidade: 100 },
+                    { id: 2, produto: "Produto 2", quantidade: 50 },
+                  ].map(produto => (
+                    <Tr key={produto.id}>
+                      <Td>{produto.id}</Td>
+                      <Td>{produto.produto}</Td>
+                      <Td>{produto.quantidade}</Td>
+                      <Td>
+                        <Flex gap="2">
+                          <Icon
+                            as={FiEdit3}
+                            boxSize="6"
+                            cursor="pointer"
+                            bg="yellow.400"
+                            color="black"
+                            borderRadius="md"
+                            p={1}
+                            onClick={() => handleOpen('Editar Produto')}
+                          />
+                          <Icon
+                            as={PiTrash}
+                            boxSize="6"
+                            cursor="pointer"
+                            bg="red.500"
+                            color="white"
+                            borderRadius="md"
+                            p={1}
+                            onClick={() => {/* Lógica para deletar o produto */}}
+                          />
+                        </Flex>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
             </Flex>
           </GridItem>
         </Grid>
 
-        <Viewer isOpen={isOpen} onClose={onClose} title={title}/>
+        <Viewer isOpen={isOpen} onClose={onClose} title={title} />
       </Box>
     </>
   );

@@ -45,7 +45,7 @@ export function Header() {
       ? 4
       : token
       ? 1
-      : 1
+      : undefined
 
   // Verificando o tipo do usuário: cliente ou produtor
   const isClient = user?.tipoCliente?.tipo === 'Cliente'

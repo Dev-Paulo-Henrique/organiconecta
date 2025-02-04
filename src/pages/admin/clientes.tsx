@@ -1,5 +1,3 @@
-// Paulo Henrique
-
 import {
   Box,
   Divider,
@@ -11,6 +9,12 @@ import {
   useDisclosure,
   useColorModeValue,
   Spinner,
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
 } from '@chakra-ui/react'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
@@ -28,7 +32,7 @@ export default function Clientes() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [title, setTitle] = useState<string>('')
+  const [title, setTitle] = useState<string>('') 
   const [clientes, setClientes] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -69,7 +73,7 @@ export default function Clientes() {
     onOpen()
   }
 
-  if (loading) {
+  if (loading && token) {
     return (
       <Loading/>
     )
@@ -95,99 +99,75 @@ export default function Clientes() {
               maxW="1200px"
               mx="auto"
             >
-              <Flex
-                justifyContent="space-between"
-                w="100%"
-                fontWeight="bold"
-                align="center"
-                mb="4"
-                gap={4}
-              >
-                {/* Centralizar os títulos das colunas */}
-                {/* <Text textAlign="center" flex="1">ID</Text> */}
-                <Text textAlign="start" flex="1">
-                  CPF
-                </Text>
-                {/* <Text textAlign="start" flex="1">Data de Nascimento</Text> */}
-                <Text textAlign="start" flex="2">
-                  Nome
-                </Text>
-                <Text textAlign="start" flex="2">
-                  E-mail
-                </Text>
-                <Text textAlign="start" flex="1">
-                  Ações
-                </Text>
-              </Flex>
+              <Table variant="simple" colorScheme="gray">
+                <Thead>
+                  <Tr>
+                    <Th textAlign="start">CPF</Th>
+                    <Th textAlign="start">Nome</Th>
+                    <Th textAlign="start">E-mail</Th>
+                    <Th textAlign="start">Ações</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {error && <Text color="red.500">{error}</Text>}
 
-              <Divider borderColor="gray.300" mb="4" />
-
-              {error && <Text color="red.500">{error}</Text>}
-
-              {loading ? (
-                <Text>Carregando clientes...</Text>
-              ) : (
-                clientes.map(cliente => (
-                  <Flex
-                    key={cliente.id}
-                    justifyContent="space-between"
-                    w="100%"
-                    align="center"
-                    gap="4"
-                    mb="4"
-                  >
-                    {/* Definir limites de largura e aplicar ellipsis */}
-                    {/* <Text textAlign="center" flex="1">{cliente.id}</Text> */}
-                    <Text textAlign="start" flex="1">
-                      {cliente.cpf}
-                    </Text>
-                    {/* <Text textAlign="start" flex="1">{cliente.dataNascimento}</Text> */}
-                    <Text textAlign="start" flex="2">
-                      {cliente.nome}
-                    </Text>
-                    <Text textAlign="start" flex="2">
-                      {cliente.usuario.username}
-                    </Text>
-
-                    <Flex gap="2">
-                      <Icon
-                        as={IoEyeOutline}
-                        boxSize="6"
-                        cursor="pointer"
-                        bg="blue.500"
-                        color="white"
-                        borderRadius="md"
-                        p={1}
-                        onClick={() => handleOpen('Visualizar Cliente')}
-                      />
-                      <Icon
-                        as={FiEdit3}
-                        boxSize="6"
-                        cursor="pointer"
-                        bg="yellow.400"
-                        color="black"
-                        borderRadius="md"
-                        p={1}
-                        onClick={() => handleOpen('Editar Cliente')}
-                      />
-                      <Icon
-                        as={PiTrash}
-                        boxSize="6"
-                        cursor="pointer"
-                        bg="red.500"
-                        color="white"
-                        borderRadius="md"
-                        p={1}
-                        onClick={() => api.delete(`/cliente/${cliente.id}`, {
-                          headers: {
-                            Authorization: `Bearer ${token}`,
-                          },
-                        })}
-                      />
-                    </Flex>
-                  </Flex>
-                ))
-              )}
+                  {loading ? (
+                    <Tr>
+                      <Td colSpan={4} textAlign="center">
+                        Carregando clientes...
+                      </Td>
+                    </Tr>
+                  ) : (
+                    clientes.map(cliente => (
+                      <Tr key={cliente.id}>
+                        <Td>
+                          {cliente.cpf.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
+                        </Td>
+                        <Td>{cliente.nome}</Td>
+                        <Td>{cliente.usuario.username}</Td>
+                        <Td>
+                          <Flex gap="2">
+                            <Icon
+                              as={IoEyeOutline}
+                              boxSize="6"
+                              cursor="pointer"
+                              bg="blue.500"
+                              color="white"
+                              borderRadius="md"
+                              p={1}
+                              onClick={() => handleOpen('Visualizar Cliente')}
+                            />
+                            <Icon
+                              as={FiEdit3}
+                              boxSize="6"
+                              cursor="pointer"
+                              bg="yellow.400"
+                              color="black"
+                              borderRadius="md"
+                              p={1}
+                              onClick={() => handleOpen('Editar Cliente')}
+                            />
+                            <Icon
+                              as={PiTrash}
+                              boxSize="6"
+                              cursor="pointer"
+                              bg="red.500"
+                              color="white"
+                              borderRadius="md"
+                              p={1}
+                              onClick={() => api.delete(`/cliente/${cliente.id}`, {
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
+                              })}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    ))
+                  )}
+                </Tbody>
+              </Table>
             </Flex>
           </GridItem>
         </Grid>
