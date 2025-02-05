@@ -31,7 +31,7 @@ const products: Product[] = Array(16).fill({
       </ProductDetails>
 
       <Text fontSize={40} fontWeight="600"padding={8} >Relacionados</Text>   
-       <ProductsGrid products={products}/>
+       {/* <ProductsGrid products={products}/> */}
     </>
   )
 }
