@@ -12,17 +12,18 @@ import { AddProductForm } from './AddProductForm'
 interface ViewerProps {
   isOpen: boolean
   onClose: () => void
-  title: string
+  title: string;
+  product?: any;
 }
 
-export function Viewer({ isOpen, onClose, title }: ViewerProps) {
+export function Viewer({ isOpen, onClose, title, product }: ViewerProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
         <ModalBody>
-          <AddProductForm title={title} />
+          <AddProductForm title={title} product={product}/>
         </ModalBody>
       </ModalContent>
     </Modal>

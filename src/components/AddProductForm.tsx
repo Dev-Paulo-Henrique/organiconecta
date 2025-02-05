@@ -33,20 +33,35 @@ import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '~hooks/useAuth'
 
 interface AddProductFormProps {
-  title: string
+  title: string;
+  product?: any;  // Produto pode ser passado como opcional
 }
-export function AddProductForm({ title }: AddProductFormProps) {
-  const [productName, setProductName] = useState('')
-  const [price, setPrice] = useState(0)
-  const [quantity, setQuantity] = useState(0)
+export function AddProductForm({ title, product }: AddProductFormProps) {
+  const [productName, setProductName] = useState(product?.produtoNome || '');
+  const [price, setPrice] = useState(product?.produtoPreco || 0);
+  const [quantity, setQuantity] = useState(product?.produtoQuantidade || 0);
   const [uploading, setUploading] = useState(false)
   const [progresspercent, setProgresspercent] = useState<number>(0)
-  const [description, setDescription] = useState('')
-  const [codigo, setCodigo] = useState(0)
+  const [description, setDescription] = useState(product?.produtoDescricao || '');
+  const [codigo, setCodigo] = useState(product?.produtoCodigo || 0);
   const [files, setFiles] = useState<File[]>([])
-  const [imgPreviews, setImgPreviews] = useState<string[]>([])
+  const [imgPreviews, setImgPreviews] = useState<string[]>(product?.produtoImagens || [])
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { user, token } = useAuth()
+
+  useEffect(() => {
+    // Se existir um produto, preenche os campos com os dados do produto
+    if (product) {
+      setProductName(product.produtoNome);
+      setPrice(product.produtoPreco);
+      setQuantity(product.produtoQuantidade);
+      setDescription(product.produtoDescricao);
+      setCodigo(product.produtoCodigo);
+      setFiles(product.produtoImagens)
+    }
+  }, [product]);
+
+  console.log("ADD", product)
 
   const handleRemoveFile = (index: number) => {
     const updatedFiles = [...files];
@@ -127,14 +142,30 @@ export function AddProductForm({ title }: AddProductFormProps) {
         };
   
         console.log(productData);
-        // Enviar os dados para a API
-        const response = await api.post('/produto', productData, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  
+        let response;
+  
+        if (product) {
+          // Se houver um produto, faz a requisição PUT para editar o produto
+          response = await api.put(`/produto/${product.id}`, productData, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        } else {
+          // Se não houver produto, faz a requisição POST para criar um novo produto
+          response = await api.post('/produto', productData, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+  
         console.log('Produto enviado com sucesso!', response.data);
+
+        window.location.reload()
   
         // Resetando os estados após o envio
         setCodigo(0);
@@ -151,16 +182,39 @@ export function AddProductForm({ title }: AddProductFormProps) {
     } else {
       // Se não houver arquivos selecionados, envia os dados sem as imagens
       const productData = {
-        productName,
-        price,
-        quantity,
-        description,
-        codigo,
+        produtoNome: productName,
+        produtoPreco: price,
+        produtoQuantidade: quantity,
+        produtoDescricao: description,
+        produtoCodigo: codigo,
       };
   
       try {
-        const response = await api.post('/produto', productData);
+        let response;
+  
+        if (product) {
+          // Se houver um produto, faz a requisição PUT para editar o produto
+          response = await api.put(`/produto/${product.id}`, productData, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        } else {
+          // Caso contrário, cria um novo produto
+          response = await api.post('/produto', productData, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+  
         console.log('Produto enviado com sucesso!', response.data);
+
+        window.location.reload()
+  
+        // Resetando os estados após o envio
         setCodigo(0);
         setDescription('');
         setFiles([]);
@@ -329,7 +383,7 @@ export function AddProductForm({ title }: AddProductFormProps) {
                       }}
                     />
                   </Box>
-                  <Text>{file.name}</Text>
+                  <Text>{file.name || `Imagem ${index + 1}` }</Text>
                 </HStack>
                 <Button
                   size="sm"
@@ -351,7 +405,7 @@ export function AddProductForm({ title }: AddProductFormProps) {
             onClick={handleSubmit}
             isLoading={uploading}
           >
-            Adicionar
+            {product ? 'Salvar Alterações' : 'Adicionar Produto'}
           </Button>
         </VStack>
       </form>

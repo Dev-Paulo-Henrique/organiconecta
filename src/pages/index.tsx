@@ -1,5 +1,3 @@
-// Paulo Henrique
-
 import {
   Box,
   Flex,
@@ -7,42 +5,60 @@ import {
   Grid,
   Image,
   Text,
-  // Button,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '~components/Button';
 import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
+import { useAuth } from '~hooks/useAuth';
 import { api } from '~services/api';
 import { storage } from '~services/firebase';
 
+// Interface do Produto
 interface Product {
-  name: string;
-  price: string;
-  quantity: string;
+  id: string;
+  produtoNome: string;
+  produtoPreco: number;
+  produtoImagens: string[];
+  produtoDescricao: string;
+  produtoCategoria: string;
+  produtoQuantidade: number;
 }
 
 const producers = Array(20).fill({ name: 'Produtor' });
-const products: Product[] = Array(16).fill({
-  name: 'Cebola roxa - Faz o L',
-  price: 'R$ 20,00',
-});
 
 export default function App() {
   const bg = useColorModeValue('gray.50', 'gray.900');
   const color = useColorModeValue('gray.800', 'gray.50');
+  const { token } = useAuth();
+  
+  const [products, setProducts] = useState<Product[]>([]);
 
   async function carregarCliente() {
-    await api.post("/tipocliente/inicializar")
+    await api.post("/tipocliente/inicializar");
+  }
+
+  async function carregarProdutos() {
+    try {
+      const response = await api.get("/produto", {
+        headers: {
+          "Authorization": `Bearer ${token}` 
+        }
+      });
+      if (response.data) {
+        setProducts(response.data);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar produtos:', error);
+    }
   }
 
   useEffect(() => {
-    carregarCliente()
-  })
-
-  console.log(storage)
+    carregarCliente();
+    carregarProdutos();
+  }, [token]);
 
   return (
     <Box bg={bg} color={color} minH="100vh">
@@ -76,6 +92,7 @@ export default function App() {
         </Flex>
       </Box>
 
+      {/* Passando os produtos para o ProductsGrid */}
       <ProductsGrid products={products} />
 
       <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4} p={8}>

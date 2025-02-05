@@ -13,8 +13,13 @@ import React from 'react'
 import { Button } from '~components/Button'
 
 interface Product {
-  name: string
-  price: string
+  id: string
+  produtoNome: string
+  produtoPreco: number
+  produtoImagens: string[]
+  produtoDescricao: string
+  produtoCategoria: string
+  produtoQuantidade: number
 }
 
 interface ProductsGridProps {
@@ -22,16 +27,23 @@ interface ProductsGridProps {
 }
 
 export function ProductsGrid({ products }: ProductsGridProps) {
+  // Função para formatar o valor para moeda BRL
+  const formatToBRL = (value: number) => {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value);
+  };
+
   return (
     <Grid
-    //   templateColumns="repeat(auto-fit, minmax(200px, 1fr))"
       templateColumns={{ base: "1fr 1fr", md: "repeat(auto-fit, minmax(200px, 1fr))" }}
       gap={4}
       p={8}
     >
-      {products.map((product, index) => (
+      {products.map((product) => (
         <Box
-          key={index}
+          key={product.id}
           p={4}
           borderWidth="1px"
           borderRadius="md"
@@ -40,17 +52,21 @@ export function ProductsGrid({ products }: ProductsGridProps) {
         >
           <Flex justifyContent={'center'}>
             <Image
-              src="/images/cebola-roxa.png"
-              alt={product.name}
+              src={product.produtoImagens[0]}  // Usando a primeira imagem do array
+              alt={product.produtoNome}
               borderRadius="md"
               mb={4}
+              maxW="100%" // Garantindo que a imagem não ultrapasse o tamanho do container
+              objectFit="contain" // Ajustando a imagem para caber no espaço
             />
           </Flex>
           <Heading size="sm" mb={2}>
-            {product.name}
+            {product.produtoNome}
           </Heading>
-          <Text mb={2}>{product.price}</Text>
-          <Button type={10} onClick={() => alert(`Você comprou ${product.name}`)}/>
+          <Text mb={2}>
+            {formatToBRL(product.produtoPreco)} {/* Formatação do preço como moeda BRL */}
+          </Text>
+          <Button type={10} onClick={() => alert(`Você comprou ${product.produtoNome}`)} />
         </Box>
       ))}
     </Grid>

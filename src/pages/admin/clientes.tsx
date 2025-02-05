@@ -110,6 +110,7 @@ export default function Clientes() {
                     <Th textAlign="start">CPF</Th>
                     <Th textAlign="start">Nome</Th>
                     <Th textAlign="start">E-mail</Th>
+                    <Th textAlign="start">Telefone</Th>
                     <Th textAlign="start">Ações</Th>
                   </Tr>
                 </Thead>
@@ -130,9 +131,10 @@ export default function Clientes() {
                         </Td>
                         <Td>{cliente.nome}</Td>
                         <Td>{cliente.usuario.username}</Td>
+                        <Td>{cliente.telefone}</Td>
                         <Td>
                           <Flex gap="2">
-                            <Icon
+                            {/* <Icon
                               as={IoEyeOutline}
                               boxSize="6"
                               cursor="pointer"
@@ -141,8 +143,8 @@ export default function Clientes() {
                               borderRadius="md"
                               p={1}
                               onClick={() => handleOpen('Visualizar Cliente')}
-                            />
-                            <Icon
+                            /> */}
+                            {/* <Icon
                               as={FiEdit3}
                               boxSize="6"
                               cursor="pointer"
@@ -151,7 +153,7 @@ export default function Clientes() {
                               borderRadius="md"
                               p={1}
                               onClick={() => handleOpen('Editar Cliente')}
-                            />
+                            /> */}
                             <Icon
                               as={PiTrash}
                               boxSize="6"
@@ -164,7 +166,7 @@ export default function Clientes() {
                                 headers: {
                                   Authorization: `Bearer ${token}`,
                                 },
-                              })}
+                              }).then(() => window.location.reload())}
                             />
                           </Flex>
                         </Td>
