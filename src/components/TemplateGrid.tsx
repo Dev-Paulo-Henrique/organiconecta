@@ -16,14 +16,14 @@ interface TemplateGridProps {
 export function TemplateGrid({ img, children }: TemplateGridProps) {
   return (
     <Grid
-      templateAreas={`"img main"`}
-      gridTemplateColumns={'40vw 1fr'}
+      templateAreas={{base: `"main"`, md: `"img main"`}}
+      gridTemplateColumns={{md:'40vw 1fr'}}
       h={'100vh'}
       gap="1"
       color="blackAlpha.700"
       fontWeight="bold"
     >
-      <GridItem area={'img'}>
+      <GridItem area={'img'} display={{ base: 'none', md: 'block' }}>
         <Flex align="center" justify="center" h="100vh">
           <Image
             src={img}
