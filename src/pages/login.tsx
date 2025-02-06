@@ -78,12 +78,14 @@ export default function Login() {
     <Box bg={bg}>
       <Title name="Login" />
       <TemplateGrid img='/images/Organic.png'>
-        <Flex align="center" justify="center" h="100vh">
+          <Box bgImage="url('/images/floating.png')" bgSize={"cover"} bgPosition={"center"} bgRepeat={"no-repeat"}>
+        <Flex align="center" maxW={"100%"} justify="center" h="100vh">
+
           <Flex
             as="form"
             w="100%"
             maxWidth={360}
-            bg={bg}
+            // bg={bg}
             p="8"
             borderRadius={8}
             flexDir="column"
@@ -209,6 +211,7 @@ export default function Login() {
             </Text>
           </Flex>
         </Flex>
+            </Box>
       </TemplateGrid>
     </Box>
   )

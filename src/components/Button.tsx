@@ -1,4 +1,5 @@
 import { Stack, Button as Btn, Text, Spinner } from '@chakra-ui/react'
+import { FiShoppingCart } from 'react-icons/fi'
 import { buttonsUtils } from '~utils/button'
 
 interface ButtonProps {
@@ -40,6 +41,7 @@ export function Button({
         w="full"
         isLoading={isLoading} // Isso ativa o carregamento no botão
         loadingText="" // Para não mostrar texto enquanto carrega
+        leftIcon={type === 10 ? <FiShoppingCart /> : undefined}
       >
         {/* Renderiza o conteúdo do botão, seja ele texto ou spinner */}
         {isLoading ? (

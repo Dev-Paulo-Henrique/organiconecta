@@ -74,12 +74,14 @@ export default function Cliente() {
     <Box bg={bg}>
       <Title name="Cadastrar cliente" />
       <TemplateGrid img="/images/photo-clientCadastro.jpg">
+      <Box bgImage="url('/images/floating.png')" bgSize={"cover"} bgPosition={"center"} bgRepeat={"no-repeat"}>
+
         <Flex align="center" justify="center" h="100vh" overflowY="auto">
           <Flex
             as="form"
             w="100%"
             maxWidth={360}
-            bg={bg}
+            // bg={bg}
             p="8"
             borderRadius={8}
             flexDir="column"
@@ -221,6 +223,7 @@ export default function Cliente() {
             </Flex>
           </Flex>
         </Flex>
+        </Box>
       </TemplateGrid>
     </Box>
   )

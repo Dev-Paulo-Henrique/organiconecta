@@ -124,7 +124,14 @@ export function Header() {
             as={'a'}
             href={link.href}
             color={color}
-            fontWeight={router.pathname === link.href ? 'bold' : 'normal'}
+            fontWeight={
+              router.pathname === "/produto" && link.href.includes("/produto") 
+                ? "bold"
+                : router.pathname === link.href 
+                ? "bold"
+                : "normal"
+            }
+            
           >
             {link.label}
           </Text>

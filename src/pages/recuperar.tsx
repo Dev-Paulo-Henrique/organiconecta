@@ -27,6 +27,7 @@ export default function ResetPassword() {
     <Box bg={bg}>
       <Title name="Recuperar senha" />
       <TemplateGrid img='/images/Organic.png'>
+      <Box bgImage="url('/images/floating.png')" bgSize={"cover"} bgPosition={"center"} bgRepeat={"no-repeat"}>
         <Flex align={'center'} justify={'center'} h={'100vh'}>
           <Flex
             as="form"
@@ -88,6 +89,7 @@ export default function ResetPassword() {
             </Stack>
           </Flex>
         </Flex>
+        </Box>
       </TemplateGrid>
     </Box>
   )

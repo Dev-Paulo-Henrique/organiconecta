@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '~components/Button';
+import { Footer } from '~components/Footer';
 import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
@@ -65,16 +66,20 @@ export default function App() {
     <Box bg={bg} color={color} minH="100vh">
       <Header />
       <Title />
-      <Flex bgImage="url('/images/ovelha.jpg')" alignItems={"center"} h={400} bgSize="cover" bgPos="center" p={8}>
-        <Box bg="rgba(255, 255, 255, 0.8)" p={6} borderRadius="md" maxH={150} maxW="600px">
-          <Heading size="lg">
+      <Flex bgImage="url('/images/farm.png')" alignItems={"center"} h={400} bgSize="cover" bgPos="center" p={8}>
+        <Box 
+        // bg="rgba(255, 255, 255, 0.8)"
+         p={6} borderRadius="md" maxH={150} maxW="700px">
+          <Heading size="2xl"
+          color={'white'}
+          >
             Conectando pessoas a produtos frescos, cultivados com carinho e
             dedicação.
           </Heading>
         </Box>
       </Flex>
 
-      <Box p={8} px={""}>
+      {/* <Box p={8} px={""}>
         <Heading size="md" mb={4}>
           Perfil de produtores
         </Heading>
@@ -91,9 +96,13 @@ export default function App() {
             />
           ))}
         </Flex>
-      </Box>
+      </Box> */}
 
       {/* Passando os produtos para o ProductsGrid */}
+
+      {products.length > 0 && <Heading size="2xl" p={8} >
+          Produtos Orgânicos
+        </Heading>}
       <ProductsGrid products={products} />
 
       <Grid templateColumns="repeat(auto-fit, minmax(200px, 1fr))" gap={4} p={8}>
@@ -116,6 +125,7 @@ export default function App() {
           <Button type={20} />
         </Box>
       </Grid>
+      <Footer/>
     </Box>
   );
 }

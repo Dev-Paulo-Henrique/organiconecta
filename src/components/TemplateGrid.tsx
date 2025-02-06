@@ -23,7 +23,7 @@ export function TemplateGrid({ img, children }: TemplateGridProps) {
       color="blackAlpha.700"
       fontWeight="bold"
     >
-      <GridItem bg="green.500" area={'img'}>
+      <GridItem area={'img'}>
         <Flex align="center" justify="center" h="100vh">
           <Image
             src={img}
@@ -31,7 +31,9 @@ export function TemplateGrid({ img, children }: TemplateGridProps) {
             width={'100%'}
             objectFit="cover"
             boxSize="100%"
-          ></Image>
+            borderRightRadius={20}
+            // borderRadius={"0 20px 20px 0"}
+          />
         </Flex>
       </GridItem>
       <GridItem area={'main'}>

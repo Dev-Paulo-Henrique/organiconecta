@@ -11,6 +11,7 @@ import { FiEdit3 } from 'react-icons/fi';
 import { PiTrash } from 'react-icons/pi';
 import { api } from '~services/api'; // Supondo que a API esteja configurada
 import { Loading } from '~components/Loading';
+import { IoEyeOutline } from 'react-icons/io5';
 
 export default function Product() {
   const { token, user } = useAuth(); // Agora estamos pegando o 'user' para verificar o tipo
@@ -110,6 +111,16 @@ export default function Product() {
                         <Td>{produto.produtoQuantidade}</Td>
                         <Td>
                           <Flex gap="2">
+                            <Icon
+                              as={IoEyeOutline}
+                              boxSize="6"
+                              cursor="pointer"
+                              bg="blue.500"
+                              color="white"
+                              borderRadius="md"
+                              p={1}
+                              onClick={() => router.push(`/produto?id=${produto.id}`)}
+                            />
                             <Icon
                               as={FiEdit3}
                               boxSize="6"
