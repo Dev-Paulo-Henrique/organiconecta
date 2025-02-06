@@ -1,96 +1,74 @@
-import {
-  Box,
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Icon,
-  Stack,
-  Text,
-  useDisclosure,
-  Input,
-  useColorModeValue,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-} from '@chakra-ui/react'
-
-import { Header } from '~components/Header'
-import { Viewer } from '~components/Modal'
-import { useState, useEffect } from 'react'
-import { Title } from '~components/Title'
-import { ListItem } from '~components/ListItem'
-import { useAuth } from '~hooks/useAuth'
-import { useRouter } from 'next/router'
-import { NotPermission } from '~components/NotPermission'
-import { FiEdit3 } from 'react-icons/fi'
-import { PiTrash } from 'react-icons/pi'
-import { api } from '~services/api' // Supondo que a API esteja configurada
-import { Loading } from '~components/Loading'
+import { Box, Button, Divider, Flex, Grid, GridItem, Icon, Stack, Text, useDisclosure, Input, useColorModeValue, Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
+import { Header } from '~components/Header';
+import { Viewer } from '~components/Modal';
+import { useState, useEffect } from 'react';
+import { Title } from '~components/Title';
+import { ListItem } from '~components/ListItem';
+import { useAuth } from '~hooks/useAuth';
+import { useRouter } from 'next/router';
+import { NotPermission } from '~components/NotPermission';
+import { FiEdit3 } from 'react-icons/fi';
+import { PiTrash } from 'react-icons/pi';
+import { api } from '~services/api'; // Supondo que a API esteja configurada
+import { Loading } from '~components/Loading';
 
 export default function Product() {
-  const { token, user } = useAuth() // Agora estamos pegando o 'user' para verificar o tipo
-  const router = useRouter()
-  const bg = useColorModeValue('gray.100', 'gray.800')
-  const color = useColorModeValue('gray.800', 'gray.100')
-  const { isOpen, onOpen, onClose } = useDisclosure()
-  const [title, setTitle] = useState<string>('')
-  const [products, setProducts] = useState<any[]>([]) // Array para armazenar os produtos
-  const [loading, setLoading] = useState<boolean>(true) // Estado de carregamento
-  const [editingProduct, setEditingProduct] = useState<any>(null)
+  const { token, user } = useAuth(); // Agora estamos pegando o 'user' para verificar o tipo
+  const router = useRouter();
+  const bg = useColorModeValue('gray.100', 'gray.800');
+  const color = useColorModeValue('gray.800', 'gray.100');
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [title, setTitle] = useState<string>('');
+  const [products, setProducts] = useState<any[]>([]); // Array para armazenar os produtos
+  const [loading, setLoading] = useState<boolean>(true); // Estado de carregamento
+  const [editingProduct, setEditingProduct] = useState<any>(null);
 
   // Verifica se o usuário é um produtor
-  const isProducer = user?.tipoCliente?.tipo === 'Produtor' // Verifique a estrutura real dos dados
+  const isProducer = user?.tipoCliente?.tipo === 'Produtor'; // Verifique a estrutura real dos dados
 
   const handleOpen = (newTitle: string) => {
-    setTitle(newTitle)
-    onOpen()
-  }
+    setTitle(newTitle);
+    onOpen();
+  };
 
   // Função para carregar os produtos
   useEffect(() => {
-    // Certifique-se de que o token não é undefined antes de fazer a requisição
     if (token) {
       const carregarProdutos = async () => {
         try {
-          setLoading(true)
+          setLoading(true);
           const response = await api.get('/produto', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          })
+          });
           if (response.data) {
-            setProducts(response.data) // Atualiza os produtos
+            setProducts(response.data); // Atualiza os produtos
           }
         } catch (error) {
-          console.error('Erro ao carregar os produtos:', error)
+          console.error('Erro ao carregar os produtos:', error);
         } finally {
-          setLoading(false) // Finaliza o carregamento
+          setLoading(false); // Finaliza o carregamento
         }
-      }
+      };
 
-      carregarProdutos() // Chama a função para carregar os produtos
+      carregarProdutos(); // Chama a função para carregar os produtos
     }
-  }, [token])
+  }, [token]);
 
   const handleEditProduct = (product: any) => {
-    setEditingProduct(product) // Carrega o produto no estado para edição
-    // console.log('t', product)
-    onOpen() // Abre o modal
-  }
+    setEditingProduct(product); // Carrega o produto no estado para edição
+    setTitle(product.produtoNome); // Atualiza o título do modal com o nome do produto
+    onOpen(); // Abre o modal
+  };
 
-  // console.log(products)
   // Se o usuário não for produtor, redireciona para a página inicial
   if (loading && token) {
-    return <Loading />
+    return <Loading />;
   }
 
   if (!isProducer) {
-    return <NotPermission />
+    return <NotPermission />;
   }
 
   return (
@@ -100,15 +78,7 @@ export default function Product() {
       <Box bg={bg} p={8} minH="100vh">
         <Grid templateAreas={`"main"`} gap="4">
           <GridItem area="main">
-            <Flex
-              as="form"
-              bg={bg}
-              p="8"
-              borderRadius="8"
-              flexDir="column"
-              maxW="1200px"
-              mx="auto"
-            >
+            <Flex as="form" bg={bg} p="8" borderRadius="8" flexDir="column" maxW="1200px" mx="auto">
               {/* Tabela para mostrar os produtos */}
               <Table variant="simple" colorScheme="gray">
                 <Thead>
@@ -148,7 +118,7 @@ export default function Product() {
                               color="black"
                               borderRadius="md"
                               p={1}
-                              onClick={() => handleEditProduct(produto)}
+                              onClick={() => handleEditProduct(produto)} // Chama a função passando o produto correto
                             />
                             <Icon
                               as={PiTrash}
@@ -167,12 +137,6 @@ export default function Product() {
                               }
                             />
                           </Flex>
-                          <Viewer
-                            isOpen={isOpen}
-                            onClose={onClose}
-                            title={title}
-                            product={produto}
-                          />
                         </Td>
                       </Tr>
                     ))
@@ -183,6 +147,16 @@ export default function Product() {
           </GridItem>
         </Grid>
       </Box>
+
+      {/* Modal de edição do produto */}
+      {editingProduct && (
+        <Viewer
+          isOpen={isOpen}
+          onClose={onClose}
+          title={title}
+          product={editingProduct} // Passa o produto que foi selecionado para editar
+        />
+      )}
     </>
-  )
+  );
 }

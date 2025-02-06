@@ -380,7 +380,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
                 <Textarea
                   placeholder="Escreva a descrição do produto"
                   value={description}
-                  // maxLength={255}
+                  maxLength={255}
                   onChange={e => setDescription(e.target.value)}
                   focusBorderColor="green.500"
                   borderColor="green.600"
