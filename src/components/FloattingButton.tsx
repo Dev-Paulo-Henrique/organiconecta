@@ -17,7 +17,7 @@ export function FloattingButton() {
       colorScheme="green"
       borderRadius="full"
       size="lg"
-      onClick={() => router.push("/carrinho")}
+      // onClick={() => router.push("/carrinho")} -- Ajustar, era pra ser o botão de carrinho
     />
   )
 }

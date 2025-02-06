@@ -39,6 +39,7 @@ export function Button({
         onClick={typeOnClick || onClick}
         colorScheme={colorScheme || typeColorScheme}
         w="full"
+        fontSize={{ base: "sm", md: "md" }}
         isLoading={isLoading} // Isso ativa o carregamento no botão
         loadingText="" // Para não mostrar texto enquanto carrega
         leftIcon={type === 10 ? <FiShoppingCart /> : undefined}
