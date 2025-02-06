@@ -19,60 +19,75 @@ import {
   InputLeftElement,
   InputRightElement,
   Center,
+  Select,
 } from '@chakra-ui/react'
 import { PiOrange } from 'react-icons/pi'
 import { RiMoneyDollarCircleLine } from 'react-icons/ri'
 import { FiBox } from 'react-icons/fi'
 import { TiPencil } from 'react-icons/ti'
+import { BiCategory } from 'react-icons/bi'
 import { api } from '~services/api'
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from 'react'
 // import { Button } from './Button'
 import { storage } from '../services/firebase'
-import { ref, uploadBytesResumable, getDownloadURL, getStorage } from 'firebase/storage'
-import { v4 as uuidv4 } from 'uuid';
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  getStorage,
+} from 'firebase/storage'
+import { v4 as uuidv4 } from 'uuid'
 import { useAuth } from '~hooks/useAuth'
 
 interface AddProductFormProps {
-  title: string;
-  product?: any;  // Produto pode ser passado como opcional
+  title: string
+  product?: any // Produto pode ser passado como opcional
 }
 export function AddProductForm({ title, product }: AddProductFormProps) {
-  const [productName, setProductName] = useState(product?.produtoNome || '');
-  const [price, setPrice] = useState(product?.produtoPreco || 0);
-  const [quantity, setQuantity] = useState(product?.produtoQuantidade || 0);
+  const [productName, setProductName] = useState(product?.produtoNome || '')
+  const [productCategory, setProductCategory] = useState(
+    product?.produtoCategoria || '',
+  )
+  const [price, setPrice] = useState(product?.produtoPreco || 0)
+  const [quantity, setQuantity] = useState(product?.produtoQuantidade || 0)
   const [uploading, setUploading] = useState(false)
   const [progresspercent, setProgresspercent] = useState<number>(0)
-  const [description, setDescription] = useState(product?.produtoDescricao || '');
-  const [codigo, setCodigo] = useState(product?.produtoCodigo || 0);
+  const [description, setDescription] = useState(
+    product?.produtoDescricao || '',
+  )
+  const [codigo, setCodigo] = useState(product?.produtoCodigo || 0)
   const [files, setFiles] = useState<File[]>([])
-  const [imgPreviews, setImgPreviews] = useState<string[]>(product?.produtoImagens || [])
+  const [imgPreviews, setImgPreviews] = useState<string[]>(
+    product?.produtoImagens || [],
+  )
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { user, token } = useAuth()
 
   useEffect(() => {
     // Se existir um produto, preenche os campos com os dados do produto
     if (product) {
-      setProductName(product.produtoNome);
-      setPrice(product.produtoPreco);
-      setQuantity(product.produtoQuantidade);
-      setDescription(product.produtoDescricao);
-      setCodigo(product.produtoCodigo);
+      setProductName(product.produtoNome)
+      setProductCategory(product.produtoCategoria)
+      setPrice(product.produtoPreco)
+      setQuantity(product.produtoQuantidade)
+      setDescription(product.produtoDescricao)
+      setCodigo(product.produtoCodigo)
       setFiles(product.produtoImagens)
     }
-  }, [product]);
+  }, [product])
 
-  console.log("ADD", product)
+  // console.log("ADD", product)
 
   const handleRemoveFile = (index: number) => {
-    const updatedFiles = [...files];
-    const updatedPreviews = [...imgPreviews];
-  
-    updatedFiles.splice(index, 1);
-    updatedPreviews.splice(index, 1);
-  
-    setFiles(updatedFiles);
-    setImgPreviews(updatedPreviews);
-  };  
+    const updatedFiles = [...files]
+    const updatedPreviews = [...imgPreviews]
+
+    updatedFiles.splice(index, 1)
+    updatedPreviews.splice(index, 1)
+
+    setFiles(updatedFiles)
+    setImgPreviews(updatedPreviews)
+  }
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = event.target.files
@@ -87,64 +102,82 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
     event.target.value = ''
   }
 
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+
+    const newFiles = Array.from(event.dataTransfer.files) as File[]
+    const newPreviews = newFiles.map(file => URL.createObjectURL(file))
+
+    setFiles(prevFiles => [...prevFiles, ...newFiles])
+    setImgPreviews(prevPreviews => [...prevPreviews, ...newPreviews])
+  }
+
+  // Função para evitar o comportamento padrão do dragover
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
+    event.preventDefault()
+  }
+
   const handleSubmit = async (e: FormEvent<any>) => {
-    e.preventDefault();
-  
+    e.preventDefault()
+
     if (files.length > 0) {
-      setUploading(true);
-      const fileUrls: string[] = []; // Array para armazenar as URLs das imagens
-  
+      setUploading(true)
+      const fileUrls: string[] = [] // Array para armazenar as URLs das imagens
+
       // Gerando o UUID para o produto antes do upload
-      const productUUID = uuidv4();
-  
+      const productUUID = uuidv4()
+
       // Para cada arquivo em files, faça o upload para o Firebase Storage
-      const uploadPromises = files.map((file) => {
-        const storageRef = ref(storage, `products/${user?.id}/${productUUID}/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-  
+      const uploadPromises = files.map(file => {
+        const storageRef = ref(
+          storage,
+          `products/${user?.id}/${productUUID}/${file.name}`,
+        )
+        const uploadTask = uploadBytesResumable(storageRef, file)
+
         return new Promise<string>((resolve, reject) => {
           uploadTask.on(
             'state_changed',
-            (snapshot) => {
+            snapshot => {
               const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              setProgresspercent(progress); // Atualizando o progresso do upload
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+              )
+              setProgresspercent(progress) // Atualizando o progresso do upload
             },
-            (error) => {
-              console.error('Erro ao fazer upload:', error);
-              reject(error);
+            error => {
+              console.error('Erro ao fazer upload:', error)
+              reject(error)
             },
             () => {
               // Obtendo a URL de download após o upload
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                fileUrls.push(downloadURL); // Armazenando a URL do arquivo no array
-                resolve(downloadURL);
-              });
-            }
-          );
-        });
-      });
-  
+              getDownloadURL(uploadTask.snapshot.ref).then(downloadURL => {
+                fileUrls.push(downloadURL) // Armazenando a URL do arquivo no array
+                resolve(downloadURL)
+              })
+            },
+          )
+        })
+      })
+
       try {
         // Aguardar o upload de todos os arquivos
-        await Promise.all(uploadPromises);
-  
+        await Promise.all(uploadPromises)
+
         // Dados do produto com as URLs das imagens
         const productData = {
           produtoNome: productName,
           produtoPreco: price,
           produtoQuantidade: quantity,
           produtoDescricao: description,
-          produtoCodigo: productUUID,  // Usando o UUID gerado para o código do produto
-          produtoCategoria: 'Orgânico',
+          produtoCodigo: productUUID, // Usando o UUID gerado para o código do produto
+          produtoCategoria: productCategory,
           produtoImagens: fileUrls, // Armazenando as URLs das imagens no banco de dados
-        };
-  
-        console.log(productData);
-  
-        let response;
-  
+        }
+
+        console.log(productData)
+
+        let response
+
         if (product) {
           // Se houver um produto, faz a requisição PUT para editar o produto
           response = await api.put(`/produto/${product.id}`, productData, {
@@ -152,7 +185,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          });
+          })
         } else {
           // Se não houver produto, faz a requisição POST para criar um novo produto
           response = await api.post('/produto', productData, {
@@ -160,38 +193,40 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          });
+          })
         }
-  
-        console.log('Produto enviado com sucesso!', response.data);
+
+        console.log('Produto enviado com sucesso!', response.data)
 
         window.location.reload()
-  
+
         // Resetando os estados após o envio
-        setCodigo(0);
-        setDescription('');
-        setFiles([]);
-        setPrice(0);
-        setProductName('');
-        setQuantity(0);
-        setUploading(false);
+        setCodigo(0)
+        setDescription('')
+        setFiles([])
+        setPrice(0)
+        setProductName('')
+        setProductCategory('')
+        setQuantity(0)
+        setUploading(false)
       } catch (error) {
-        console.log('Erro ao enviar produto', error);
-        setUploading(false);
+        console.log('Erro ao enviar produto', error)
+        setUploading(false)
       }
     } else {
       // Se não houver arquivos selecionados, envia os dados sem as imagens
       const productData = {
         produtoNome: productName,
+        produtoCategoria: productCategory,
         produtoPreco: price,
         produtoQuantidade: quantity,
         produtoDescricao: description,
         produtoCodigo: codigo,
-      };
-  
+      }
+
       try {
-        let response;
-  
+        let response
+
         if (product) {
           // Se houver um produto, faz a requisição PUT para editar o produto
           response = await api.put(`/produto/${product.id}`, productData, {
@@ -199,7 +234,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          });
+          })
         } else {
           // Caso contrário, cria um novo produto
           response = await api.post('/produto', productData, {
@@ -207,25 +242,26 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
             },
-          });
+          })
         }
-  
-        console.log('Produto enviado com sucesso!', response.data);
+
+        console.log('Produto enviado com sucesso!', response.data)
 
         window.location.reload()
-  
+
         // Resetando os estados após o envio
-        setCodigo(0);
-        setDescription('');
-        setFiles([]);
-        setPrice(0);
-        setProductName('');
-        setQuantity(0);
+        setCodigo(0)
+        setDescription('')
+        setFiles([])
+        setPrice(0)
+        setProductName('')
+        setProductCategory('')
+        setQuantity(0)
       } catch (error) {
-        console.log('Erro ao enviar produto', error);
+        console.log('Erro ao enviar produto', error)
       }
     }
-  };
+  }
 
   const handleFileClick = () => {
     fileInputRef.current?.click()
@@ -246,7 +282,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
       </HStack>
       <form>
         <VStack spacing={4}>
-          {/* Nome do Produto */}
+          {/* Category do Produto */}
           <FormControl id="productName" isRequired>
             <FormLabel fontWeight="bold">Nome do Produto</FormLabel>
             <InputGroup>
@@ -260,6 +296,27 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
                 focusBorderColor="green.500"
                 bg="white"
               />
+            </InputGroup>
+          </FormControl>
+
+          <FormControl id="productCategory" isRequired>
+            <FormLabel fontWeight="bold">Categoria</FormLabel>
+            <InputGroup>
+              <Select
+                placeholder="Selecione uma categoria"
+                value={productCategory}
+                onChange={e => setProductCategory(e.target.value)}
+                focusBorderColor="green.500"
+                bg="white"
+              >
+                <option value="Fruta">Fruta</option>
+                <option value="Verdura">Verdura</option>
+                <option value="Legume">Legume</option>
+                <option value="Cereal">Cereal</option>
+                <option value="Grão">Grão</option>
+                <option value="Laticínio">Laticínio</option>
+                <option value="Carne">Carne</option>
+              </Select>
             </InputGroup>
           </FormControl>
 
@@ -323,6 +380,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
                 <Textarea
                   placeholder="Escreva a descrição do produto"
                   value={description}
+                  maxLength={255}
                   onChange={e => setDescription(e.target.value)}
                   focusBorderColor="green.500"
                   borderColor="green.600"
@@ -351,6 +409,8 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
                 bg="gray.50"
                 _hover={{ bg: 'gray.100' }}
                 onClick={handleFileClick}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
               >
                 Arraste e solte aqui para fazer upload <br />
                 <Text fontSize="sm" color="gray.500">
@@ -370,7 +430,12 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
 
           {files &&
             files.map((file, index) => (
-              <HStack key={file.name} justify="space-between" w="full" align="center">
+              <HStack
+                key={file.name}
+                justify="space-between"
+                w="full"
+                align="center"
+              >
                 <HStack>
                   <Box boxSize="50px" overflow="hidden" borderRadius="md">
                     <img
@@ -383,7 +448,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
                       }}
                     />
                   </Box>
-                  <Text>{file.name || `Imagem ${index + 1}` }</Text>
+                  <Text>{file.name || `Imagem ${index + 1}`}</Text>
                 </HStack>
                 <Button
                   size="sm"

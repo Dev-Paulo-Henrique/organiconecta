@@ -9,6 +9,7 @@ import { Viewer } from './Modal'
 import { useState, useEffect } from 'react'
 import { useAuth } from '~hooks/useAuth'
 import { api } from '~services/api'
+import { Loading } from './Loading'
 
 export function Header() {
   const bg = useColorModeValue('white', 'gray.900')
@@ -17,6 +18,8 @@ export function Header() {
   const { token, user } = useAuth() // Obtendo o token e o usuário do contexto
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [title, setTitle] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(true)
+  const [isValidToken, setIsValidToken] = useState<boolean>(false)
 
   // Adicionando estado de loading para o botão de ativação/desativação do plano
   const [loadingPlan, setLoadingPlan] = useState<boolean>(false)
@@ -25,6 +28,40 @@ export function Header() {
   const handleOpen = (newTitle: string) => {
     setTitle(newTitle)
     onOpen()
+  }
+
+  async function loadToken() {
+    if (!token) {
+      setLoading(false)
+      return
+    }
+
+    try {
+      const response = await api.get('/cliente', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      setIsValidToken(response.data)
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      localStorage.removeItem("email")
+      localStorage.removeItem("token")
+      window.location.reload()
+      console.error('Erro ao carregar token', error)
+    }
+  }
+
+  useEffect(() => {
+    // if (token) {
+      loadToken()
+    // }
+  }, [])
+
+  if(loading){
+    return <Loading/>
   }
 
   const links = [

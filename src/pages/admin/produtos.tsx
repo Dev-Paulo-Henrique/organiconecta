@@ -30,6 +30,7 @@ import { NotPermission } from '~components/NotPermission'
 import { FiEdit3 } from 'react-icons/fi'
 import { PiTrash } from 'react-icons/pi'
 import { api } from '~services/api' // Supondo que a API esteja configurada
+import { Loading } from '~components/Loading'
 
 export default function Product() {
   const { token, user } = useAuth() // Agora estamos pegando o 'user' para verificar o tipo
@@ -78,12 +79,16 @@ export default function Product() {
 
   const handleEditProduct = (product: any) => {
     setEditingProduct(product) // Carrega o produto no estado para edição
-    console.log('t', product)
+    // console.log('t', product)
     onOpen() // Abre o modal
   }
 
-  console.log(products)
+  // console.log(products)
   // Se o usuário não for produtor, redireciona para a página inicial
+  if (loading && token) {
+    return <Loading />
+  }
+
   if (!isProducer) {
     return <NotPermission />
   }

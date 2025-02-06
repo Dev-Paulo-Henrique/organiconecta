@@ -69,7 +69,7 @@ export const buttonsUtils = {
       bg: "green.500",
       color: "white",
       colorScheme: "green",
-      onClick: () => alert("Você clicou no botão Comprar"),
+      onClick: null,
     },
     11: {
       text: "Login",
