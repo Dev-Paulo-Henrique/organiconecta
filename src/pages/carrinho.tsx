@@ -18,46 +18,42 @@ import {
 import React from 'react'
 import { Header } from '~components/Header'
 import { Title } from '~components/Title'
+import { useCart } from '~components/useCart'
+
 
 interface Product {
-  id: number
-  name: string
-  producer: string
-  price: string
-  quantity: number
-  image: string
+  id: string
+  produtoNome: string
+  produtoPreco: number | string
+  produtoImagens: string[]
+  produtoDescricao: string
+  produtoCategoria: string
+  produtoCodigo?: string
+  produtoQuantidade: number | string
+  quantity:number
 }
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Cebola Roxa',
-    producer: 'Produtor',
-    price: 'R$ 20,00',
-    quantity: 0,
-    image: '/images/cebola-roxa.png',
-  },
-  {
-    id: 2,
-    name: 'Morango',
-    producer: 'Produtor',
-    price: 'R$ 15,00',
-    quantity: 0,
-    image: '/images/cebola-roxa.png',
-  },
-  {
-    id: 3,
-    name: 'Pimentão Amarelo',
-    producer: 'Produtor',
-    price: 'R$ 10,00',
-    quantity: 0,
-    image: '/images/cebola-roxa.png',
-  },
-]
 
 export default function Carrinho() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+
+  // Pegando os dados do carrinho do contexto
+  const { cartItems, addToCart, removeFromCart } = useCart(); // Acesso aos itens do carrinho e funções
+
+  // Função para atualizar a quantidade de um produto
+  const updateQuantity = (productId: string, operation: 'increment' | 'decrement') => {
+    const updatedProduct = cartItems.find(product => product.id === productId);
+    if (!updatedProduct) return;
+
+    if (operation === 'increment') {
+      updatedProduct.quantity += 1;
+    } else if (operation === 'decrement' && updatedProduct.quantity > 1) {
+      updatedProduct.quantity -= 1;
+    }
+
+    // Atualizando o carrinho com a nova quantidade
+    addToCart(updatedProduct);
+  }
 
   return (
     <Box bg={bg} minH="100vh">
@@ -76,7 +72,7 @@ export default function Carrinho() {
             Carrinho
           </Heading>
           <Stack spacing={4}>
-            {products.map(product => (
+            {cartItems.map(product => (
               <Flex
                 key={product.id}
                 p={4}
@@ -85,29 +81,29 @@ export default function Carrinho() {
                 alignItems="center"
               >
                 <Image
-                  src={product.image}
-                  alt={product.name}
+                  src={product.produtoImagens[0]}
+                  alt={product.produtoNome}
                   boxSize="80px"
                   objectFit="cover"
                   borderRadius="md"
                   mr={4}
                 />
                 <Box flex="1">
-                  <Text color={color}>{product.name}</Text>
+                  <Text color={color}>{product.produtoNome}</Text>
                   <Text fontSize="sm" color={color}>
-                    {product.producer}
+                    {product.produtoPreco}
                   </Text>
                 </Box>
                 <Flex alignItems="center">
                   <Button size="sm" mr={2}>
                     -
                   </Button>
-                  <Text color={color}>{product.quantity} </Text>
+                  <Text color={color}>{product.produtoQuantidade}</Text>
                   <Button size="sm" ml={2}>
                     +
                   </Button>
                 </Flex>
-                <Text ml={4}>{product.price}</Text>
+            
               </Flex>
             ))}
           </Stack>
@@ -128,6 +124,8 @@ export default function Carrinho() {
               Resumo do Pedido
             </Heading>
             <Stack spacing={2}>
+              {}
+
               <Flex justifyContent="space-between">
                 <Text>Valor dos produtos</Text>
                 <Text>R$ 0,00</Text>
@@ -154,7 +152,15 @@ export default function Carrinho() {
               <Text>Total</Text>
               <Text>R$ 0,00</Text>
             </Flex>
-            <Button mt={4} colorScheme="green" width="full">
+            <Button
+              mt={4}
+              colorScheme="green"
+              width="full"
+              onClick={() =>
+                (window.location.href =
+                  'https://buy.stripe.com/test_cN2cQseId2cH0Bq9AA')
+              }
+            >
               Finalizar compra
             </Button>
           </Box>

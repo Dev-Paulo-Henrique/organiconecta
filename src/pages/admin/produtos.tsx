@@ -217,7 +217,7 @@ export default function Product() {
                   )}
                 </Tbody>
               </Table>
-
+               
               {/* Paginação */}
               <Flex justify="center" align="center" mt={5} gap={5}>
                 <Button

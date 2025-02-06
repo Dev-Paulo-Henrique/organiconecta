@@ -2,7 +2,7 @@
 
 import { ChakraProvider } from '@chakra-ui/react'
 import 'react-color-picker/index.css'
-
+import { CartProvider } from '~contexts/CartContext'
 import { AuthContextProvider } from '../contexts/AuthContext'
 
 import { AppProps } from 'next/app'
@@ -18,8 +18,10 @@ export default function Main({ Component, pageProps }: AppProps) {
       <ToastContainer />
       <ColorModeProvider>
         <AuthContextProvider>
-        <ColorModeButton />
-          <Component {...pageProps} />
+          <CartProvider> {/* Envolva com CartProvider */}
+            <ColorModeButton />
+            <Component {...pageProps} />
+          </CartProvider>
         </AuthContextProvider>
         <FloattingButton />
       </ColorModeProvider>
