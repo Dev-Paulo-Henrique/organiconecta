@@ -24,6 +24,7 @@ interface Product {
   produtoImagens: string[];
   produtoDescricao: string;
   produtoCategoria: string;
+  produtoCodigo: string;
   produtoQuantidade: number;
 }
 
