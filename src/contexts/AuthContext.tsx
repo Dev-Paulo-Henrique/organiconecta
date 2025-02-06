@@ -67,7 +67,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       if (user) {
         setUser(user);  // Armazenando o usuário no estado
-        console.log("Usuário encontrado:", user);
+        // console.log("Usuário encontrado:", user);
       } else {
         console.log("Usuário não encontrado com esse email.");
       }

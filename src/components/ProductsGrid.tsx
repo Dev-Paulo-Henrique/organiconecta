@@ -78,7 +78,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           </Text>
           <Button
             type={10}
-            onClick={() => router.push(`/produto?id=${product.produtoCodigo}`)}
+            onClick={() => router.push(`/produto?id=${product.id}`)}
           />
         </Box>
       ))}

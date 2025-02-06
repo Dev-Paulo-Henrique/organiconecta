@@ -30,39 +30,39 @@ export function Header() {
     onOpen()
   }
 
-  async function loadToken() {
-    if (!token) {
-      setLoading(false)
-      return
-    }
+  // async function loadToken() {
+  //   if (!token) {
+  //     setLoading(false)
+  //     return
+  //   }
 
-    try {
-      const response = await api.get('/cliente', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+  //   try {
+  //     const response = await api.get('/cliente', {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
 
-      setIsValidToken(response.data)
-      setLoading(false)
-    } catch (error) {
-      setLoading(false)
-      localStorage.removeItem("email")
-      localStorage.removeItem("token")
-      window.location.reload()
-      console.error('Erro ao carregar token', error)
-    }
-  }
+  //     setIsValidToken(response.data)
+  //     setLoading(false)
+  //   } catch (error) {
+  //     setLoading(false)
+  //     localStorage.removeItem("email")
+  //     localStorage.removeItem("token")
+  //     window.location.reload()
+  //     console.error('Erro ao carregar token', error)
+  //   }
+  // }
 
-  useEffect(() => {
-    // if (token) {
-      loadToken()
-    // }
-  }, [])
+  // useEffect(() => {
+  //   if (token) {
+  //     loadToken()
+  //   }
+  // }, [])
 
-  if(loading){
-    return <Loading/>
-  }
+  // if(loading){
+  //   return <Loading/>
+  // }
 
   const links = [
     { href: '/', label: 'Início' },

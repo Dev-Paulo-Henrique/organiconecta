@@ -10,7 +10,7 @@ export default function ErrorPage() {
     
   return (
     <Box bg={bg}>
-      <Title name="404" />
+      <Title name="Error 404" />
       <Flex
         maxW="1120px"
         h="100vh"
@@ -22,10 +22,10 @@ export default function ErrorPage() {
         <Text fontSize="2rem" fontWeight="bold" lineHeight="4.5rem" color={color}>
           Página não encontrada!
         </Text>
-        <Text color="green.900" fontWeight="bold">
+        <Text color="green.500" fontWeight="bold">
           OrganiConecta
         </Text>
-        <Button onClick={() => window.history.back()} mt={3}>Voltar</Button>
+        <Button bg={color} colorScheme='green' color={bg} onClick={() => window.history.back()} mt={3}>Voltar</Button>
       </Flex>
     </Box>
   )

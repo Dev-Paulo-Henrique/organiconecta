@@ -1,70 +1,114 @@
-//Gisele Oliveira
-
-import { Flex, Image, Text, Box, Grid, Button } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { Flex, Image, Text, Box, Button } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import theme from '~styles/theme'
+import { useRouter } from 'next/router'
 
 interface ProductDetailsProps {
-  backgroundImg: string
+  img: string
   alt: string
-  children:React.ReactNode;
+  price: string
+  id: string
+  quantity: string
+  children: React.ReactNode
 }
+
 export function ProductDetails({
   children,
   alt,
-  backgroundImg,
+  img,
+  price,
+  id,
+  quantity
 }: ProductDetailsProps) {
+  const [isClient, setIsClient] = useState(false)
+    const router = useRouter()
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const bg = useColorModeValue('gray.100', 'gray.800')
+  const buttonBg = useColorModeValue(
+    theme.colors.green[500],
+    theme.colors.green[600],
+  )
+  const buttonColor = useColorModeValue(
+    theme.colors.gray[100],
+    theme.colors.gray[100],
+  )
+
+  if (!isClient) {
+    return null
+  }
 
   return (
-    <>
-      <Flex alignItems={'center'} justifyContent={'center'} gap={9}>
-        <Flex flexDir="column" alignItems={'center'}>
-          <Box
-            flexDir="column"
-            p={4}
-            borderWidth="1px"
-            borderRadius="md"
-            bg="white"
-            boxShadow="sm"
-            h="auto"
-            w={'350px'}
-          >
-            <Image
-              src={backgroundImg}
-              alt={alt}
-              w={'350px'}
-              h="auto"
-              objectFit="cover"
-            ></Image>
-          </Box>
-          <Button
-            w={350}
-            type="submit"
-            mt="6"
-            colorScheme="green"
-            bg={useColorModeValue(
-              theme.colors.green[700],
-              theme.colors.green[500],
-            )}
-            size="lg"
-            color={useColorModeValue(
-              theme.colors.gray[100],
-              theme.colors.gray[100],
-            )}
-          >
-            Comprar
-          </Button>
-        </Flex>
+    <Flex gap={20} pt={20}>
+      <Flex flexDir="column" alignItems={'center'}>
         <Box
-          display="flex"
-          alignItems="start"
-          justifyContent="start"
-          flexDir="column"
+          position="relative" // Define o container como referência
+          p={4}
+          borderWidth="1px"
+          borderRadius="md"
+          boxShadow="sm"
+          bg={"white"}
+          h="auto"
+          w={'350px'}
+          textAlign="center"
         >
-          <Text w={'35rem'}>{children}</Text>
+          {/* Preço posicionado em cima da imagem */}
+          <Box
+            position="absolute"
+            top="10px"
+            left="10px"
+            bg="green.500"
+            color="white"
+            px="3"
+            py="1"
+            borderRadius="md"
+            fontWeight="bold"
+            fontSize="sm"
+          >
+            {new Intl.NumberFormat('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            }).format(parseFloat(price))} / KG
+          </Box>
+
+          <Image
+            src={img}
+            alt={alt}
+            w={300}
+            h={300}
+            objectFit="contain"
+            borderRadius="md"
+          />
         </Box>
+        <Button
+          w={350}
+          type="submit"
+          mt="6"
+          colorScheme="green"
+          bg={buttonBg}
+          size="lg"
+          p={10}
+          fontSize={24}
+          textTransform={"uppercase"}
+          fontWeight={"bold"}
+          color={buttonColor}
+          onClick={() => router.push(`/carrinho?id=${id}`)}
+        >
+          Comprar
+        </Button>
+        <Text mt={2}>{quantity} itens restantes</Text>
       </Flex>
-    </>
+      <Flex
+        // alignItems="start"
+        // justifyContent="start"
+        flexDir="column"
+      >
+        {children}
+      </Flex>
+    </Flex>
   )
 }
