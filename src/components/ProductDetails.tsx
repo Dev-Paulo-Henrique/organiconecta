@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { Flex, Image, Text, Box, Button } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import theme from '~styles/theme'
@@ -10,7 +10,8 @@ interface ProductDetailsProps {
   price: string
   id: string
   quantity: string
-  children: React.ReactNode
+  onClick: () => void
+  children: ReactNode
 }
 
 export function ProductDetails({
@@ -19,7 +20,8 @@ export function ProductDetails({
   img,
   price,
   id,
-  quantity
+  quantity,
+  onClick
 }: ProductDetailsProps) {
   const [isClient, setIsClient] = useState(false)
     const router = useRouter()
@@ -96,9 +98,9 @@ export function ProductDetails({
           textTransform={"uppercase"}
           fontWeight={"bold"}
           color={buttonColor}
-          onClick={() => router.push(`/carrinho?id=${id}`)}
+          onClick={onClick}
         >
-          Comprar
+          Comprar agora
         </Button>
         <Text mt={2}>{quantity} itens restantes</Text>
       </Flex>

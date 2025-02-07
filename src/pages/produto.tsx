@@ -12,6 +12,7 @@ import { useColorModeValue } from "~components/ui/color-mode";
 import { Title } from "~components/Title";
 import { ProductsGrid } from "~components/ProductsGrid";
 import { Footer } from "~components/Footer";
+import { useCart } from "~hooks/useCart";
 
 interface Product {
   produtoNome: string;
@@ -29,6 +30,7 @@ export default function Produto() {
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { addItem } = useCart();
   const bg = useColorModeValue("gray.100", "gray.800");
 
   const router = useRouter();
@@ -95,13 +97,24 @@ export default function Produto() {
     <>
       <Header />
       <Title name={product.produtoNome} />
-      <Box px={60} py={"auto"} h={"100%"} bg={"gray.100"}>
+      <Box px={10} py={"auto"} h={"100%"} bg={"gray.100"}>
         <ProductDetails
           img={product.produtoImagens[0]}
           alt={`Imagem de ${product.produtoNome}`}
           price={product.produtoPreco}
           id={product.id}
           quantity={product.produtoQuantidade}
+          onClick={() => {
+            router.push("/carrinho"),
+            addItem({
+              id: product.id,
+              produtoNome: product.produtoNome,
+              produtoPreco: product.produtoPreco,
+              quantity: 1,
+              produtoImagens: product.produtoImagens[0],
+              produtoQuantidade: product.produtoQuantidade
+            });
+          }}
         >
           <Text fontSize={60} fontWeight="bold" textTransform={"uppercase"}>
             {product.produtoNome}

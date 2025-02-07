@@ -18,12 +18,12 @@ export default function Main({ Component, pageProps }: AppProps) {
       <ToastContainer />
       <ColorModeProvider>
         <AuthContextProvider>
-          <CartProvider> {/* Envolva com CartProvider */}
+          <CartProvider>
             <ColorModeButton />
             <Component {...pageProps} />
+            <FloattingButton />
           </CartProvider>
         </AuthContextProvider>
-        <FloattingButton />
       </ColorModeProvider>
     </ChakraProvider>
   )
