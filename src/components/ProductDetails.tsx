@@ -45,7 +45,12 @@ export function ProductDetails({
   }
 
   return (
-    <Flex gap={20} pt={20}>
+    <Flex
+     gap={{base: 5, md: 20}} 
+     pt={{base: 10, md: 20}}
+     flexDir={{ base: 'column', md: 'row' }} 
+      alignItems="center" // Centraliza os itens em mobile
+     >
       <Flex flexDir="column" alignItems={'center'}>
         <Box
           position="relative" // Define o container como referência
@@ -55,7 +60,7 @@ export function ProductDetails({
           boxShadow="sm"
           bg={"white"}
           h="auto"
-          w={'350px'}
+          w={{base: '280px', md: '350px'}}
           textAlign="center"
         >
           {/* Preço posicionado em cima da imagem */}
@@ -80,21 +85,21 @@ export function ProductDetails({
           <Image
             src={img}
             alt={alt}
-            w={300}
-            h={300}
+            w={{base: '250px', md:'300px'}} //Tamano menor no mobile
+            h={{base: '250px', md:'300px'}} //Tamano menor no mobile
             objectFit="contain"
             borderRadius="md"
           />
         </Box>
         <Button
-          w={350}
+          w={{base:'280px', md:'350px'}}
           type="submit"
           mt="6"
           colorScheme="green"
           bg={buttonBg}
           size="lg"
-          p={10}
-          fontSize={24}
+          p={{ base: 6, md: 10 }} 
+          fontSize={{ base: 18, md: 24 }} 
           textTransform={"uppercase"}
           fontWeight={"bold"}
           color={buttonColor}
@@ -108,6 +113,7 @@ export function ProductDetails({
         // alignItems="start"
         // justifyContent="start"
         flexDir="column"
+        w={{ base: '100%', md: 'auto' }}
       >
         {children}
       </Flex>

@@ -15,7 +15,7 @@ import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
 import { useAuth } from '~hooks/useAuth';
 import { api } from '~services/api';
-import { storage } from '~services/firebase';
+import { storage } from '~services/firebase'; 
 
 // Interface do Produto
 interface Product {

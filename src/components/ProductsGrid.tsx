@@ -30,6 +30,9 @@ interface ProductsGridProps {
 }
 
 export function ProductsGrid({ products }: ProductsGridProps) {
+  const bg = useColorModeValue('gray.100', 'gray.800')
+  const color = useColorModeValue('gray.800', 'gray.100')
+
   const router = useRouter();
 
   return (
@@ -40,7 +43,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
         md: "repeat(auto-fit, minmax(200px, 1fr))",
       }}
       gap={{ base: 2, md: 4 }}
-      p={{ base: 4, md: 8 }} 
+      p={{ base: 4, md: 8 }}
     >
       {products.map((product) => (
         <Box
@@ -48,7 +51,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           p={3}
           borderWidth="1px"
           borderRadius="md"
-          bg="white"
+          bg={bg}
           boxShadow="sm"
           _hover={{ transform: "scale(1.02)", boxShadow: "xl" }}
           transition="0.3s"
@@ -58,8 +61,8 @@ export function ProductsGrid({ products }: ProductsGridProps) {
               position="absolute"
               top="0"
               right="0"
-              bg="green.500"
-              color="white"
+              bg={bg}
+              color={color}
               px="3"
               py="1"
               borderRadius="md"
@@ -79,20 +82,20 @@ export function ProductsGrid({ products }: ProductsGridProps) {
               mb={4}
               mt={-2}
               objectFit="contain"
-              w="100%" 
-              maxW="200px" 
+              w="100%"
+              maxW="200px"
               h="200px"
             />
           </Flex>
           <Flex align="center" mb={3} justify="space-between">
-            <Heading size="md" color="gray.700" fontSize={{ base: "sm", md: "md" }}>
+            <Heading size="md" color={color}fontSize={{ base: "sm", md: "md" }}>
               {product.produtoNome}
             </Heading>
             <Flex align="center" justify="space-between">
               <Tooltip label="Categoria do Produto" hasArrow>
                 <Flex align="center">
-                  <Icon as={FiTag} color="gray.500" mr={1} />
-                  <Text fontSize="sm" color="gray.600">
+                  <Icon as={FiTag} color={color} mr={1} />
+                  <Text fontSize="sm" color={color}>
                     {product.produtoCategoria}
                   </Text>
                 </Flex>

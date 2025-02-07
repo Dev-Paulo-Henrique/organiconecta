@@ -20,6 +20,7 @@ import { FaTrash } from 'react-icons/fa'
 import { Header } from '~components/Header'
 import { Title } from '~components/Title'
 import { useCart } from '~hooks/useCart'
+import theme from '~styles/theme'
 import { notifySuccess } from '~utils/toastify'
 
 const FRETE_FIXO = 20
@@ -96,7 +97,7 @@ export default function Carrinho() {
             <Stack spacing={4}>
               {cartItems.map(product => (
                 <Flex
-                  bg={'white'}
+                  bg={bg}
                   key={product.id}
                   p={4}
                   borderWidth="1px"
@@ -127,7 +128,9 @@ export default function Carrinho() {
                   </Box>
                   <Flex alignItems="center">
                     <Button
-                      bg={'green.500'}
+                      bg={useColorModeValue(
+                        theme.colors.gray[300],
+                        theme.colors.gray[700],)}  
                       color={'white'}
                       fontWeight={'bold'}
                       size="sm"
