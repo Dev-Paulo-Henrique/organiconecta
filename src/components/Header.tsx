@@ -99,6 +99,7 @@ export function Header() {
   // Verificando o tipo do usuário: cliente ou produtor
   const isClient = user?.tipoCliente?.tipo === 'Cliente'
   const isProducer = user?.tipoCliente?.tipo === 'Produtor'
+  const isAdmin = user?.usuario?.username?.includes('@discente.ifpe.edu.br');
 
   return (
     <Flex align={'center'} justify={'space-between'} p={{ base: '1rem', md: '1rem 3rem' }} bg={bg} flexDirection={{ base: 'column', md: 'row' }}>
@@ -143,11 +144,12 @@ export function Header() {
         ))}
 
         {/* {token && isClient && router.pathname === '/' && <Button type={12} />} */}
+        {token && isAdmin && router.pathname !== '/admin/dashboard' && <Button type={16} />}
         {!token && router.pathname === '/' && <Button type={12} />}
         {!token && router.pathname === '/carrinho' && <Button type={11} />}
         {!token && router.pathname === '/produto' && <Button type={11} />}
         {!token && router.pathname.includes('/politicas') && <Button type={11} />}
-        {token && router.pathname !== '/' && (
+        {/* {token && router.pathname !== '/' && (
           <Button type={buttonType}
             onClick={
               buttonType === 21
@@ -155,7 +157,7 @@ export function Header() {
                 : undefined
             }
           />
-        )}
+        )} */}
         {!token && router.pathname === '/' && (
           <Button
             type={buttonType}

@@ -107,11 +107,11 @@ export const buttonsUtils = {
       onClick: () => alert("Você clicou no botão Finalizar Compra"),
     },
     16: {
-      text: "+ Seguir",
+      text: "Dashboard",
       bg: "green.500",
       color: "white",
       colorScheme: "green",
-      onClick: () => alert("Você clicou no botão + Seguir"),
+      onClick: () => window.location.href = "/admin/dashboard",
     },
     17: {
       text: "Descartar Alterações",
