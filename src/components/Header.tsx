@@ -147,6 +147,7 @@ export function Header() {
 
         {/* Caso o usuário esteja logado e esteja em alguma página diferente de Início */}
         {!token && router.pathname === '/' && <Button type={12} />}
+        {!token && router.pathname === '/carrinho' && <Button type={11} />}
         {token && router.pathname !== '/' && (
           <Button type={buttonType}
             onClick={

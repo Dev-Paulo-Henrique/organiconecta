@@ -44,11 +44,7 @@ export default function App() {
 
   async function carregarProdutos() {
     try {
-      const response = await api.get("/produto", {
-        headers: {
-          "Authorization": `Bearer ${token}` 
-        }
-      });
+      const response = await api.get("/produto");
       if (response.data) {
         setProducts(response.data);
       }

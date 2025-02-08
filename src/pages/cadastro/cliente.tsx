@@ -40,6 +40,12 @@ export default function Cliente() {
     e.preventDefault()
     setLoading(true)
 
+    if (password.length < 8) {
+      notifyError("A senha deve ter no mínimo 8 caracteres.");
+      setLoading(false);
+      return; // Impede que o formulário seja enviado
+    }
+
     const data = {
       nome,
       email,
@@ -50,7 +56,7 @@ export default function Cliente() {
       clienteImagem: "/images/avatar.png"
     }
 
-    console.log(data)
+    // console.log(data)
     try {
       const response = await api.post('/cliente', data)
 
@@ -60,7 +66,26 @@ export default function Cliente() {
     } catch (error) {
       if (isAxiosError(error)) {
         if (error.response) {
-          notifyError(error.response.data.message)
+          console.log(error)
+          const message = error.response.data;
+
+        // Verificando o erro de duplicação para cada campo
+        if (message.includes("duplicate key value violates unique constraint")) {
+          if (message.includes("cpf")) {
+            notifyError("O CPF já está cadastrado.");
+          } else if (message.includes("username")) {
+            notifyError("O e-mail já está cadastrado.");
+          } else if (message.includes("telefone")) {
+            notifyError("O número de telefone já está cadastrado.");
+          } else if (message.includes("nome")) {
+            notifyError("Já existe um cliente com o este nome.");
+          } else {
+            notifyError("Ocorreu um erro ao tentar cadastrar o cliente. Tente novamente.");
+          }
+        } else {
+          // Se o erro não for de duplicação, exibe a mensagem genérica do erro
+          notifyError(message);
+        }
         }
       } else {
         console.log('Erro desconhecido:', error)

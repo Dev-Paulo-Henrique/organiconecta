@@ -19,9 +19,10 @@ import React, { useState } from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { Header } from '~components/Header'
 import { Title } from '~components/Title'
+import { useAuth } from '~hooks/useAuth'
 import { useCart } from '~hooks/useCart'
 import theme from '~styles/theme'
-import { notifySuccess } from '~utils/toastify'
+import { notifyError, notifySuccess } from '~utils/toastify'
 
 const FRETE_FIXO = 20
 const TAXA_POR_PRODUTO = 1.75
@@ -29,7 +30,8 @@ const TAXA_POR_PRODUTO = 1.75
 export default function Carrinho() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
-  const [paymentMethod, setPaymentMethod] = useState('credito');
+  const [paymentMethod, setPaymentMethod] = useState('credito')
+  const { token } = useAuth()
   const router = useRouter() // Usando o roteador do Next.js
 
   const {
@@ -97,7 +99,7 @@ export default function Carrinho() {
             <Stack spacing={4}>
               {cartItems.map(product => (
                 <Flex
-                  bg={bg}
+                  bg={'white'}
                   key={product.id}
                   p={4}
                   borderWidth="1px"
@@ -128,9 +130,7 @@ export default function Carrinho() {
                   </Box>
                   <Flex alignItems="center">
                     <Button
-                      bg={useColorModeValue(
-                        theme.colors.gray[300],
-                        theme.colors.gray[700],)}  
+                      bg={'green.500'}
                       color={'white'}
                       fontWeight={'bold'}
                       size="sm"
@@ -198,13 +198,17 @@ export default function Carrinho() {
               </Flex>
             </Stack>
             <Divider my={4} />
-            <RadioGroup value={paymentMethod} onChange={(e) => setPaymentMethod(e)} defaultValue="credito">
-        <Stack spacing={2}>
-          <Radio value="credito">Cartão de crédito</Radio>
-          <Radio value="debito">Cartão de débito</Radio>
-          <Radio value="pix">Pix</Radio>
-        </Stack>
-      </RadioGroup>
+            <RadioGroup
+              value={paymentMethod}
+              onChange={e => setPaymentMethod(e)}
+              defaultValue="credito"
+            >
+              <Stack spacing={2}>
+                <Radio value="credito">Cartão de crédito</Radio>
+                <Radio value="debito">Cartão de débito</Radio>
+                <Radio value="pix">Pix</Radio>
+              </Stack>
+            </RadioGroup>
             <Divider my={4} />
             <Flex justifyContent="space-between" fontWeight="bold">
               <Text>Total</Text>
@@ -216,11 +220,16 @@ export default function Carrinho() {
               disabled={cartItems.length === 0}
               width="full"
               onClick={() => {
-                notifySuccess(
-                  `Compra no valor de ${formatCurrency(total)} realizada com sucesso! Meio de pagamento: ${paymentMethod.toUpperCase()}.`,
-                )
-                setTimeout(deleteItems, 6000)
+                if (token) {
+                  notifySuccess(
+                    `Compra no valor de ${formatCurrency(total)} realizada com sucesso! Meio de pagamento: ${paymentMethod.toUpperCase()}.`
+                  );
+                  setTimeout(deleteItems, 6000);
+                } else {
+                  notifyError("Faça login para continuar a compra");
+                }
               }}
+              
             >
               Finalizar compra
             </Button>
@@ -232,17 +241,19 @@ export default function Carrinho() {
             mt={3}
           >
             {cartItems.length !== 0 && (
-              <Button
-                colorScheme="green"
-                variant="link"
-                onClick={() => router.push('/')}
-              >
-                Continuar comprando
-              </Button>
+              <>
+                <Button
+                  colorScheme="green"
+                  variant="link"
+                  onClick={() => router.push('/')}
+                >
+                  Continuar comprando
+                </Button>
+                <Button colorScheme="red" variant="link" onClick={deleteItems}>
+                  Cancelar pedidos
+                </Button>
+              </>
             )}
-            <Button colorScheme="red" variant="link" onClick={deleteItems}>
-              Cancelar pedidos
-            </Button>
           </Flex>
         </GridItem>
       </Grid>

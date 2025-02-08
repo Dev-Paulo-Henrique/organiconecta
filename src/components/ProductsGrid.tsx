@@ -51,7 +51,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           p={3}
           borderWidth="1px"
           borderRadius="md"
-          bg={bg}
+          bg={"white"}
           boxShadow="sm"
           _hover={{ transform: "scale(1.02)", boxShadow: "xl" }}
           transition="0.3s"
@@ -61,8 +61,8 @@ export function ProductsGrid({ products }: ProductsGridProps) {
               position="absolute"
               top="0"
               right="0"
-              bg={bg}
-              color={color}
+              bg={"green.500"}
+              color={"white"}
               px="3"
               py="1"
               borderRadius="md"

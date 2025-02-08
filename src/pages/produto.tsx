@@ -41,11 +41,7 @@ export default function Produto() {
     if (id) {
       const fetchProduct = async () => {
         try {
-          const response = await api.get(`/produto/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await api.get(`/produto/${id}`);
 
           if (response.status !== 200) {
             throw new Error("Produto não encontrado");
@@ -67,11 +63,7 @@ export default function Produto() {
   // Buscar produtos relacionados (mesma categoria)
   const fetchRelatedProducts = async (categoria: string, produtoId: string) => {
     try {
-      const response = await api.get("/produto", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get("/produto");
   
       const filteredProducts = response.data.filter(
         (item: Product) => item.produtoCategoria === categoria && item.id !== produtoId
