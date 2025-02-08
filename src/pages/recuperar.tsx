@@ -59,6 +59,7 @@ export default function ResetPassword() {
 
       if (response.status === 200) {
         notifySuccess('E-mail enviado!');
+        setEmail("")
       }
     } catch (error) {
       if (isAxiosError(error)) {
@@ -92,7 +93,7 @@ export default function ResetPassword() {
 
     try {
       setLoading(true); // Ativa o carregamento
-      const response = await api.post(`/redefinir/resetar-senha?token=${token}`, { password });
+      const response = await api.post(`/redefinir/resetar-senha?token=${token}`, {password});
 
       if (response.status === 200) {
         notifySuccess('Senha redefinida com sucesso!');
@@ -102,6 +103,7 @@ export default function ResetPassword() {
       if (isAxiosError(error)) {
         if (error.response) {
           const message = error.response.data;
+          console.log(message)
 
           if(message === "Token inválido."){
             notifyError(message);

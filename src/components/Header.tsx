@@ -22,7 +22,6 @@ export function Header() {
   const [isValidToken, setIsValidToken] = useState<boolean>(false)
 
   //   // Adicionando estado de loading para o botão de ativação/desativação do plano
-  const [loadingPlan, setLoadingPlan] = useState<boolean>(false)
 
   // Função para abrir o modal com o título correto
   const handleOpen = (newTitle: string) => {
@@ -64,12 +63,22 @@ export function Header() {
   //   //   return <Loading/>
   //   // }    
 
-  const links = [
+  const isProducerLinks = [
     { href: '/', label: 'Início' },
     { href: '/admin/produtos', label: 'Produtos' },
     { href: '/admin/clientes', label: 'Clientes' },
     { href: '/admin/pedidos', label: 'Pedidos' },
+    { href: '/perfil', label: 'Perfil' },
     { href: `/loja/${user?.id}`, label: 'Loja' },
+  ]
+
+  const isClientLinks = [
+    { href: '/', label: 'Início' },
+    // { href: '/admin/produtos', label: 'Produtos' },
+    // { href: '/admin/clientes', label: 'Clientes' },
+    // { href: '/admin/pedidos', label: 'Pedidos' },
+    { href: '/perfil', label: 'Perfil' },
+    // { href: `/loja/${user?.id}`, label: 'Loja' },
   ]
 
   const buttonType =
@@ -91,32 +100,11 @@ export function Header() {
   const isClient = user?.tipoCliente?.tipo === 'Cliente'
   const isProducer = user?.tipoCliente?.tipo === 'Produtor'
 
-  const handlePlanToggle = async () => {
-    setLoadingPlan(true)
-    try {
-      // Dependendo do tipo de cliente, fazemos a requisição PUT
-      const endpoint = isClient
-        ? `/assinatura/${user.id}/ativarplano`
-        : `/assinatura/${user.id}/desativarplano`
-      const response = await api.put(endpoint, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      console.log('Plano atualizado:', response)
-      window.location.reload() // Recarrega a página após sucesso
-    } catch (error) {
-      console.error('Erro ao atualizar plano:', error)
-    } finally {
-      setLoadingPlan(false)  // Desativa o estado de loading após a requisição
-    }
-  }
-
   return (
     <Flex align={'center'} justify={'space-between'} p={{ base: '1rem', md: '1rem 3rem' }} bg={bg} flexDirection={{ base: 'column', md: 'row' }}>
       <Logo size={{ base: 150, md: 250 }} link='/' />
       <Flex gap={{ base: 3, md: 5 }} alignItems={'center'} flexWrap='wrap' justifyContent={{ base: 'center', md: 'flex-start' }}>
-        {isProducer && token && links.map((link, index) => (
+        {isProducer && token && isProducerLinks.map((link, index) => (
           <Text
             key={index}
             as={'a'}
@@ -135,17 +123,26 @@ export function Header() {
           </Text>
         ))}
 
-        {/* Se o usuário for cliente, exibe o botão "Quero virar produtor" */}
-        {token && (
-          <Button isLoading={loadingPlan} // Passando o estado de carregamento
-            onClick={handlePlanToggle}
-            type={isClient ? 22 : 23}
+{token && isClientLinks.map((link, index) => (
+          <Text
+            key={index}
+            as={'a'}
+            href={link.href}
+            color={color}
+            fontSize={{ base: 'sm', md: 'md' }}
+            fontWeight={
+              router.pathname === '/produto' && link.href.includes('/produto')
+                ? 'bold'
+                : router.pathname === link.href
+                  ? 'bold'
+                  : 'normal'
+            }
           >
-            {isClient ? 'Ativar Plano' : 'Desativar Plano'}
-          </Button>
-        )}
+            {link.label}
+          </Text>
+        ))}
 
-        {/* Caso o usuário esteja logado e esteja em alguma página diferente de Início */}
+        {token && isClient && router.pathname === '/' && <Button type={12} />}
         {!token && router.pathname === '/' && <Button type={12} />}
         {!token && router.pathname === '/carrinho' && <Button type={11} />}
         {!token && router.pathname === '/produto' && <Button type={11} />}

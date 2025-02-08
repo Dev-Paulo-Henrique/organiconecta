@@ -20,6 +20,7 @@
     "coloreact": "^0.3.1",
     "copy-to-clipboard": "^3.2.1",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "firebase": "^11.2.0",
     "framer-motion": "7.3.0",
     "immer": "^9.0.15",

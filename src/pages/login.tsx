@@ -166,7 +166,7 @@ export default function Login() {
                 </Link>
               </Flex>
               <Divider my="3" borderColor="gray.300" />
-              <Button
+              {/* <Button
                 type="button"
                 border={`2px solid ${theme.colors.green[500]}`}
                 color={theme.colors.gray[800]}
@@ -181,7 +181,7 @@ export default function Login() {
                     Entrar com Google
                   </Text>
                 </Flex>
-              </Button>
+              </Button> */}
               <Text
                 color={useColorModeValue(
                   theme.colors.gray[700],
