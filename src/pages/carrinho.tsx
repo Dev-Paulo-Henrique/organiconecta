@@ -1,5 +1,3 @@
-//Alex William
-
 import {
   Box,
   Flex,
@@ -14,46 +12,59 @@ import {
   RadioGroup,
   Radio,
   useColorModeValue,
+  IconButton,
 } from '@chakra-ui/react'
-import React from 'react'
+import { useRouter } from 'next/router'
+import React, { useState } from 'react'
+import { FaTrash } from 'react-icons/fa'
 import { Header } from '~components/Header'
 import { Title } from '~components/Title'
-import { useCart } from '~components/useCart'
+import { useAuth } from '~hooks/useAuth'
+import { useCart } from '~hooks/useCart'
+import theme from '~styles/theme'
+import { notifyError, notifySuccess } from '~utils/toastify'
 
-
-interface Product {
-  id: string
-  produtoNome: string
-  produtoPreco: number | string
-  produtoImagens: string[]
-  produtoDescricao: string
-  produtoCategoria: string
-  produtoCodigo?: string
-  produtoQuantidade: number | string
-  quantity:number
-}
+const FRETE_FIXO = 20
+const TAXA_POR_PRODUTO = 1.75
 
 export default function Carrinho() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const [paymentMethod, setPaymentMethod] = useState('credito')
+  const { token } = useAuth()
+  const router = useRouter() // Usando o roteador do Next.js
 
-  // Pegando os dados do carrinho do contexto
-  const { cartItems, addToCart, removeFromCart } = useCart(); // Acesso aos itens do carrinho e funções
+  const {
+    cartItems,
+    addItem,
+    removeItem,
+    deleteItems,
+    removeProduct,
+  } = useCart()
 
-  // Função para atualizar a quantidade de um produto
-  const updateQuantity = (productId: string, operation: 'increment' | 'decrement') => {
-    const updatedProduct = cartItems.find(product => product.id === productId);
-    if (!updatedProduct) return;
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    }).format(value)
+
+  const updateQuantity = (productId: string, operation: string) => {
+    const product = cartItems.find(item => item.id === productId)
+    if (!product) return
 
     if (operation === 'increment') {
-      updatedProduct.quantity += 1;
-    } else if (operation === 'decrement' && updatedProduct.quantity > 1) {
-      updatedProduct.quantity -= 1;
+      addItem({ ...product, quantity: 1 }) // Adiciona +1 ao item existente
+    } else if (operation === 'decrement' && product.quantity > 1) {
+      removeItem(productId) // Remove -1 do item existente
     }
-
-    // Atualizando o carrinho com a nova quantidade
-    addToCart(updatedProduct);
   }
+
+  const subtotal = cartItems.reduce(
+    (acc, item) => acc + parseFloat(item.produtoPreco) * item.quantity,
+    0,
+  )
+  const taxas = cartItems.length * TAXA_POR_PRODUTO
+  const total = subtotal + (cartItems.length === 0 ? 0 : FRETE_FIXO) + taxas
 
   return (
     <Box bg={bg} minH="100vh">
@@ -66,53 +77,100 @@ export default function Carrinho() {
         mx="auto"
         p={8}
       >
-        {/* Teste visual ainda não sei como receber informações do back - Lista de Produtos */}
         <GridItem>
           <Heading size="lg" mb={4}>
             Carrinho
           </Heading>
-          <Stack spacing={4}>
-            {cartItems.map(product => (
-              <Flex
-                key={product.id}
-                p={4}
-                borderWidth="1px"
-                borderRadius="lg"
-                alignItems="center"
+
+          {cartItems.length === 0 ? (
+            <Flex justifyContent={'center'} flexDir={'column'}>
+              <Text fontSize="xl" fontWeight="bold" textAlign="center" my={6}>
+                🛒 Seu carrinho está vazio!
+              </Text>
+              <Button
+                mt={3}
+                colorScheme="green"
+                onClick={() => router.push('/')}
               >
-                <Image
-                  src={product.produtoImagens[0]}
-                  alt={product.produtoNome}
-                  boxSize="80px"
-                  objectFit="cover"
-                  borderRadius="md"
-                  mr={4}
-                />
-                <Box flex="1">
-                  <Text color={color}>{product.produtoNome}</Text>
-                  <Text fontSize="sm" color={color}>
-                    {product.produtoPreco}
-                  </Text>
-                </Box>
-                <Flex alignItems="center">
-                  <Button size="sm" mr={2}>
-                    -
-                  </Button>
-                  <Text color={color}>{product.produtoQuantidade}</Text>
-                  <Button size="sm" ml={2}>
-                    +
-                  </Button>
+                Continuar comprando
+              </Button>
+            </Flex>
+          ) : (
+            <Stack spacing={4}>
+              {cartItems.map(product => (
+                <Flex
+                  bg={'white'}
+                  key={product.id}
+                  p={4}
+                  borderWidth="1px"
+                  borderRadius="lg"
+                  alignItems="center"
+                >
+                  <Image
+                    src={product.produtoImagens}
+                    alt={product.produtoNome}
+                    boxSize="80px"
+                    objectFit="contain"
+                    bg={'white'}
+                    borderRadius="md"
+                    mr={4}
+                  />
+                  <Box flex="1">
+                    <Text
+                      color={'green.600'}
+                      textTransform={'uppercase'}
+                      fontSize={20}
+                      fontWeight={'bold'}
+                    >
+                      {product.produtoNome}
+                    </Text>
+                    <Text as={'small'} fontSize="sm" color={color}>
+                      {formatCurrency(parseFloat(product.produtoPreco))}
+                    </Text>
+                  </Box>
+                  <Flex alignItems="center">
+                    <Button
+                      bg={'green.500'}
+                      color={'white'}
+                      fontWeight={'bold'}
+                      size="sm"
+                      mr={2}
+                      onClick={() => updateQuantity(product.id, 'decrement')}
+                      disabled={product.quantity === 1}
+                    >
+                      -
+                    </Button>
+                    <Text color={color} mx={1} fontWeight={'bold'}>
+                      {product.quantity}
+                    </Text>
+                    <Button
+                      bg={'green.500'}
+                      color={'white'}
+                      fontWeight={'bold'}
+                      size="sm"
+                      ml={2}
+                      onClick={() => updateQuantity(product.id, 'increment')}
+                      disabled={
+                        product.quantity === Number(product.produtoQuantidade)
+                      }
+                    >
+                      +
+                    </Button>
+                    <IconButton
+                      icon={<FaTrash />}
+                      aria-label="Remover item"
+                      colorScheme="red"
+                      size="sm"
+                      ml={5}
+                      onClick={() => removeProduct(product.id)}
+                    />
+                  </Flex>
                 </Flex>
-            
-              </Flex>
-            ))}
-          </Stack>
-          <Button mt={4} colorScheme="teal" variant="link">
-            Continuar comprando
-          </Button>
+              ))}
+            </Stack>
+          )}
         </GridItem>
 
-        {/* Teste visual ainda não sei como receber informações do back - Resumo do Pedido*/}
         <GridItem>
           <Box
             p={6}
@@ -124,23 +182,27 @@ export default function Carrinho() {
               Resumo do Pedido
             </Heading>
             <Stack spacing={2}>
-              {}
-
               <Flex justifyContent="space-between">
                 <Text>Valor dos produtos</Text>
-                <Text>R$ 0,00</Text>
+                <Text>{formatCurrency(subtotal)}</Text>
               </Flex>
               <Flex justifyContent="space-between">
                 <Text>Frete</Text>
-                <Text>R$ 0,00</Text>
+                <Text>
+                  {formatCurrency(cartItems.length === 0 ? 0 : FRETE_FIXO)}
+                </Text>
               </Flex>
               <Flex justifyContent="space-between">
                 <Text>Taxas adicionais</Text>
-                <Text>R$ 0,00</Text>
+                <Text>{formatCurrency(taxas)}</Text>
               </Flex>
             </Stack>
             <Divider my={4} />
-            <RadioGroup defaultValue="credito">
+            <RadioGroup
+              value={paymentMethod}
+              onChange={e => setPaymentMethod(e)}
+              defaultValue="credito"
+            >
               <Stack spacing={2}>
                 <Radio value="credito">Cartão de crédito</Radio>
                 <Radio value="debito">Cartão de débito</Radio>
@@ -150,24 +212,48 @@ export default function Carrinho() {
             <Divider my={4} />
             <Flex justifyContent="space-between" fontWeight="bold">
               <Text>Total</Text>
-              <Text>R$ 0,00</Text>
+              <Text>{formatCurrency(total)}</Text>
             </Flex>
             <Button
               mt={4}
               colorScheme="green"
+              disabled={cartItems.length === 0}
               width="full"
-              onClick={() =>
-                (window.location.href =
-                  'https://buy.stripe.com/test_cN2cQseId2cH0Bq9AA')
-              }
+              onClick={() => {
+                if (token) {
+                  notifySuccess(
+                    `Compra no valor de ${formatCurrency(total)} realizada com sucesso! Meio de pagamento: ${paymentMethod.toUpperCase()}.`
+                  );
+                  setTimeout(deleteItems, 6000);
+                } else {
+                  notifyError("Faça login para continuar a compra");
+                }
+              }}
+              
             >
               Finalizar compra
             </Button>
           </Box>
-          <Flex justifyContent="flex-end" mt={2}>
-            <Button colorScheme="red" variant="link">
-              Cancelar pedidos
-            </Button>
+          <Flex
+            justifyContent={
+              cartItems.length !== 0 ? 'space-between' : 'flex-end'
+            }
+            mt={3}
+          >
+            {cartItems.length !== 0 && (
+              <>
+                <Button
+                  colorScheme="green"
+                  variant="link"
+                  onClick={() => router.push('/')}
+                >
+                  Continuar comprando
+                </Button>
+                <Button colorScheme="red" variant="link" onClick={deleteItems}>
+                  Cancelar pedidos
+                </Button>
+              </>
+            )}
           </Flex>
         </GridItem>
       </Grid>

@@ -3,11 +3,14 @@
 import { Image, Link } from '@chakra-ui/react'
 
 interface LogoProps {
-  size: number
+  size: number | {base: number; md: number} 
   link?: string
 }
 
 export function Logo({ size, link }: LogoProps) {
+
+  const responsiveSize = typeof size === 'number' ? { base: size * 0.75, md: size } : size;
+  
   return (
     <>
       {link ? (

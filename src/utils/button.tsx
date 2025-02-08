@@ -65,7 +65,7 @@ export const buttonsUtils = {
       onClick: () => alert("Você clicou no botão Entrar"),
     },
     10: {
-      text: "Comprar",
+      text: "Adicionar",
       bg: "green.500",
       color: "white",
       colorScheme: "green",

@@ -15,7 +15,7 @@ import { ProductsGrid } from '~components/ProductsGrid';
 import { Title } from '~components/Title';
 import { useAuth } from '~hooks/useAuth';
 import { api } from '~services/api';
-import { storage } from '~services/firebase';
+import { storage } from '~services/firebase'; 
 
 // Interface do Produto
 interface Product {
@@ -44,11 +44,7 @@ export default function App() {
 
   async function carregarProdutos() {
     try {
-      const response = await api.get("/produto", {
-        headers: {
-          "Authorization": `Bearer ${token}` 
-        }
-      });
+      const response = await api.get("/produto");
       if (response.data) {
         setProducts(response.data);
       }
