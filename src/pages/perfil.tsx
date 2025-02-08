@@ -7,7 +7,7 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import { api } from '~services/api'
 import theme from '~styles/theme'
 
-export default function Atualizacao() {
+export default function Perfil() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   const [editing, setEditing]= useState(null)
