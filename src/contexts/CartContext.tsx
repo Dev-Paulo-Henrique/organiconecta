@@ -6,8 +6,8 @@ interface CartItem {
   quantity: number;
   produtoNome: string;
   produtoImagens: string;
-  produtoPreco: string;
-  produtoQuantidade: string;
+  produtoPreco: number | string;
+  produtoQuantidade: number | string;
 }
 
 // Definindo o tipo do contexto

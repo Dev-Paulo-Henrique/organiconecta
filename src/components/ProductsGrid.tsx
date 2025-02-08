@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { FiTag } from "react-icons/fi";
 import { Button } from "~components/Button";
+import { useCart } from "~hooks/useCart";
 
 interface Product {
   id: string;
@@ -32,6 +33,7 @@ interface ProductsGridProps {
 export function ProductsGrid({ products }: ProductsGridProps) {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const { addItem } = useCart()
 
   const router = useRouter();
 
@@ -55,6 +57,8 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           boxShadow="sm"
           _hover={{ transform: "scale(1.02)", boxShadow: "xl" }}
           transition="0.3s"
+          cursor={"pointer"}
+          onClick={() => router.push(`/produto?id=${product.id}`)}
         >
           <Flex position="relative" justifyContent="center">
             <Box
@@ -105,7 +109,17 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           <Button
             type={10}
             // width="100%" -- Necessario para ocupar a tela toda no mobile
-            onClick={() => router.push(`/produto?id=${product.id}`)}
+            onClick={(e: { stopPropagation: () => any; }) => {
+              return e.stopPropagation(),
+                addItem({
+                  id: product.id,
+                  produtoNome: product.produtoNome,
+                  produtoPreco: product.produtoPreco,
+                  quantity: 1,
+                  produtoImagens: product.produtoImagens[0],
+                  produtoQuantidade: product.produtoQuantidade
+                });
+            }}
           />
         </Box>
       ))}

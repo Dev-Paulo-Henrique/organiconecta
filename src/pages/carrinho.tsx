@@ -60,7 +60,7 @@ export default function Carrinho() {
   }
 
   const subtotal = cartItems.reduce(
-    (acc, item) => acc + parseFloat(item.produtoPreco) * item.quantity,
+    (acc, item) => acc + Number(item.produtoPreco) * item.quantity,
     0,
   )
   const taxas = cartItems.length * TAXA_POR_PRODUTO
@@ -125,7 +125,7 @@ export default function Carrinho() {
                       {product.produtoNome}
                     </Text>
                     <Text as={'small'} fontSize="sm" color={color}>
-                      {formatCurrency(parseFloat(product.produtoPreco))}
+                      {formatCurrency(Number(product.produtoPreco))}
                     </Text>
                   </Box>
                   <Flex alignItems="center">

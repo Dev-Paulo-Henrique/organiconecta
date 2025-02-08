@@ -194,19 +194,19 @@ export default function Login() {
               >
                 Ao continuar, você concorda com os{' '}
                 <b>
-                  <Link href="politica/termoServico" passHref>
+                  <Link href="politicas/termos" passHref>
                     <a>Termos de Serviço</a>
                   </Link>
                 </b>
                 , com a{' '}
                 <b>
-                  <Link href="/politica/politicaPrivacidade" passHref>
+                  <Link href="/politicas/privacidade" passHref>
                     <a>Política de Privacidade </a>
                   </Link>
                 </b>
                 e com o{' '}
                 <b>
-                  <Link href="/politica/cookies" passHref>
+                  <Link href="/politicas/cookies" passHref>
                     <a>uso de cookies </a>
                   </Link>
                 </b>

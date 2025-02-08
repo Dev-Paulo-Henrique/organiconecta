@@ -19,9 +19,9 @@ export default function TermoSevicos() {
             TERMO DE SERVIÇOS DA ORGANICONECTA
           </Text>
 
-          <Text fontSize="1rem" fontWeight="medium" textAlign="center" mb={6}>
+          {/* <Text fontSize="1rem" fontWeight="medium" textAlign="center" mb={6}>
             Última Atualização: [02/08/2025]
-          </Text>
+          </Text> */}
           {[
             {
               title: 'ACEITAÇÃO DOS TERMOS',

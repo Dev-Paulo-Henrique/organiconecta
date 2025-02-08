@@ -1,10 +1,11 @@
 import { Stack, Button as Btn, Text, Spinner } from '@chakra-ui/react'
+import { ReactNode } from 'react'
 import { FiShoppingCart } from 'react-icons/fi'
 import { buttonsUtils } from '~utils/button'
 
 interface ButtonProps {
-  children?: React.ReactNode // Alterado para aceitar qualquer tipo de conteúdo dentro do botão
-  onClick?: () => void
+  children?: ReactNode // Alterado para aceitar qualquer tipo de conteúdo dentro do botão
+  onClick?: (e:any) => void
   bg?: string
   color?: string
   colorScheme?: string
@@ -36,7 +37,10 @@ export function Button({
       <Btn
         p={4}
         bg={bg || typeBg}
-        onClick={typeOnClick || onClick}
+        // onClick={typeOnClick || onClick}
+        onClick={(e) => {
+          typeOnClick ? typeOnClick(e) : onClick?.(e)
+        }}
         colorScheme={colorScheme || typeColorScheme}
         w="full"
         fontSize={{ base: "sm", md: "md" }}

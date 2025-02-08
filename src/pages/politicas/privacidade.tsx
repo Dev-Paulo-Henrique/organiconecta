@@ -12,12 +12,12 @@ export default function PoliticaPrivacidade() {
       <Title />
       <Flex p={7} flexDirection="column" maxW="800px" mx="auto">
         <Text fontSize="1.5rem" fontWeight="bold" textAlign="center" mb={4}>
-          🔒 POLÍTICA DE PRIVACIDADE DA ORGANICONECTA
+          POLÍTICA DE PRIVACIDADE DA ORGANICONECTA
         </Text>
 
-        <Text fontSize="1rem" fontWeight="medium" textAlign="center" mb={6}>
+        {/* <Text fontSize="1rem" fontWeight="medium" textAlign="center" mb={6}>
           Última Atualização: [02/08/2025]
-        </Text>
+        </Text> */}
         {[
           {
             title: 'ACEITAÇÃO DOS TERMOS',
