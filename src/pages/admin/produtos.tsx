@@ -70,19 +70,25 @@ export default function Product() {
               Authorization: `Bearer ${token}`,
             },
           })
-          if (response.data) {
-            setProducts(response.data) // Atualiza os produtos
-          }
+
+          // Filtra os produtos pela loja (usando o ID da loja)
+          const filteredProducts = response.data.filter(
+            (produto: any) => produto.lojas.cliente.id === user?.id
+          )
+
+          setProducts(filteredProducts)
         } catch (error) {
           console.error('Erro ao carregar os produtos:', error)
         } finally {
-          setLoading(false) // Finaliza o carregamento
+          setLoading(false)
         }
       }
 
-      carregarProdutos() // Chama a função para carregar os produtos
+      carregarProdutos()
     }
   }, [token])
+
+  // console.log(products)
 
   // Paginando os produtos
   const indexOfLastProduct = currentPage * productsPerPage
@@ -156,7 +162,7 @@ export default function Product() {
                     </Tr>
                   ) : products.length === 0 ? (
                     <Tr>
-                      <Td colSpan={4} textAlign="center">
+                      <Td textAlign="center">
                         Nenhum produto encontrado.
                       </Td>
                     </Tr>
@@ -301,7 +307,7 @@ export default function Product() {
               </Box>
 
               {/* Paginação */}
-              <Flex
+              {products.length > 0 && <Flex
                 justify="center"
                 align="center"
                 mt={5}
@@ -334,7 +340,7 @@ export default function Product() {
                 >
                   Próxima
                 </Button>
-              </Flex>
+              </Flex>}
             </Flex>
           </GridItem>
         </Grid>
