@@ -33,12 +33,8 @@ export default function Loja() {
   // Carregar dados da loja
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await api.get(`/loja/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+    try {
+        const response = await api.get(`/loja/${id}`)
         setLoja(response.data) // Armazenar dados da loja no estado
       } catch (error) {
         console.error('Erro ao buscar loja:', error)
@@ -47,10 +43,10 @@ export default function Loja() {
       }
     }
 
-    if (id && token) {
+    if (id) {
       fetchData()
     }
-  }, [id, token])
+  }, [id])
 
   if (loading) return <Loading />
   // if (!isProducer || Number(id) !== user?.id) return <NotPermission />
@@ -102,6 +98,7 @@ export default function Loja() {
             alt="Perfil do produtor"
             w={200}
             h={200}
+            bg={"white"}
             objectFit="cover"
           />
           <Box ml={4}>
@@ -126,7 +123,7 @@ export default function Loja() {
         </Flex>
 
         {/* Botão para seguir */}
-        {loja.id === id ? <Button
+        <Button
           mr={40}
           zIndex={2}
           position="absolute"
@@ -137,10 +134,12 @@ export default function Loja() {
           bg="green.500"
           colorScheme="green"
           color="white"
+          // isDisabled
+          disabled
           // onClick={() => localStorage.setItem("seguindo", id)}
         >
           + SEGUIR
-        </Button> : <></>}
+        </Button>
       </Box>
 
       {/* Seção de produtos - Você pode adicionar a exibição dos produtos da loja aqui */}

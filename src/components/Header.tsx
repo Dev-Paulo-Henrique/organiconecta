@@ -62,7 +62,7 @@ export function Header() {
     }
   }, [token, user?.id])
 
-  // console.log(loja)
+  console.log(loja)
 
   // if (loading) return <Loading />
   // if (!isProducer || !loja) return <NotPermission />
@@ -128,7 +128,7 @@ export function Header() {
             fontWeight={
               router.pathname === '/produto' && link?.href?.includes('/produto')
                 ? 'bold'
-              : router.pathname.includes(`/loja`) && link?.href?.includes('/loja')
+              : link?.href?.includes(`/loja/${id}`)
                 ? 'bold'
                 : router.pathname === link.href
                   ? 'bold'
@@ -187,6 +187,8 @@ export function Header() {
             onClick={() => handleOpen('Adicionar Produto')
             }
           />}
+        {!token && router.pathname.includes('/loja') && <Button type={12} />}
+        {!token && router.pathname.includes('/loja') && <Button type={11} />}
         {token && <Button type={1} />}
       </Flex>
       <Viewer isOpen={isOpen} onClose={onClose} title={title} />

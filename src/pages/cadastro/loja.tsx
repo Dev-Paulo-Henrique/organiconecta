@@ -21,6 +21,7 @@ import { TemplateGrid } from '~components/TemplateGrid'
 import { useAuth } from '~hooks/useAuth'
 import { useRouter } from 'next/router'
 import { api } from '~services/api'
+import { notifySuccess } from '~utils/toastify'
 
 export default function Loja() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -67,7 +68,7 @@ export default function Loja() {
           Authorization: `Bearer ${token}`,
         },
       })
-      console.log('Loja cadastrada com sucesso:', response.data)
+      notifySuccess('Loja cadastrada com sucesso!')
 
       setLoading(false)
       // Redireciona após o sucesso
