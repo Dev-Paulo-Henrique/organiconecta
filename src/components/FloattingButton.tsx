@@ -13,6 +13,22 @@ export function FloattingButton() {
     setTotalItems(cartItems.reduce((acc, item) => acc + item.quantity, 0));
   }, [cartItems]);
 
+  //Paginas que não devem aparecer o carrinho
+  const hiddenRoutes = [
+    '/login',
+    '/cadastro',
+    '/recuperar-senha',
+    '/carrinho',
+  ];
+
+  //Verifica se a rota atual esta na lista
+  const shouldShowButton = !hiddenRoutes.includes(router.pathname);
+
+  //Verifica a rota, caso esteja na lista não renderiza o botão
+  if (!shouldShowButton) {
+    return null;
+  }
+
   return (
     <Box position="fixed" bottom={10} right={10}>
       <IconButton

@@ -17,6 +17,8 @@ import {
   Tr,
   Th,
   Td,
+  useBreakpointValue,
+  Stack,
 } from '@chakra-ui/react'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
@@ -32,14 +34,16 @@ import { Loading } from '~components/Loading'
 
 export default function Clientes() {
   const bg = useColorModeValue('gray.100', 'gray.800')
+  const cardBg = useColorModeValue('white', 'gray.700') // Cor de fundo dos cards
   const color = useColorModeValue('gray.800', 'gray.100')
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [title, setTitle] = useState<string>('') 
+  const [title, setTitle] = useState<string>('')
   const [clientes, setClientes] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const { token, user } = useAuth()
 
+  const isMobile = useBreakpointValue({ base: true, md: false }) // Adicionado para detectar se está em mobile
   const isProducer = user?.tipoCliente?.tipo === 'Produtor' // Verifique a estrutura real dos dados
 
   async function getClientes() {
@@ -92,19 +96,20 @@ export default function Clientes() {
     <>
       <Header />
       <Title name="Clientes" />
-      <Box bg={bg} p={8} minH="100vh">
+      <Box bg={bg} p={[4, 8]} minH="100vh">
         <Grid templateAreas={`"main"`} gap="4">
           <GridItem area="main">
             <Flex
               as="form"
               bg={bg}
-              p="8"
+              p={[4, 8]}
               borderRadius="8"
               flexDir="column"
               maxW="1200px"
               mx="auto"
             >
-              <Table variant="simple" colorScheme="gray">
+              {/* Tabela para desktop (oculta em mobile) */}
+              <Table variant="simple" colorScheme="gray" display={['none', 'none', 'table']}>
                 <Thead>
                   <Tr>
                     <Th textAlign="start">CPF</Th>
@@ -115,11 +120,17 @@ export default function Clientes() {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {error && <Text color="red.500">{error}</Text>}
+                  {error && (
+                    <Tr>
+                      <Td colSpan={5} textAlign="center">
+                        <Text color="red.500">{error}</Text>
+                      </Td>
+                    </Tr>
+                  )}
 
                   {loading ? (
                     <Tr>
-                      <Td colSpan={4} textAlign="center">
+                      <Td colSpan={5} textAlign="center">
                         Carregando clientes...
                       </Td>
                     </Tr>
@@ -175,6 +186,65 @@ export default function Clientes() {
                   )}
                 </Tbody>
               </Table>
+
+              {/* Cards para mobile (oculto em desktop) */}
+              <Box display={['block', 'block', 'none']}>
+                {error && (
+                  <Text color="red.500" textAlign="center" mb={4}>
+                    {error}
+                  </Text>
+                )}
+
+                {loading ? (
+                  <Flex justify="center">
+                    <Spinner size="lg" />
+                  </Flex>
+                ) : (
+                  <Stack spacing={4}> {/* Stack para espaçamento vertical */}
+                    {filteredClientes.map(cliente => (
+                      <Box
+                        key={cliente.id}
+                        bg={cardBg} // Fundo contrastante para melhor leitura
+                        p={4}
+                        borderRadius="md"
+                        boxShadow="md" // Sombra para destacar os cards
+                      >
+                        <Stack spacing={2}>
+                          <Text fontSize="sm"> {/* Texto menor para mobile */}
+                            <strong>CPF:</strong>{' '}
+                            {cliente.cpf.replace(/\D/g, '').replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')}
+                          </Text>
+                          <Text fontSize="sm">
+                            <strong>Nome:</strong> {cliente.nome}
+                          </Text>
+                          <Text fontSize="sm">
+                            <strong>E-mail:</strong> {cliente.usuario.username}
+                          </Text>
+                          <Text fontSize="sm">
+                            <strong>Telefone:</strong> {cliente.telefone}
+                          </Text>
+                          <Flex justify="flex-end" mt={2}>
+                            <Icon
+                              as={PiTrash}
+                              boxSize="5" // Ícone menor para mobile
+                              cursor="pointer"
+                              bg="red.500"
+                              color="white"
+                              borderRadius="md"
+                              p={1}
+                              onClick={() => api.delete(`/cliente/${cliente.id}`, {
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                },
+                              }).then(() => window.location.reload())}
+                            />
+                          </Flex>
+                        </Stack>
+                      </Box>
+                    ))}
+                  </Stack>
+                )}
+              </Box>
             </Flex>
           </GridItem>
         </Grid>
