@@ -20,6 +20,7 @@ import {
 } from '@chakra-ui/react'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
+import { Spline } from '~components/Grafico'
 import { FiEdit3 } from 'react-icons/fi'
 import { Header } from '~components/Header'
 import { Viewer } from '~components/Modal'
@@ -28,8 +29,11 @@ import { api } from '~services/api'
 import { useAuth } from '~hooks/useAuth'
 import { Title } from '~components/Title'
 import { NotPermission } from '~components/NotPermission'
+import ApexCharts from 'apexcharts'
 import { Loading } from '~components/Loading'
 import BoxRelatorio from '~components/BoxRelatorio'
+import dynamic from 'next/dynamic'
+
 export default function Clientes() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
@@ -38,8 +42,11 @@ export default function Clientes() {
   const [clientes, setClientes] = useState<any[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
+  const [pedidos, setPedidos] = useState<any[]>([])
+  const [vendasMensais, setVendasMensais] = useState<any[]>([])
   const { token, user } = useAuth()
   const bgBox = useColorModeValue('gray.50', 'gray.800')
+  const Chart = dynamic(() => import('react-apexcharts'), { ssr: false })
   const produtos = [
     {
       nome: 'Produto 1',
@@ -67,7 +74,7 @@ export default function Clientes() {
     },
   ]
 
-  const isAdmin = user?.usuario?.username?.includes('@discente.ifpe.edu.br');
+  const isAdmin = user?.usuario?.username?.includes('@discente.ifpe.edu.br')
 
   async function getClientes() {
     if (!token) {
@@ -103,27 +110,37 @@ export default function Clientes() {
   }
 
   if (loading && token) {
-    return (
-      <Loading />
-    )
+    return <Loading />
   }
 
   if (!isAdmin) {
     return <NotPermission />
   }
 
+  const handlepedido = async () => {
+    try {
+      const response = await api.get('/pedido')
+      setPedidos(response.data)
+      console.log(response.data)
+    } catch (erro) {
+      console.log('erro ao tazer pedidos', erro)
+    }
+  }
+
   return (
     <>
       <Header />
       <Title name="Administração" />
-      <Box bg={bg} p={8} minH="100vh">
+      <Box bg={bg} p={5} minH="100vh">
         <Flex flexDirection={'column'}>
-          <Text left={1} fontSize={30} fontWeight={700}>
-            Dashboard
-          </Text>
-          <Flex justifyContent={'space-around'}>
+          <Flex>
+            <Text left={1} fontSize={30} fontWeight={700}>
+              Dashboard
+            </Text>
+          </Flex>
+          <Flex justifyContent={'space-around'} p={9}>
             <BoxRelatorio
-              src="/images/Icon.png"
+              src="/images/IconPessoa.png"
               alt="Descrição da imagem"
               total={40.689}
               atualizacao=" Desde ontem"
@@ -157,6 +174,13 @@ export default function Clientes() {
           </Flex>
         </Flex>
         <Box mt={8} bg={bgBox}>
+          <Spline
+            type="line" // Tipo de gráfico (pode ser "line", "area", "bar", etc)
+            height={350} // Altura do gráfico
+            title="Vendas Mensais" // Título do gráfico
+          />
+        </Box>
+        <Box mt={8} bg={bgBox}>
           <Flex>
             <Text fontSize="2xl" fontWeight="bold" mb={4} p={3}>
               Histórico de Vendas
@@ -174,16 +198,22 @@ export default function Clientes() {
               </Tr>
             </Thead>
             <Tbody>
-              {produtos.map((produto, index) => (
-                <Tr key={index}>
-                  <Td>{produto.nome}</Td>
-                  <Td>{produto.local}</Td>
-                  <Td>{produto.data}</Td>
-                  <Td>{produto.quantidade}</Td>
-                  <Td>{produto.total}</Td>
-                  <Td>{produto.status}</Td>
-                </Tr>
-              ))}
+              {pedidos.length > 0 ? (
+                pedidos.map((produto, index) => (
+                  <Tr key={index}>
+                    <Td>{produto.nome}</Td>
+                    <Td>{produto.local}</Td>
+                    <Td>{produto.data}</Td>
+                    <Td>{produto.quantidade}</Td>
+                    <Td>{produto.total}</Td>
+                    <Td>{produto.status}</Td>
+                  </Tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={6}>Nenhum pedido encontrado.</td>
+                </tr>
+              )}
             </Tbody>
           </Table>
         </Box>

@@ -1,11 +1,7 @@
 import {
   Box,
   Text,
-  HStack,
   Image,
-  Icon,
-  VStack,
-  Divider,
   useColorModeValue,
   Flex,
 } from '@chakra-ui/react'
