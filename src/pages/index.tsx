@@ -166,7 +166,7 @@ export default function App() {
         );
       })}
 
-      <Grid
+      {/* <Grid
         templateColumns={{ base: "1fr", md: "repeat(auto-fit, minmax(200px, 1fr))" }}
         gap={6}
         p={{ base: 4, md: 8 }}
@@ -190,8 +190,8 @@ export default function App() {
           </Heading>
           <Button type={20} />
         </Box>
-      </Grid>
-      {/* <CardsEndScreen /> */}
+      </Grid> */}
+      <CardsEndScreen />
       <Footer />
     </Box>
   );
