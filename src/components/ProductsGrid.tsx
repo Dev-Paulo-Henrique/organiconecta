@@ -41,7 +41,6 @@ export function ProductsGrid({ products }: ProductsGridProps) {
     <Grid
       templateColumns={{
         base: "1fr", // Uma coluna Mobile
-        sm: "1fr 1fr", // Duas colunas Mobile
         md: "repeat(auto-fit, minmax(200px, 1fr))",
       }}
       gap={{ base: 2, md: 4 }}
