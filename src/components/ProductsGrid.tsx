@@ -40,7 +40,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
   return (
     <Grid
       templateColumns={{
-        base: "1fr",
+        base: "repeat(auto-fit, minmax(150px, 1fr))",
         sm: "1fr 1fr",
         md: "repeat(auto-fit, minmax(200px, 1fr))",
         // md: "repeat(auto-fit, min(200px))",
