@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { Button } from '~components/Button';
+import { CardsEndScreen } from '~components/CardsEndScreen';
 import { Footer } from '~components/Footer';
 import { Header } from '~components/Header';
 import { ProductsGrid } from '~components/ProductsGrid';
@@ -150,7 +151,7 @@ export default function App() {
         if (categoryProducts.length === 0) return null;
 
         return (
-          <Box key={category} pb={{base:"4", md:"2"}}>
+          <Box key={category} pb={{ base: "4", md: "2" }}>
             <Heading
               size={{ base: "xl", md: "lg" }}
               p={{ base: 4, md: 8 }}
@@ -165,12 +166,13 @@ export default function App() {
         );
       })}
 
-      <Grid
+      {/* <Grid
         templateColumns={{ base: "1fr", md: "repeat(auto-fit, minmax(200px, 1fr))" }}
         gap={6}
         p={{ base: 4, md: 8 }}
       >
-        <Box bg="purple.100" p={4} borderRadius="md">
+        <Box bg="purple.100" p={4} borderRadius="md"
+        >
           <Heading size="sm" mb={2}>
             Semente ao solo, esperança ao futuro.
           </Heading>
@@ -188,8 +190,9 @@ export default function App() {
           </Heading>
           <Button type={20} />
         </Box>
-      </Grid>
-      <Footer/>
+      </Grid> */}
+      <CardsEndScreen />
+      <Footer />
     </Box>
   );
 }

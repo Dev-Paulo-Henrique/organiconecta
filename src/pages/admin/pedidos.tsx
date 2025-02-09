@@ -24,7 +24,7 @@ import { Title } from '~components/Title'
 import { NotPermission } from '~components/NotPermission'
 import { Loading } from '~components/Loading'
 
-export default function Clientes() {
+export default function Pedidos() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const cardBg = useColorModeValue('white', 'gray.700') // Cor de fundo dos cards
   const color = useColorModeValue('gray.800', 'gray.100')
@@ -87,7 +87,7 @@ export default function Clientes() {
   return (
     <>
       <Header />
-      <Title name="Pedidos do Cliente" />
+      <Title name="Pedidos" />
       <Box bg={bg} p={[4, 8]} minH="100vh">
         <Grid templateAreas={`"main"`} gap="4">
           <GridItem area="main">
@@ -115,7 +115,7 @@ export default function Clientes() {
                   <Text textAlign="start" flex="2">Nome do Produto</Text>
                   <Text textAlign="start" flex="2">Valor</Text>
                   <Text textAlign="start" flex="1">Data</Text>
-                  <Text textAlign="start" flex="1">Ações</Text>
+                  {/* <Text textAlign="start" flex="1">Ações</Text> */}
                 </Flex>
 
                 <Divider borderColor="gray.300" mb="4" />
@@ -132,7 +132,11 @@ export default function Clientes() {
                       w="100%"
                       align="center"
                       gap="4"
+                      borderBottomWidth={1}
+                    borderBottomColor={"gray.300"}
+                    borderBottomStyle={"dashed"}
                       mb="4"
+                    pb={5}
                     >
                       <Text textAlign="start" flex="1">{pedido.cliente.nome}</Text>
                       <Text textAlign="start" flex="2">{pedido.itens.map((item: any) => item.produto.produtoNome).join(', ')}</Text>
@@ -142,7 +146,7 @@ export default function Clientes() {
             }).format(pedido.valorTotal)}</Text>
                       <Text textAlign="start" flex="1">{new Date(pedido.dataCompra).toLocaleDateString()}</Text>
 
-                      <Flex gap="2">
+                      {/* <Flex gap="2">
                         <Icon
                           as={IoEyeOutline}
                           boxSize="6"
@@ -177,7 +181,7 @@ export default function Clientes() {
                             },
                           })}
                         />
-                      </Flex>
+                      </Flex> */}
                     </Flex>
                   ))
                 )}

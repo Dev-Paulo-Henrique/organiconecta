@@ -7,8 +7,9 @@ import {
   Image,
   Text,
   useColorModeValue,
+  Spinner,
 } from '@chakra-ui/react'
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import { useAuth } from '~hooks/useAuth'
 import { useRouter } from 'next/router'
 import { Header } from '~components/Header'
@@ -23,21 +24,30 @@ export default function Loja() {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
   const { token, user } = useAuth()
-  const { query } = useRouter()
+  const { query, push } = useRouter()
   const { id } = query
   const isProducer = user?.tipoCliente?.tipo === 'Produtor'
 
   const [loja, setLoja] = useState<any>(null) // Estado para armazenar os dados da loja
+  const [produtos, setProdutos] = useState<any[]>([]) // Estado para armazenar os produtos da loja
   const [loading, setLoading] = useState(true)
 
-  // Carregar dados da loja
+  // Carregar dados da loja e produtos
   useEffect(() => {
     async function fetchData() {
-    try {
-        const response = await api.get(`/loja/${id}`)
-        setLoja(response.data) // Armazenar dados da loja no estado
+      try {
+        const responseLoja = await api.get(`/loja/${id}`)
+        setLoja(responseLoja.data) // Armazenar dados da loja no estado
+
+        // Buscar os produtos da loja
+        const responseProdutos = await api.get(`/produto`)
+        const filteredProducts = responseProdutos.data.filter(
+          (produto: any) => produto.lojas.id == id
+        )
+        // console.log(filteredProducts)
+        setProdutos(filteredProducts) // Armazenar dados dos produtos no estado
       } catch (error) {
-        console.error('Erro ao buscar loja:', error)
+        console.error('Erro ao buscar loja ou produtos:', error)
       } finally {
         setLoading(false)
       }
@@ -47,14 +57,11 @@ export default function Loja() {
       fetchData()
     }
   }, [id])
-
-  if (loading) return <Loading />
-  // if (!isProducer || Number(id) !== user?.id) return <NotPermission />
+// console.log(produtos)
+  if (loading) return <Loading /> // Carregando...
 
   if (!loja) {
-    return (
-      <ErrorPage/>
-    )
+    return <ErrorPage /> // Caso a loja não seja encontrada
   }
 
   return (
@@ -135,14 +142,70 @@ export default function Loja() {
           colorScheme="green"
           color="white"
           // isDisabled
-          disabled
+          // disabled
           // onClick={() => localStorage.setItem("seguindo", id)}
         >
           + SEGUIR
         </Button>
       </Box>
 
-      {/* Seção de produtos - Você pode adicionar a exibição dos produtos da loja aqui */}
+      {/* Seção de produtos */}
+      <Box py={10} px={4}>
+        <Text fontSize="2xl" fontWeight="bold" mb={6}>
+          Produtos da Loja
+        </Text>
+        <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
+          {produtos.length > 0 ? (
+            produtos.map((produto) => (
+              <GridItem key={produto.id}>
+                <Box
+                  border="1px solid #e0e0e0"
+                  borderRadius="md"
+                  overflow="hidden"
+                  boxShadow="md"
+                  bg="white"
+                  // maxH={600}
+                  p={4}
+                >
+                  <Image
+                    src={produto.produtoImagens[0] || 'https://via.placeholder.com/250'}
+                    alt={produto.produtoNome}
+                    boxSize="250px"
+                    objectFit="contain"
+                    mx="auto"
+                  />
+                  <Text fontSize="lg" fontWeight="bold" mt={4}>
+                    {produto.produtoNome}
+                  </Text>
+                  <Text fontSize="sm" color="gray.500" mt={2} noOfLines={5} textAlign={"justify"}>
+                    {produto.produtoDescricao}
+                  </Text>
+                  <Text fontSize="xl" fontWeight="bold" mt={4}>
+                    {
+                      new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                      }).format(produto.produtoPreco)
+                    }
+                  </Text>
+                  <Button
+                    mt={4}
+                    colorScheme="green"
+                    w="full"
+                    onClick={() => push(`/produto?id=${produto.id}`)}
+                  >
+                    Ver detalhes
+                  </Button>
+                </Box>
+              </GridItem>
+            ))
+          ) : (
+            <Flex justify="center" align="center" w="full" h="200px">
+              <Spinner size="lg" />
+            </Flex>
+          )}
+        </Grid>
+      </Box>
     </>
   )
 }

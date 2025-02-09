@@ -1,3 +1,5 @@
+// Paulo Henrique
+
 import {
   Box,
   Button,
@@ -11,7 +13,7 @@ import { useColorModeValue } from '~components/ui/color-mode'
 import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
-import { useState, ChangeEvent, useRef } from 'react'
+import { useState, ChangeEvent, useRef, useEffect } from 'react'
 import { storage } from '../../services/firebase' // Firebase configuration
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
@@ -46,6 +48,32 @@ export default function Loja() {
   // if (!isProducer) {
   //   return <NotPermission />
   // }
+
+  const checkStore = async () => {
+    try {
+      // Fazendo uma requisição para a rota /lojas
+      const response = await api.get('/loja')
+      
+      // Verificar se algum cliente tem o mesmo id
+      const lojaExistente = response.data.find(
+        (loja: { cliente: {id: number} }) => loja.cliente.id === user?.id
+      )
+
+      if (lojaExistente) {
+        // Redireciona para a página inicial caso encontre uma loja com o mesmo idCliente
+        router.push('/')
+        // window.location.href = '/'
+      }
+    } catch (error) {
+      console.error("Erro ao verificar loja:", error)
+    }
+  }
+
+  useEffect(() => {
+    if (user?.id) {
+      checkStore()
+    }
+  }, [user?.id])
 
   const handleCreateStore = async (e: any) => {
     e.preventDefault()
