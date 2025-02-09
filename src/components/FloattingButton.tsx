@@ -19,6 +19,8 @@ export function FloattingButton() {
     '/cadastro',
     '/recuperar-senha',
     '/carrinho',
+    '/cadastro/loja',
+    '/perfil',
   ];
 
   //Verifica se a rota atual esta na lista
@@ -30,7 +32,7 @@ export function FloattingButton() {
   }
 
   return (
-    <Box position="fixed" bottom={10} right={10}>
+    <Box position="fixed" bottom={10} right={10} zIndex={999}>
       <IconButton
         icon={<FaCartShopping />}
         aria-label="Carrinho"

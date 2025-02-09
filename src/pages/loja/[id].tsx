@@ -15,8 +15,9 @@ import { Header } from '~components/Header'
 import { Title } from '~components/Title'
 import { NotPermission } from '~components/NotPermission'
 import { Loading } from '~components/Loading'
-import { farms, persons, getRandomImage } from '~utils/store' // Importando o utilitário
 import { FaStar } from 'react-icons/fa'
+import { api } from '~services/api' // Certifique-se de importar a API
+import ErrorPage from '~pages/404'
 
 export default function Loja() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -26,32 +27,39 @@ export default function Loja() {
   const { id } = query
   const isProducer = user?.tipoCliente?.tipo === 'Produtor'
 
-  const [capa, setCapa] = useState<string>('') // Capa do produtor
-  const [perfil, setPerfil] = useState<string>('') // Perfil do produtor
+  const [loja, setLoja] = useState<any>(null) // Estado para armazenar os dados da loja
   const [loading, setLoading] = useState(true)
 
-  // Carregar capa e perfil
+  // Carregar dados da loja
   useEffect(() => {
     async function fetchData() {
       try {
-        // Usar a função getRandomImage para selecionar imagens aleatórias
-        setCapa(getRandomImage(farms)) // Seleciona uma imagem aleatória para a capa
-        setPerfil(getRandomImage(persons)) // Seleciona uma imagem aleatória para o perfil
+        const response = await api.get(`/loja/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        setLoja(response.data) // Armazenar dados da loja no estado
       } catch (error) {
-        console.error('Erro ao buscar imagem:', error)
+        console.error('Erro ao buscar loja:', error)
       } finally {
         setLoading(false)
       }
     }
-    fetchData()
-  }, [])
 
-  // Usando useMemo para garantir que a capa e o perfil não mudem durante os re-renders
-  const capaMemo = useMemo(() => capa, [capa])
-  const perfilMemo = useMemo(() => perfil, [perfil])
+    if (id && token) {
+      fetchData()
+    }
+  }, [id, token])
 
   if (loading) return <Loading />
-  if (!isProducer || Number(id) !== user?.id) return <NotPermission />
+  // if (!isProducer || Number(id) !== user?.id) return <NotPermission />
+
+  if (!loja) {
+    return (
+      <ErrorPage/>
+    )
+  }
 
   return (
     <>
@@ -70,17 +78,14 @@ export default function Loja() {
         />
         <Image
           zIndex={0}
-          src={
-            capaMemo ||
-            'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
-          }
+          src={loja.capaLojaImagem || 'https://via.placeholder.com/1920x300'} // Imagem da capa da loja
           alt="Capa do produtor"
           w="100%"
           h="300px"
           objectFit="cover"
         />
 
-        {/* Informações da fazenda */}
+        {/* Informações da loja */}
         <Flex
           zIndex={2}
           position="absolute"
@@ -91,7 +96,7 @@ export default function Loja() {
           ml={40}
         >
           <Image
-            src={perfilMemo}
+            src={loja.perfilLojaImagem || 'https://via.placeholder.com/200'} // Imagem do perfil da loja
             borderRadius="full"
             border={'5px solid green'}
             alt="Perfil do produtor"
@@ -101,10 +106,10 @@ export default function Loja() {
           />
           <Box ml={4}>
             <Text fontSize="3xl" fontWeight="bold">
-              FAZENDA APRISCO
+              {loja.nomeLoja}
             </Text>
             <Text fontSize="md">
-              ovelhanegra@gmail.com • Recife - PE • Desde 2024
+              {loja.cliente?.nome} • {loja.cliente?.usuario?.username}
             </Text>
             <Text display={'flex'} alignItems={'center'} mt={1}>
               Avaliações:
@@ -115,13 +120,13 @@ export default function Loja() {
                 <FaStar color="gold" />
                 <FaStar color="gold" />
               </Flex>{' '}
-              (82 avaliações)
+              ({Number(id) * 3} avaliações)
             </Text>
           </Box>
         </Flex>
 
         {/* Botão para seguir */}
-        <Button
+        {loja.id === id ? <Button
           mr={40}
           zIndex={2}
           position="absolute"
@@ -132,53 +137,13 @@ export default function Loja() {
           bg="green.500"
           colorScheme="green"
           color="white"
+          // onClick={() => localStorage.setItem("seguindo", id)}
         >
           + SEGUIR
-        </Button>
+        </Button> : <></>}
       </Box>
 
-      {/* Seção de produtos */}
-      {/* <Box bg={bg} p={8} minH="100vh">
-        <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-          <GridItem>
-            <Text fontSize="xl" fontWeight="bold" mb={4}>
-              FRUTAS/VEGETAIS FRESCOS
-            </Text>
-            <Flex gap={4}>
-              <Image
-                src="/images/tomato.jpg"
-                boxSize="150px"
-                borderRadius="md"
-              />
-              <Image
-                src="/images/banana.jpg"
-                boxSize="150px"
-                borderRadius="md"
-              />
-              <Image
-                src="/images/strawberry.jpg"
-                boxSize="150px"
-                borderRadius="md"
-              />
-            </Flex>
-          </GridItem>
-
-          <GridItem>
-            <Text fontSize="xl" fontWeight="bold" mb={4}>
-              DERIVADOS DE ANIMAIS
-            </Text>
-            <Flex gap={4}>
-              <Image src="/images/milk.jpg" boxSize="150px" borderRadius="md" />
-              <Image src="/images/eggs.jpg" boxSize="150px" borderRadius="md" />
-              <Image
-                src="/images/cheese.jpg"
-                boxSize="150px"
-                borderRadius="md"
-              />
-            </Flex>
-          </GridItem>
-        </Grid>
-      </Box> */}
+      {/* Seção de produtos - Você pode adicionar a exibição dos produtos da loja aqui */}
     </>
   )
 }

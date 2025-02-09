@@ -54,10 +54,10 @@ export default function Product() {
   // Verifica se o usuário é um produtor
   const isProducer = user?.tipoCliente?.tipo === 'Produtor' // Verifique a estrutura real dos dados
 
-  const handleOpen = (newTitle: string) => {
-    setTitle(newTitle)
-    onOpen()
-  }
+  // const handleOpen = (newTitle: string) => {
+  //   setTitle(newTitle)
+  //   onOpen()
+  // }
 
   // Função para carregar os produtos
   useEffect(() => {

@@ -26,7 +26,7 @@ export default function Perfil() {
   const [dataNascimento, setDataNascimento] = useState('')
   const [enderecos, setEnderecos] = useState<any[]>([])
   const [loadingPlan, setLoadingPlan] = useState<boolean>(false)
-  const [hasLoja, setHasLoja] = useState<boolean>(false)
+  const [hasLoja, setHasLoja] = useState<any>(false)
   const [uploading, setUploading] = useState(false)
   const [progresspercent, setProgresspercent] = useState<number>(0)
 
@@ -82,7 +82,7 @@ export default function Perfil() {
       )
 
       if (loja) {
-        setHasLoja(true)
+        setHasLoja(loja)
       } else {
         setHasLoja(false)
         // router.push('/cadastro/loja')
@@ -284,31 +284,40 @@ export default function Perfil() {
   }
 
   const handlePlanToggle = async () => {
-    if (hasLoja) {
-      setLoadingPlan(true)
-      try {
-        const endpoint = isClient
-          ? `/assinatura/${user.id}/ativarplano`
-          : `/assinatura/${user.id}/desativarplano`
-        const response = await api.put(
-          endpoint,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+    // if (hasLoja) {
+    setLoadingPlan(true)
+    try {
+      const endpoint = isClient
+        ? `/assinatura/${user.id}/ativarplano`
+        : `/assinatura/${user.id}/desativarplano`
+      const response = await api.put(
+        endpoint,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        )
-        console.log('Plano atualizado:', response)
+        },
+      )
+      console.log('Plano atualizado:', response)
+      if (isClient) {
+        if (hasLoja) {
+          window.location.href = `/loja/${hasLoja?.id}` // Recarrega a página após sucesso
+        } else {
+          window.location.href = '/cadastro/loja' // Recarrega a página após sucesso
+        }
+      } else {
         window.location.reload() // Recarrega a página após sucesso
-      } catch (error) {
-        console.error('Erro ao atualizar plano:', error)
-      } finally {
-        setLoadingPlan(false) // Desativa o estado de loading após a requisição
       }
-    } else {
-      router.push('/cadastro/loja')
+    } catch (error) {
+      console.error('Erro ao atualizar plano:', error)
+    } finally {
+      setLoadingPlan(false) // Desativa o estado de loading após a requisição
+      isProducer ? router.push('/') : router.push('/cadastro/loja')
     }
+    // } else {
+    //   router.push('/cadastro/loja')
+    // }
   }
 
   return (
@@ -336,26 +345,27 @@ export default function Perfil() {
               width="135px"
               height="135px"
               borderWidth={1}
-              borderColor={"gray.500"}
-              borderStyle={"solid"}
+              borderColor={'gray.500'}
+              borderStyle={'solid'}
               borderRadius="50%" // Para torná-la redonda
             />
             <Flex flexDirection="column" mb={4}>
               <label htmlFor="imageUpload">
                 <Button
                   as="span"
-                  colorScheme="blue"
+                  colorScheme="green"
                   size="sm"
                   cursor={'pointer'}
                   mt={3}
                   isLoading={progresspercent > 0 && progresspercent !== 100}
                 >
-                  {progresspercent === 100 ? "Upload Completo" : "Alterar Foto"}
+                  {progresspercent === 100 ? 'Upload Completo' : 'Alterar Foto'}
                 </Button>
               </label>
               <input
                 id="imageUpload"
                 type="file"
+                accept=".png,.jpg,.jpeg"
                 style={{ display: 'none' }}
                 onChange={handleProfileImageUpload} // Função de upload
               />

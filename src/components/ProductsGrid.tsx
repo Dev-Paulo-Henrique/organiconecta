@@ -43,6 +43,7 @@ export function ProductsGrid({ products }: ProductsGridProps) {
         base: "1fr",
         sm: "1fr 1fr",
         md: "repeat(auto-fit, minmax(200px, 1fr))",
+        // md: "repeat(auto-fit, min(200px))",
       }}
       gap={{ base: 2, md: 4 }}
       p={{ base: 4, md: 8 }}

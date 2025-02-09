@@ -2,28 +2,25 @@ import {
   Box,
   Button,
   Flex,
-  Grid,
-  GridItem,
   Stack,
   Text,
   Image,
-  FormControl,
-  FormLabel,
-  // Input,
   InputGroup,
 } from '@chakra-ui/react'
 import { useColorModeValue } from '~components/ui/color-mode'
 import Link from 'next/link'
 import { Input } from '~components/Input'
 import theme from '~styles/theme'
-import { useAuth } from '~hooks/useAuth'
-import { useRouter } from 'next/router'
-import { Title } from '~components/Title'
 import { useState, ChangeEvent, useRef } from 'react'
 import { storage } from '../../services/firebase' // Firebase configuration
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { v4 as uuidv4 } from 'uuid'
+import axios from 'axios'
+import { Title } from '~components/Title'
 import { TemplateGrid } from '~components/TemplateGrid'
+import { useAuth } from '~hooks/useAuth'
+import { useRouter } from 'next/router'
+import { api } from '~services/api'
 
 export default function Loja() {
   const bg = useColorModeValue('gray.100', 'gray.800')
@@ -31,45 +28,53 @@ export default function Loja() {
   const [nomeLoja, setNomeLoja] = useState('')
   const [certificacao, setCertificacao] = useState('')
   const [registroPropriedade, setRegistroPropriedade] = useState('')
-  const [perfilLojaImagem, setPerfilLojaImagem] = useState<File | null>(null)
-  const [capaLojaImagem, setCapaLojaImagem] = useState<File | null>(null)
+  const [perfilLojaImagem, setPerfilLojaImagem] = useState<string | null>(null)
+  const [capaLojaImagem, setCapaLojaImagem] = useState<string | null>(null)
   const [uploading, setUploading] = useState(false)
   const fileInputRefPerfil = useRef<HTMLInputElement | null>(null)
   const fileInputRefCapa = useRef<HTMLInputElement | null>(null)
   const [idCliente, setIdCliente] = useState(0)
   const [loading, setLoading] = useState(false)
+  const { user, token } = useAuth()
   const router = useRouter()
+  const [perfilLoading, setPerfilLoading] = useState(false)  // loading para perfil
+  const [capaLoading, setCapaLoading] = useState(false)  // loading para capa
 
-  const { token, setToken } = useAuth()
+  // const isProducer = user?.tipoCliente?.tipo === 'Produtor' // Verifique a estrutura real dos dados
 
-  // useEffect(() => {
-  //   if (token) {
-  //     router.push('/')
-  //   }
-  // }, [token, router])
+  // if (!isProducer) {
+  //   return <NotPermission />
+  // }
 
-  const handleLogin = async (e: any) => {
+  const handleCreateStore = async (e: any) => {
     e.preventDefault()
     setLoading(true)
     try {
-      // Lógica para enviar os dados para o servidor (aqui é apenas um exemplo)
       const data = {
         nomeLoja,
         certificacao,
         registroPropriedade,
-        capaLojaImagem,
         perfilLojaImagem,
-        idCliente,
+        capaLojaImagem,
+        idCliente: user?.id,
       }
 
-      // Exemplo de chamada à API
-      // const response = await api.post('/sua-rota', data)
+      console.log(data)
+      // Fazendo o POST para a API /loja
+      const response = await api.post('/loja', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      console.log('Loja cadastrada com sucesso:', response.data)
 
       setLoading(false)
-      router.push('/') // Redirecionar após o sucesso
+      // Redireciona após o sucesso
+      router.push(`/loja/${user?.id}`)  // Descomente se quiser redirecionar após o cadastro
     } catch (erro) {
       setLoading(false)
-      console.error(erro)
+      console.error('Erro ao cadastrar loja:', erro)
     }
   }
 
@@ -80,11 +85,12 @@ export default function Loja() {
     const file = event.target.files?.[0]
     if (!file) return
 
-    // Defina o tipo de arquivo (perfil ou capa) e faça o upload para o Firebase
     const fileName = uuidv4() + file.name
     const storageRef = ref(storage, `loja/${fileName}`)
 
-    setUploading(true)
+    // setUploading(true)
+    if (type === 'perfil') setPerfilLoading(true)
+      if (type === 'capa') setCapaLoading(true)
 
     const uploadTask = uploadBytesResumable(storageRef, file)
 
@@ -94,21 +100,22 @@ export default function Loja() {
         const progress = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
         )
-        // Aqui você pode adicionar um indicador de progresso, se necessário
       },
       error => {
         console.error('Erro ao fazer upload', error)
-        setUploading(false)
+        // setUploading(false)
+        if (type === 'perfil') setPerfilLoading(false)
+          if (type === 'capa') setCapaLoading(false)
       },
       () => {
-        // Quando o upload for concluído com sucesso
         getDownloadURL(uploadTask.snapshot.ref).then(url => {
           if (type === 'perfil') {
-            setPerfilLojaImagem(file)
+            setPerfilLojaImagem(url) // Armazena a URL da imagem de perfil
+            setPerfilLoading(false)
           } else if (type === 'capa') {
-            setCapaLojaImagem(file)
+            setCapaLojaImagem(url) // Armazena a URL da imagem de capa
+            setCapaLoading(false)
           }
-          setUploading(false)
         })
       },
     )
@@ -124,6 +131,7 @@ export default function Loja() {
             bgSize={'cover'}
             bgPosition={'center'}
             bgRepeat={'no-repeat'}
+            overflowY="auto"
           >
             <Flex align="center" justify="center" h="100vh">
               <Flex
@@ -133,7 +141,9 @@ export default function Loja() {
                 p="2"
                 borderRadius={8}
                 flexDir="column"
-                onSubmit={handleLogin} // Envia os dados quando o formulário for submetido
+                overflowY="auto"
+                // maxHeight="calc(100vh - 20px)"
+                onSubmit={handleCreateStore} // Envia os dados quando o formulário for submetido
               >
                 <Stack spacing="2">
                   <Image src={'/images/logo.png'} alt="logo" width={'100%'} />
@@ -147,6 +157,8 @@ export default function Loja() {
                     value={nomeLoja}
                     onChange={e => setNomeLoja(e.target.value)}
                   />
+
+                  <Flex gap={3}>
 
                   <Input
                     name="certificacao"
@@ -162,41 +174,23 @@ export default function Loja() {
                     name="registroPropriedade"
                     type="text"
                     placeholder="Registros"
-                    label="Registros de Propriedade"
+                    label="Registros"
                     color={color}
                     value={registroPropriedade}
                     onChange={e => setRegistroPropriedade(e.target.value)}
-                  />
+                  /></Flex>
 
-                  {/* <Input
-                    name="capaLojaImagem"
-                    type="text"
-                    placeholder="URL da Capa da Loja"
-                    label="Capa da Loja (Imagem)"
-                    color={color}
-                    value={capaLojaImagem}
-                    onChange={e => setCapaLojaImagem(e.target.value)}
-                  /> */}
-
-                  {/* <Input
-                    name="perfilLojaImagem"
-                    type="text"
-                    placeholder="URL do Perfil da Loja"
-                    label="Perfil da Loja (Imagem)"
-                    color={color}
-                    value={perfilLojaImagem}
-                    onChange={e => setPerfilLojaImagem(e.target.value)}
-                  /> */}
                   <InputGroup>
                     <Button
                       onClick={() => fileInputRefPerfil.current?.click()}
                       colorScheme="green"
                       width="full"
-                      isLoading={uploading}
+                      minW={"full"}
+                      isLoading={perfilLoading}
                     >
                       {perfilLojaImagem
-                        ? 'Trocar Imagem de Perfil'
-                        : 'Escolher Imagem de Perfil'}
+                        ? 'Trocar Perfil'
+                        : 'Perfil'}
                     </Button>
                     <Input
                       type="file"
@@ -209,24 +203,27 @@ export default function Loja() {
                   </InputGroup>
                   {perfilLojaImagem && (
                     <Image
-                      src={URL.createObjectURL(perfilLojaImagem)}
+                      src={perfilLojaImagem}
                       alt="Imagem de Perfil"
+                      alignSelf={"center"}
+                      rounded={50}
                       mt={3}
-                      boxSize="150px"
-                      objectFit="cover"
+                      boxSize="100px"
+                      objectFit="contain"
                     />
                   )}
 
-                  <InputGroup>
+                  <InputGroup display={"flex"} minW={"full"}>
                     <Button
                       onClick={() => fileInputRefCapa.current?.click()}
                       colorScheme="green"
                       width="full"
-                      isLoading={uploading}
+                      minW={"full"}
+                      isLoading={capaLoading}
                     >
-                      {capaLojaImagem
-                        ? 'Trocar Imagem de Capa'
-                        : 'Escolher Imagem de Capa'}
+                      {capaLojaImagem 
+                        ? 'Trocar Capa'
+                        : 'Capa'}
                     </Button>
                     <Input
                       type="file"
@@ -239,15 +236,16 @@ export default function Loja() {
                   </InputGroup>
                   {capaLojaImagem && (
                     <Image
-                      src={URL.createObjectURL(capaLojaImagem)}
+                      src={capaLojaImagem}
                       alt="Imagem de Capa"
                       mt={3}
-                      boxSize="300px"
-                      objectFit="cover"
+                      alignSelf={"center"}
+                      boxSize="100px"
+                      objectFit="contain"
                     />
                   )}
 
-                  <Input
+                  {/* <Input
                     name="idCliente"
                     type="number"
                     placeholder="ID do Cliente"
@@ -255,7 +253,7 @@ export default function Loja() {
                     color={color}
                     value={idCliente}
                     onChange={e => setIdCliente(Number(e.target.value))}
-                  />
+                  /> */}
                 </Stack>
                 <Flex
                   justifyContent="space-between"
@@ -265,10 +263,8 @@ export default function Loja() {
                 >
                   <Link href="/" passHref>
                     <Button
-                    w={"50%"}
+                      w={"50%"}
                       as="a"
-                      // w={140}
-                      alignItems="center"
                       colorScheme="whiteAlpha"
                       bg={useColorModeValue(theme.colors.gray[300], theme.colors.gray[700])}
                       color={color}
@@ -278,21 +274,12 @@ export default function Loja() {
                     </Button>
                   </Link>
                   <Button
-                    // w={250}
-                    // w={140}
                     type="submit"
                     colorScheme="green"
-                    // gap={1}
                     w={"50%"}
-                    bg={useColorModeValue(
-                      theme.colors.green[700],
-                      theme.colors.green[500],
-                    )}
+                    bg={useColorModeValue(theme.colors.green[700], theme.colors.green[500])}
                     size="lg"
-                    color={useColorModeValue(
-                      theme.colors.gray[100],
-                      theme.colors.gray[100],
-                    )}
+                    color={theme.colors.gray[100]}
                     isLoading={loading}
                     loadingText="Cadastrando..."
                   >

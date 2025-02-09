@@ -62,6 +62,43 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
   )
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const { user, token } = useAuth()
+  const [loading, setLoading] = useState<boolean>(true)
+  const [loja, setLoja] = useState<any>(null) // Estado para armazenar os dados da loja
+
+  // Função para verificar se a loja pertence ao cliente logado
+  const checkLoja = (lojas: any[]) => {
+    return lojas.find(loja => loja.cliente.id === user?.id)
+  }
+
+  // Carregar dados da loja
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get('/loja', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        
+        // Verificar se a loja pertence ao cliente logado
+        const lojaEncontrada = checkLoja(response.data)
+        
+        if (lojaEncontrada) {
+          setLoja(lojaEncontrada) // Se encontrar, armazena os dados da loja
+        } else {
+          console.error('Loja não encontrada para esse cliente.')
+        }
+      } catch (error) {
+        console.error('Erro ao buscar lojas:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (token) {
+      fetchData()
+    }
+  }, [token, user?.id])
 
   useEffect(() => {
     // Se existir um produto, preenche os campos com os dados do produto
@@ -76,7 +113,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
     }
   }, [product])
 
-  console.log("ADD", product)
+  // console.log("ADD", product)
 
   const handleRemoveFile = (index: number) => {
     const updatedFiles = [...files]
@@ -165,6 +202,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
 
         // Dados do produto com as URLs das imagens
         const productData = {
+          idLojas: loja?.id,
           produtoNome: productName,
           produtoPreco: price,
           produtoQuantidade: quantity,
@@ -216,6 +254,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
     } else {
       // Se não houver arquivos selecionados, envia os dados sem as imagens
       const productData = {
+        idLojas: loja?.id,
         produtoNome: productName,
         produtoCategoria: productCategory,
         produtoPreco: price,
@@ -323,7 +362,7 @@ export function AddProductForm({ title, product }: AddProductFormProps) {
           {/* Preço */}
           <Flex gap={5}>
             <FormControl id="price" isRequired>
-              <FormLabel fontWeight="bold">Preço</FormLabel>
+              <FormLabel fontWeight="bold">Preço (aprox.)</FormLabel>
               <InputGroup>
                 <NumberInput
                   value={price}

@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '~hooks/useAuth'
 import { api } from '~services/api'
 import { Loading } from './Loading'
+import { NotPermission } from './NotPermission'
 
 export function Header() {
   const bg = useColorModeValue('white', 'gray.900')
@@ -21,6 +22,51 @@ export function Header() {
   const [loading, setLoading] = useState<boolean>(true)
   const [isValidToken, setIsValidToken] = useState<boolean>(false)
 
+  const { query } = useRouter()
+  const { id } = query
+
+  const [loja, setLoja] = useState<any>(null) // Estado para armazenar os dados da loja
+
+  // Função para verificar se a loja pertence ao cliente logado
+  const checkLoja = (lojas: any[]) => {
+    return lojas.find(loja => loja.cliente.id === user?.id)
+  }
+
+  // Carregar dados da loja
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await api.get('/loja', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        
+        // Verificar se a loja pertence ao cliente logado
+        const lojaEncontrada = checkLoja(response.data)
+        
+        if (lojaEncontrada) {
+          setLoja(lojaEncontrada) // Se encontrar, armazena os dados da loja
+        } else {
+          console.error('Loja não encontrada para esse cliente.')
+        }
+      } catch (error) {
+        console.error('Erro ao buscar lojas:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (token) {
+      fetchData()
+    }
+  }, [token, user?.id])
+
+  // console.log(loja)
+
+  // if (loading) return <Loading />
+  // if (!isProducer || !loja) return <NotPermission />
+
   //   // Adicionando estado de loading para o botão de ativação/desativação do plano
 
   // Função para abrir o modal com o título correto
@@ -29,47 +75,13 @@ export function Header() {
     onOpen()
   }
 
-  // async function loadToken() {
-  //   //   if (!token) {
-  //   //     setLoading(false)
-  //   //     return
-  //   //   }
-
-  //   //   try {
-  //   //     const response = await api.get('/cliente', {
-  //   //       headers: {
-  //   //         Authorization: `Bearer ${token}`,
-  //   //       },
-  //   //     })
-
-  //   //     setIsValidToken(response.data)
-  //   //     setLoading(false)
-  //   //   } catch (error) {
-  //   //     setLoading(false)
-  //   //     localStorage.removeItem("email")
-  //   //     localStorage.removeItem("token")
-  //   //     window.location.reload()
-  //   //     console.error('Erro ao carregar token', error)
-  //   //   }
-  //   // }
-
-  //   // useEffect(() => {
-  //   //   if (token) {
-  //   //     loadToken()
-  //   //   }
-  //   // }, [])
-
-  //   // if(loading){
-  //   //   return <Loading/>
-  //   // }    
-
   const isProducerLinks = [
     { href: '/', label: 'Início' },
-    { href: '/admin/produtos', label: 'Produtos' },
+    loja ? { href: `/admin/produtos`, label: 'Produtos' } : {},
     { href: '/admin/clientes', label: 'Clientes' },
     { href: '/admin/pedidos', label: 'Pedidos' },
     { href: '/perfil', label: 'Perfil' },
-    { href: `/loja/${user?.id}`, label: 'Loja' },
+    loja ? { href: `/loja/${loja.id}`, label: 'Loja' } : {},
   ]
 
   const isClientLinks = [
@@ -114,7 +126,9 @@ export function Header() {
             color={color}
             fontSize={{ base: 'sm', md: 'md' }}
             fontWeight={
-              router.pathname === '/produto' && link.href.includes('/produto')
+              router.pathname === '/produto' && link?.href?.includes('/produto')
+                ? 'bold'
+              : router.pathname.includes(`/loja`) && link?.href?.includes('/loja')
                 ? 'bold'
                 : router.pathname === link.href
                   ? 'bold'
@@ -125,7 +139,7 @@ export function Header() {
           </Text>
         ))}
 
-{token && isClientLinks.map((link, index) => (
+{isClient && token && isClientLinks.map((link, index) => (
           <Text
             key={index}
             as={'a'}
@@ -168,6 +182,11 @@ export function Header() {
             }
           />
         )}
+        {loja && isProducer && token && router.pathname === "/admin/produtos" && <Button
+            type={21}
+            onClick={() => handleOpen('Adicionar Produto')
+            }
+          />}
         {token && <Button type={1} />}
       </Flex>
       <Viewer isOpen={isOpen} onClose={onClose} title={title} />
