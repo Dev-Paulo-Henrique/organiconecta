@@ -3,13 +3,13 @@
 import { isAxiosError } from 'axios'
 import { createContext, ReactNode, useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { api } from '~services/api' // Aqui deve ser o caminho correto para a instância da sua API
+import { api } from '~services/api'
 import { notifyError } from '~utils/toastify'
 
 type AuthContextType = {
   token: string | null
   setToken: (token: string | null) => void
-  user: any // Aqui você pode armazenar os dados do usuário autenticado
+  user: any
 }
 
 type AuthContextProviderProps = {
@@ -20,13 +20,13 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [token, setTokenState] = useState<string | null>(null)
-  const [user, setUser] = useState<any>(null) // Adicionamos o estado do usuário
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token')
     if (storedToken) {
       setTokenState(storedToken)
-      getUserByToken(storedToken) // Busca o usuário com base no token
+      getUserByToken(storedToken)
     }
   }, [])
 
@@ -35,13 +35,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
 
     if (newToken) {
       localStorage.setItem('token', newToken)
-      getUserByToken(newToken) // Busca o usuário ao definir o token
+      getUserByToken(newToken)
     } else {
       localStorage.removeItem('token')
     }
   }
 
-  // Função que valida o token e busca o usuário
   async function getUserByToken(token: string | null) {
     if (!token) {
       console.log('Token ausente')
@@ -49,28 +48,25 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
 
     try {
-      // Fazendo a requisição para a API
       const response = await api.get('/cliente', {
         headers: {
-          Authorization: `Bearer ${token}`, // Enviando o token no cabeçalho da requisição
+          Authorization: `Bearer ${token}`,
         },
       })
 
-      // Agora vamos procurar o usuário usando o 'email' armazenado no localStorage
-      const storedEmail = localStorage.getItem('email') // O email do usuário armazenado no localStorage
+      const storedEmail = localStorage.getItem('email')
 
       if (!storedEmail) {
         console.log('Email não encontrado no localStorage')
         return
       }
 
-      // Filtrando o usuário com base no email
       const user = response.data.find(
         (user: any) => user.usuario.username === storedEmail,
       )
 
       if (user) {
-        setUser(user) // Armazenando o usuário no estado
+        setUser(user)
         console.log('Usuário encontrado:', user)
       } else {
         console.log('Usuário não encontrado com esse email.')
@@ -82,14 +78,12 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           error.response.status === 500 &&
           error.response.data.includes('JWT')
         ) {
-          // notifyError(error.response.data)
-          // notifyError('Erro, revise seus dados!')
           console.error(
             'Erro 500 - JWT no corpo da resposta. Validando token...',
           )
           localStorage.removeItem('token')
           localStorage.removeItem('email')
-          validateToken() // Chama a função que valida o token
+          validateToken()
         }
       } else {
         console.log('Erro desconhecido:', error)
@@ -97,7 +91,6 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
-  // Função que valida o token no localStorage
   function validateToken() {
     const storedToken = localStorage.getItem('token')
 
@@ -115,7 +108,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
           className: 'text-center',
         },
       )
-      window.location.assign("/login")
+      window.location.assign('/login')
     } else {
       setToken(storedToken)
     }

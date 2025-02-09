@@ -22,7 +22,7 @@ import { Title } from '~components/Title'
 import { useAuth } from '~hooks/useAuth'
 import { useCart } from '~hooks/useCart'
 import theme from '~styles/theme'
-import { notifyError, notifySuccess } from '~utils/toastify'
+import { notifyError, notifyInfo, notifySuccess } from '~utils/toastify'
 
 const FRETE_FIXO = 20
 const TAXA_POR_PRODUTO = 1.75
@@ -206,7 +206,7 @@ export default function Carrinho() {
               <Stack spacing={2}>
                 <Radio value="credito">Cartão de crédito</Radio>
                 <Radio value="debito">Cartão de débito</Radio>
-                <Radio value="pix">Pix</Radio>
+                <Radio value="pix" isDisabled>Pix</Radio>
               </Stack>
             </RadioGroup>
             <Divider my={4} />
@@ -221,12 +221,14 @@ export default function Carrinho() {
               width="full"
               onClick={() => {
                 if (token) {
-                  notifySuccess(
-                    `Compra no valor de ${formatCurrency(total)} realizada com sucesso! Meio de pagamento: ${paymentMethod.toUpperCase()}.`
-                  );
-                  setTimeout(deleteItems, 6000);
+                  // notifySuccess(
+                  //   `Compra no valor de ${formatCurrency(total)} realizada com sucesso! Meio de pagamento: ${paymentMethod.toUpperCase()}.`
+                  // );
+                  // setTimeout(deleteItems, 6000);
+                  router.push(`/checkout?type=${paymentMethod}`)
                 } else {
-                  notifyError("Faça login para continuar a compra");
+                  notifyInfo("Faça login para continuar a compra");
+                  router.push(`/login`)
                 }
               }}
               

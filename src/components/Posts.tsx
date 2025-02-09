@@ -1,5 +1,6 @@
 // Gisele Oliveira
-import { Flex, Image, Text } from '@chakra-ui/react';
+
+import { Flex, Image, Text } from '@chakra-ui/react'
 interface PostsProps {
   images: { src: string; alt: string }[]
   children?: React.ReactNode

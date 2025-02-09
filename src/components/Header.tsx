@@ -78,6 +78,7 @@ export function Header() {
     // { href: '/admin/clientes', label: 'Clientes' },
     // { href: '/admin/pedidos', label: 'Pedidos' },
     { href: '/perfil', label: 'Perfil' },
+    { href: '/pedidos', label: 'Pedidos' },
     // { href: `/loja/${user?.id}`, label: 'Loja' },
   ]
 

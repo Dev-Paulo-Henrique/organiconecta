@@ -35,7 +35,6 @@ export default function Perfil() {
   const isClient = user?.tipoCliente?.tipo === 'Cliente'
   const isProducer = user?.tipoCliente?.tipo === 'Produtor'
 
-  // Função que carrega os dados do usuário
   async function getUser() {
     if (!token || !user?.id) {
       setLoading(false)
@@ -68,21 +67,17 @@ export default function Perfil() {
   const checkLoja = async () => {
     setLoading(true)
     try {
-      // Realizando a requisição GET para a rota /loja
       const response = await api.get('/loja', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       
-      // Verifica se algum dos resultados tem o cliente.id igual ao user.id
       const loja = response.data.find((loja: any) => loja.cliente.id === user.id)
 
       if (loja) {
-        // Se encontrou a loja vinculada ao user.id
         setHasLoja(true)
       } else {
-        // Caso não encontre, redireciona para o cadastro de loja
         setHasLoja(false)
         // router.push('/cadastro/loja')
       }
@@ -93,7 +88,6 @@ export default function Perfil() {
     }
   }
 
-  // Certifique-se de que os dados sejam carregados assim que o token e o user estiverem disponíveis
   useEffect(() => {
     if (token && user?.id) {
       getUser()
@@ -101,21 +95,17 @@ export default function Perfil() {
     }
   }, [token, user])
 
-  // Se o loading estiver ativo, exibe o componente Loading
   if (loading) {
     return <Loading />
   }
 
-  // Se o token não estiver disponível, mostra a tela de permissão
   if (!token) {
     return <NotPermission />
   }
 
-  // Função para atualizar os dados
   async function handleEditing() {
     setLoadingButton(true)
     try {
-      // Atualiza as informações principais (nome, telefone, cpf, etc.)
       await api.put(
         `/cliente/${user.id}`,
         {
@@ -134,7 +124,6 @@ export default function Perfil() {
         },
       )
 
-      // Verifica se algum dado de endereço foi alterado e envia para a rota correspondente
       if (enderecos.length > 0) {
         const endereco = enderecos[0]
 
@@ -147,7 +136,6 @@ export default function Perfil() {
           endereco.estado
         ) {
           if (endereco.id) {
-            // Se o endereço já existe (tem um id), realiza a atualização (PUT)
             await api.put(
               `/cliente/endereco/${endereco.id}`,
               {
@@ -167,7 +155,6 @@ export default function Perfil() {
               },
             )
           } else {
-            // Se o endereço não tem id, realiza a criação (POST)
             await api.post(
               `/cliente/endereco/${user.id}`,
               {
@@ -188,7 +175,6 @@ export default function Perfil() {
             )
           }
         } else {
-          // Caso algum campo obrigatório do endereço esteja vazio, exibe um alerta
           notifyError(
             'Por favor, preencha todos os campos obrigatórios do endereço!',
           )
@@ -207,7 +193,6 @@ export default function Perfil() {
       if (hasLoja) {
       setLoadingPlan(true)
       try {
-        // Dependendo do tipo de cliente, fazemos a requisição PUT
         const endpoint = isClient
           ? `/assinatura/${user.id}/ativarplano`
           : `/assinatura/${user.id}/desativarplano`
@@ -382,6 +367,7 @@ export default function Perfil() {
                 label="País"
                 value={'Brasil'}
                 isReadOnly
+                isDisabled
               />
             </Flex>
             <Flex alignItems={'center'} justifyContent={'end'} gap={5} mt={3}>

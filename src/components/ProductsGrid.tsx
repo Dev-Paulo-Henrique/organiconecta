@@ -40,8 +40,8 @@ export function ProductsGrid({ products }: ProductsGridProps) {
   return (
     <Grid
       templateColumns={{
-        base: "1fr", // Uma coluna Mobile
-        sm: "1fr 1fr", // Duas colunas Mobile
+        base: "1fr",
+        sm: "1fr 1fr",
         md: "repeat(auto-fit, minmax(200px, 1fr))",
       }}
       gap={{ base: 2, md: 4 }}
@@ -108,7 +108,6 @@ export function ProductsGrid({ products }: ProductsGridProps) {
           </Flex>
           <Button
             type={10}
-            // width="100%" -- Necessario para ocupar a tela toda no mobile
             onClick={(e: { stopPropagation: () => any; }) => {
               return e.stopPropagation(),
                 addItem({

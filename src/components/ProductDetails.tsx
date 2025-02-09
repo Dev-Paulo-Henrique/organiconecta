@@ -49,11 +49,11 @@ export function ProductDetails({
      gap={{base: 5, md: 20}} 
      pt={{base: 10, md: 20}}
      flexDir={{ base: 'column', md: 'row' }} 
-      alignItems="center" // Centraliza os itens em mobile
+      alignItems="center"
      >
       <Flex flexDir="column" alignItems={'center'}>
         <Box
-          position="relative" // Define o container como referência
+          position="relative"
           p={4}
           borderWidth="1px"
           borderRadius="md"
@@ -63,7 +63,6 @@ export function ProductDetails({
           w={{base: '280px', md: '350px'}}
           textAlign="center"
         >
-          {/* Preço posicionado em cima da imagem */}
           <Box
             position="absolute"
             top="10px"
@@ -85,8 +84,8 @@ export function ProductDetails({
           <Image
             src={img}
             alt={alt}
-            w={{base: '250px', md:'300px'}} //Tamano menor no mobile
-            h={{base: '250px', md:'300px'}} //Tamano menor no mobile
+            w={{base: '250px', md:'300px'}}
+            h={{base: '250px', md:'300px'}}
             objectFit="contain"
             borderRadius="md"
           />
@@ -110,8 +109,8 @@ export function ProductDetails({
         <Text mt={2}>{quantity} itens restantes</Text>
       </Flex>
       <Flex
-        // alignItems="start"
-        // justifyContent="start"
+      
+      
         flexDir="column"
         w={{ base: '100%', md: 'auto' }}
       >
