@@ -1,6 +1,6 @@
 // Paulo Henrique
 // Gisele Oliveira
- import {
+import {
   Box,
   Divider,
   Flex,
@@ -157,6 +157,11 @@ export default function Clientes() {
           </Flex>
         </Flex>
         <Box mt={8} bg={bgBox}>
+          <Flex>
+            <Text fontSize="2xl" fontWeight="bold" mb={4} p={3}>
+              Histórico de Vendas
+            </Text>
+          </Flex>
           <Table variant="simple">
             <Thead>
               <Tr>
