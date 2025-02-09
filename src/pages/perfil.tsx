@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Image, Text } from '@chakra-ui/react'
+import { Box, Button, Flex, Image, Progress, Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Header } from '~components/Header'
@@ -12,7 +12,9 @@ import theme from '~styles/theme'
 import { format, parseISO } from 'date-fns'
 import InputMask from 'react-input-mask'
 import { notifyError, notifySuccess } from '~utils/toastify'
-import { Button as Btn} from '../components/Button'
+import { Button as Btn } from '../components/Button'
+import { storage } from '~services/firebase'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 
 export default function Perfil() {
   const bg = 'gray.100'
@@ -25,6 +27,8 @@ export default function Perfil() {
   const [enderecos, setEnderecos] = useState<any[]>([])
   const [loadingPlan, setLoadingPlan] = useState<boolean>(false)
   const [hasLoja, setHasLoja] = useState<boolean>(false)
+  const [uploading, setUploading] = useState(false)
+  const [progresspercent, setProgresspercent] = useState<number>(0)
 
   const { token, user } = useAuth()
   const router = useRouter()
@@ -72,8 +76,10 @@ export default function Perfil() {
           Authorization: `Bearer ${token}`,
         },
       })
-      
-      const loja = response.data.find((loja: any) => loja.cliente.id === user.id)
+
+      const loja = response.data.find(
+        (loja: any) => loja.cliente.id === user.id,
+      )
 
       if (loja) {
         setHasLoja(true)
@@ -101,6 +107,94 @@ export default function Perfil() {
 
   if (!token) {
     return <NotPermission />
+  }
+
+  const handleProfileImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0]
+      const fileUrls: string[] = []
+
+      // Criação do caminho para a imagem no Firebase Storage
+      const storageRef = ref(storage, `perfil/${user.id}/${file.name}`)
+      const uploadTask = uploadBytesResumable(storageRef, file)
+
+      try {
+        const uploadPromise = new Promise<string>((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            snapshot => {
+              // Acompanhando o progresso do upload
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+              )
+              setProgresspercent(progress) // Atualizando o progresso
+            },
+            error => {
+              console.error('Erro ao fazer upload:', error)
+              reject(error)
+            },
+            () => {
+              // Quando o upload for concluído com sucesso
+              getDownloadURL(uploadTask.snapshot.ref)
+                .then(downloadURL => {
+                  fileUrls.push(downloadURL) // Armazenando a URL da imagem
+                  resolve(downloadURL)
+                })
+                .catch(error => {
+                  console.error('Erro ao obter a URL de download:', error)
+                  reject(error)
+                })
+            },
+          )
+        })
+
+        // Espera o upload ser concluído e obtém a URL
+        const profileImageURL = await uploadPromise
+        setClienteImagem(profileImageURL) // Atualiza a imagem de perfil no estado
+
+        // Atualiza a foto de perfil do usuário no backend
+        await updateProfileImage(profileImageURL) // Chama a função para atualizar a imagem no servidor
+
+        notifySuccess('Imagem de perfil carregada com sucesso!')
+      } catch (error) {
+        console.error('Erro ao fazer upload da imagem de perfil:', error)
+        notifyError('Erro ao carregar a imagem de perfil.')
+      }
+    }
+  }
+
+  const updateProfileImage = async (profileImageURL: string) => {
+    try {
+      const response = await api.put(
+        `/cliente/${user.id}`, // Endpoint para atualizar a foto de perfil
+        {
+          nome,
+          telefone,
+          cpf,
+          dataNascimento,
+          email,
+          clienteImagem: profileImageURL,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Incluindo o token de autorização
+            'Content-Type': 'application/json',
+          },
+        },
+      )
+
+      if (response.status === 200) {
+        console.log('Foto de perfil atualizada com sucesso!')
+        window.location.reload()
+      } else {
+        throw new Error('Erro ao atualizar foto de perfil')
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar foto de perfil:', error)
+      notifyError('Erro ao atualizar foto de perfil.')
+    }
   }
 
   async function handleEditing() {
@@ -189,29 +283,33 @@ export default function Perfil() {
     }
   }
 
-    const handlePlanToggle = async () => {
-      if (hasLoja) {
+  const handlePlanToggle = async () => {
+    if (hasLoja) {
       setLoadingPlan(true)
       try {
         const endpoint = isClient
           ? `/assinatura/${user.id}/ativarplano`
           : `/assinatura/${user.id}/desativarplano`
-        const response = await api.put(endpoint, {}, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const response = await api.put(
+          endpoint,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        })
+        )
         console.log('Plano atualizado:', response)
         window.location.reload() // Recarrega a página após sucesso
       } catch (error) {
         console.error('Erro ao atualizar plano:', error)
       } finally {
-        setLoadingPlan(false)  // Desativa o estado de loading após a requisição
+        setLoadingPlan(false) // Desativa o estado de loading após a requisição
       }
     } else {
-      router.push("/cadastro/loja")
+      router.push('/cadastro/loja')
     }
-    }
+  }
 
   return (
     <>
@@ -225,7 +323,62 @@ export default function Perfil() {
           as="form"
           mt={20}
         >
-          <Image src={clienteImagem} alt="logo" width={'auto'} h={'135px'} />
+          <Flex
+            flexDir={'column'}
+            justify={'center'}
+            alignItems={'center'}
+            h={'auto'}
+          >
+            {/* <Image src={clienteImagem} alt="logo" width={'auto'} h={'135px'} /> */}
+            <Image
+              src={clienteImagem || '/default-profile.png'} // Use a URL da imagem ou uma imagem padrão
+              alt="Foto de perfil"
+              width="135px"
+              height="135px"
+              borderWidth={1}
+              borderColor={"gray.500"}
+              borderStyle={"solid"}
+              borderRadius="50%" // Para torná-la redonda
+            />
+            <Flex flexDirection="column" mb={4}>
+              <label htmlFor="imageUpload">
+                <Button
+                  as="span"
+                  colorScheme="blue"
+                  size="sm"
+                  cursor={'pointer'}
+                  mt={3}
+                  isLoading={progresspercent > 0 && progresspercent !== 100}
+                >
+                  {progresspercent === 100 ? "Upload Completo" : "Alterar Foto"}
+                </Button>
+              </label>
+              <input
+                id="imageUpload"
+                type="file"
+                style={{ display: 'none' }}
+                onChange={handleProfileImageUpload} // Função de upload
+              />
+            </Flex>
+            {progresspercent === 100 ? (
+              // <Text>Upload Completo!</Text>
+              <></>
+            ) : (
+              progresspercent > 0 &&
+              progresspercent < 100 && (
+                <Flex direction="column" alignItems="center" mt={3}>
+                  <Text>Progresso: {progresspercent}%</Text>
+                  <Progress
+                    value={progresspercent}
+                    size="xs"
+                    colorScheme="green"
+                    width="100%"
+                  />
+                </Flex>
+              )
+            )}
+          </Flex>
+
           <Flex flexDir="column">
             <Flex justifyContent={'space-between'} gap={4} mb={3}>
               <Input
@@ -372,13 +525,14 @@ export default function Perfil() {
             </Flex>
             <Flex alignItems={'center'} justifyContent={'end'} gap={5} mt={3}>
               {token && (
-                        <Btn isLoading={loadingPlan} // Passando o estado de carregamento
-                          onClick={handlePlanToggle}
-                          type={isClient ? 22 : 23}
-                        >
-                          {isClient ? 'Ativar Plano' : 'Desativar Plano'}
-                        </Btn>
-                      )}
+                <Btn
+                  isLoading={loadingPlan} // Passando o estado de carregamento
+                  onClick={handlePlanToggle}
+                  type={isClient ? 22 : 23}
+                >
+                  {isClient ? 'Ativar Plano' : 'Desativar Plano'}
+                </Btn>
+              )}
               <Button
                 alignItems={'center'}
                 w={140}
