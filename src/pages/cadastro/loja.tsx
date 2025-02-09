@@ -71,7 +71,8 @@ export default function Loja() {
 
       setLoading(false)
       // Redireciona após o sucesso
-      router.push(`/loja/${user?.id}`)  // Descomente se quiser redirecionar após o cadastro
+      window.location.href = "/"
+      // router.push(`/loja/${user?.id}`)  // Descomente se quiser redirecionar após o cadastro
     } catch (erro) {
       setLoading(false)
       console.error('Erro ao cadastrar loja:', erro)
