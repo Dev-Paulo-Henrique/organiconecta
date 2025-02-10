@@ -25,7 +25,7 @@ export default function BoxRelatorio({
   return (
     <>
       <Box>
-        <Flex flexDirection={'column'} bg={bg} p={5} borderRadius={7}>
+        <Flex flexDirection={'column'} bg={"white"} p={5} borderRadius={7}>
           <Flex>
             <Flex gap={5}>
               <Flex flexDirection={'column'}>

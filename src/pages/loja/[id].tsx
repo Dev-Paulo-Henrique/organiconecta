@@ -150,12 +150,12 @@ export default function Loja() {
       </Box>
 
       {/* Seção de produtos */}
-      <Box py={10} px={4}>
+      <Box p={10}>
         <Text fontSize="2xl" fontWeight="bold" mb={6}>
           Produtos da Loja
         </Text>
         <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={6}>
-          {produtos.length > 0 ? (
+          {produtos.length > 0 && (
             produtos.map((produto) => (
               <GridItem key={produto.id}>
                 <Box
@@ -177,7 +177,7 @@ export default function Loja() {
                   <Text fontSize="lg" fontWeight="bold" mt={4}>
                     {produto.produtoNome}
                   </Text>
-                  <Text fontSize="sm" color="gray.500" mt={2} noOfLines={5} textAlign={"justify"}>
+                  <Text fontSize="sm" color="gray.500" mt={2} noOfLines={3} textAlign={"justify"}>
                     {produto.produtoDescricao}
                   </Text>
                   <Text fontSize="xl" fontWeight="bold" mt={4}>
@@ -199,12 +199,15 @@ export default function Loja() {
                 </Box>
               </GridItem>
             ))
-          ) : (
-            <Flex justify="center" align="center" w="full" h="200px">
-              <Spinner size="lg" />
-            </Flex>
           )}
         </Grid>
+        {produtos.length === 0 && (
+          <Box w="full" textAlign="center" p={6} border="1px solid #e0e0e0" borderRadius="md" bg="gray.50">
+          <Text fontSize="xl" w={"full"} color="gray.500">
+            Não há produtos disponíveis na loja no momento.
+          </Text>
+        </Box>
+        )}
       </Box>
     </>
   )

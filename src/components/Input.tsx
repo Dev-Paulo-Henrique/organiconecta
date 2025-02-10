@@ -11,6 +11,7 @@ import { forwardRef, ForwardRefRenderFunction } from 'react'
 import { FieldError } from 'react-hook-form'
 import { useColorModeValue } from './ui/color-mode'
 import theme from '~styles/theme'
+import { useRouter } from 'next/router'
 
 interface InputProps extends ChakraInputProps {
   name: string
@@ -24,10 +25,11 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
 ) => {
   const bg = useColorModeValue('gray.100', 'gray.800')
   const color = useColorModeValue('gray.800', 'gray.100')
+  const router = useRouter()
   return (
     <FormControl isInvalid={!!error}>
       {!!label && (
-        <FormLabel htmlFor={name} color={color}>
+        <FormLabel htmlFor={name} color={router.pathname === "/perfil" ? "gray.800" : color}>
           {label}
         </FormLabel>
       )}
@@ -35,12 +37,15 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         name={name}
         id={name}
         focusBorderColor={theme.colors.green[500]}
-        borderColor={color}
-        bgColor={bg}
+        borderColor={router.pathname === "/perfil" ? "gray.800" : color}
+        bgColor={router.pathname === "/perfil" ? "white" : bg}
         variant="filled"
         size="lg"
         _hover={{ 
-          background: "transparent"
+          background: bg
+         }}
+         _focus={{
+          background: bg
          }}
         ref={ref}
         {...rest}

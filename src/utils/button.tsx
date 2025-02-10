@@ -114,11 +114,11 @@ export const buttonsUtils = {
       onClick: () => window.location.href = "/admin/dashboard",
     },
     17: {
-      text: "Descartar Alterações",
-      bg: "green.500",
+      text: "Lojas",
+      bg: "gray.500",
       color: "white",
-      colorScheme: "green",
-      onClick: () => alert("Você clicou no botão Descartar Alterações"),
+      colorScheme: "gray",
+      onClick: () => window.location.href = "/lojas",
     },
     18: {
       text: "Adicionar",

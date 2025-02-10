@@ -135,12 +135,14 @@ export default function Product() {
           <GridItem area="main">
             <Flex
               as="form"
-              bg={bg}
-              p={[4, 8]}
+              // bg={bg}
+              p={[4, 10]}
               borderRadius="8"
               flexDir="column"
               maxW="1200px"
               mx="auto"
+              bg={"white"} 
+              rounded={5}
             >
               {/* Tabela para mostrar os produtos no Desktop*/}
               <Table variant="simple" colorScheme="gray" display={['none', 'none', 'table']}>
@@ -310,7 +312,7 @@ export default function Product() {
               {products.length > 0 && <Flex
                 justify="center"
                 align="center"
-                mt={5}
+                mt={10}
                 gap={5}
                 direction={['row']}
               >

@@ -159,6 +159,7 @@ export function Header() {
         ))}
 
         {/* {token && isClient && router.pathname === '/' && <Button type={12} />} */}
+        {router.pathname !== '/lojas' && <Button type={17} />}
         {token && isAdmin && router.pathname !== '/admin/dashboard' && <Button type={16} />}
         {!token && router.pathname === '/' && <Button type={12} />}
         {!token && router.pathname === '/carrinho' && <Button type={11} />}
