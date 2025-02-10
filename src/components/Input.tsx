@@ -42,10 +42,10 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         variant="filled"
         size="lg"
         _hover={{ 
-          background: bg
+          background: router.pathname === "/perfil" ? "white" : bg
          }}
          _focus={{
-          background: bg
+          background: router.pathname === "/perfil" ? "white" : bg
          }}
         ref={ref}
         {...rest}
