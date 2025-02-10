@@ -320,135 +320,142 @@ export default function Perfil() {
     // }
   }
 
-  return (
-    <>
-      <Header />
-      <Title />
-      <Flex bg={bg} h="100vh" justifyContent={'center'}>
+return (
+  <>
+    <Header />
+    <Title />
+    <Flex bg={bg} minH="100vh" justifyContent={'center'} pb={8}>
+      <Flex
+        justifyContent={'center'}
+        alignItems={'flex-start'}
+        gap={8}
+        as="form"
+        mt={{ base: 8, md: 20 }}
+        px={{ base: 4, md: 0 }}
+        flexDirection={{ base: 'column', md: 'row' }}
+        w="100%"
+      >
         <Flex
-          justifyContent={'center'}
-          alignItems={'flex-start'}
-          gap={3}
-          as="form"
-          mt={20}
+          flexDir={'column'}
+          justify={'center'}
+          alignItems={'center'}
+          w={{ base: '100%', md: 'auto' }}
+          mb={{ base: 6, md: 0 }}
         >
-          <Flex
-            flexDir={'column'}
-            justify={'center'}
-            alignItems={'center'}
-            h={'auto'}
-          >
-            {/* <Image src={clienteImagem} alt="logo" width={'auto'} h={'135px'} /> */}
-            <Image
-              src={clienteImagem || '/default-profile.png'} // Use a URL da imagem ou uma imagem padrão
-              alt="Foto de perfil"
-              width="135px"
-              height="135px"
-              borderWidth={1}
-              borderColor={'gray.500'}
-              borderStyle={'solid'}
-              borderRadius="50%" // Para torná-la redonda
-            />
-            <Flex flexDirection="column" mb={4}>
-              <label htmlFor="imageUpload">
-                <Button
-                  as="span"
+          <Image
+            src={clienteImagem || '/default-profile.png'}
+            alt="Foto de perfil"
+            width={{ base: '200px', md: '135px' }}
+            height={{ base: '200px', md: '135px' }}
+            borderWidth={1}
+            borderColor={'gray.500'}
+            borderStyle={'solid'}
+            borderRadius="50%"
+          />
+
+          <Flex flexDirection="column" mb={4} w={{base:'100%', md:'auto'}} alignItems="center">
+            <label htmlFor="imageUpload" style={{ width: '100%' }}>
+              <Button
+                as="span"
+                colorScheme="green"
+                size={'sm'}
+                cursor={'pointer'}
+                mt={3}
+                w={{ base: '100%', md: 'auto' }}
+                isLoading={progresspercent > 0 && progresspercent !== 100}
+              >
+                {progresspercent === 100 ? 'Completo' : 'Alterar Foto'}
+              </Button>
+            </label>
+
+            {progresspercent > 0 && progresspercent < 100 && (
+              <Flex direction="column" alignItems="center" mt={3} w="100%">
+                <Text fontSize="sm">Progresso: {progresspercent}%</Text>
+                <Progress
+                  value={progresspercent}
+                  size="xs"
                   colorScheme="green"
-                  size="sm"
-                  cursor={'pointer'}
-                  mt={3}
-                  isLoading={progresspercent > 0 && progresspercent !== 100}
-                >
-                  {progresspercent === 100 ? 'Upload Completo' : 'Alterar Foto'}
-                </Button>
-              </label>
-              <input
-                id="imageUpload"
-                type="file"
-                accept=".png,.jpg,.jpeg"
-                style={{ display: 'none' }}
-                onChange={handleProfileImageUpload} // Função de upload
-              />
-            </Flex>
-            {progresspercent === 100 ? (
-              // <Text>Upload Completo!</Text>
-              <></>
-            ) : (
-              progresspercent > 0 &&
-              progresspercent < 100 && (
-                <Flex direction="column" alignItems="center" mt={3}>
-                  <Text>Progresso: {progresspercent}%</Text>
-                  <Progress
-                    value={progresspercent}
-                    size="xs"
-                    colorScheme="green"
-                    width="100%"
-                  />
-                </Flex>
-              )
+                  width="100%"
+                />
+              </Flex>
             )}
           </Flex>
+        </Flex>
 
-          <Flex flexDir="column">
-            <Flex justifyContent={'space-between'} gap={4} mb={3}>
-              <Input
-                name="nome"
-                type="text"
-                label="Nome Completo"
-                w={750}
-                value={nome}
-                onChange={e => setNome(e.target.value)}
-              />
-              <InputMask
-                mask="99/99/9999" // Máscara de data
-                value={dataNascimento}
-                onChange={e => setDataNascimento(e.target.value)}
-              >
-                {(inputProps: any) => (
-                  <Input
-                    {...inputProps}
-                    name="dataNasc"
-                    type="text"
-                    label="Data Nascimento"
-                  />
-                )}
-              </InputMask>
-            </Flex>
-            <Flex justifyContent={'space-between'} gap={4} mb={3}>
-              <Input
-                name="email"
-                type="email"
-                label="E-mail"
-                w={500}
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-              />
-              <Input
-                name="telefone"
-                type="text"
-                label="Telefone"
-                value={telefone}
-                onChange={e => setTelefone(e.target.value)}
-              />
-              <InputMask
-                mask="999.999.999-99"
-                value={cpf}
-                onChange={(e: {
-                  target: { value: React.SetStateAction<string> }
-                }) => setCpf(e.target.value)}
-              >
-                {(inputProps: any) => (
-                  <Input
-                    name="cpf"
-                    type="text"
-                    label="CPF"
-                    // color={color}
-                    {...inputProps}
-                  />
-                )}
-              </InputMask>
-            </Flex>
-            <Flex justifyContent={'space-between'} gap={4} mb={3}>
+        <Flex flexDir="column" w={{ base: '100%', md: 'auto' }}>
+          <Flex
+            flexDir={{ base: 'column', md: 'row' }}
+            gap={4}
+            mb={3}
+            mt={{base:-6, md: 0}}
+            w="100%"
+          >
+            <Input
+              name="nome"
+              type="text"
+              label="Nome Completo"
+              w={{ base: '100%', md: 750 }}
+              value={nome}
+              onChange={e => setNome(e.target.value)}
+            />
+            <InputMask
+              mask="99/99/9999"
+              value={dataNascimento}
+              onChange={e => setDataNascimento(e.target.value)}
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  name="dataNasc"
+                  type="text"
+                  label="Data Nasc."
+                  w={{ base: '100%', md: 'auto' }}
+                />
+              )}
+            </InputMask>
+          </Flex>
+
+          {/* Linha 2 - Email, Telefone e CPF */}
+          <Flex
+            flexDir={{ base: 'column', md: 'row' }}
+            gap={4}
+            mb={3}
+            w="100%"
+          >
+            <Input
+              name="email"
+              type="email"
+              label="E-mail"
+              w={{ base: '100%', md: 500 }}
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+            <Input
+              name="telefone"
+              type="text"
+              label="Telefone"
+              value={telefone}
+              onChange={e => setTelefone(e.target.value)}
+            />
+            <InputMask
+              mask="999.999.999-99"
+              value={cpf}
+              onChange={e => setCpf(e.target.value)}
+            >
+              {(inputProps: any) => (
+                <Input
+                  {...inputProps}
+                  name="cpf"
+                  type="text"
+                  label="CPF"
+                  w={{ base: '100%', md: 'auto' }}
+                />
+              )}
+            </InputMask>
+          </Flex>
+
+          <Flex flexDir="column" gap={4} mb={3}>
+            <Flex flexDir={{ base: 'column', md: 'row' }} gap={4}>
               <Input
                 name="Rua"
                 type="text"
@@ -468,7 +475,8 @@ export default function Perfil() {
                 }
               />
             </Flex>
-            <Flex justifyContent={'space-between'} gap={4} mb={3}>
+
+            <Flex flexDir={{ base: 'column', md: 'row' }} gap={4}>
               <Input
                 name="bairro"
                 type="text"
@@ -490,7 +498,7 @@ export default function Perfil() {
                 }
               />
               <InputMask
-                mask="99999-999" // Máscara do CEP
+                mask="99999-999"
                 value={enderecos[0]?.cep}
                 onChange={e =>
                   setEnderecos([{ ...enderecos[0], cep: e.target.value }])
@@ -501,7 +509,8 @@ export default function Perfil() {
                 )}
               </InputMask>
             </Flex>
-            <Flex justifyContent={'space-between'} gap={4} mb={3}>
+
+            <Flex flexDir={{ base: 'column', md: 'row' }} gap={4}>
               <Input
                 name="cidade"
                 type="text"
@@ -516,7 +525,6 @@ export default function Perfil() {
                 type="text"
                 label="UF"
                 maxLength={2}
-                min={2}
                 value={enderecos[0]?.estado}
                 onChange={e =>
                   setEnderecos([
@@ -533,34 +541,41 @@ export default function Perfil() {
                 isDisabled
               />
             </Flex>
-            <Flex alignItems={'center'} justifyContent={'end'} gap={5} mt={3}>
-              {token && (
-                <Btn
-                  isLoading={loadingPlan} // Passando o estado de carregamento
-                  onClick={handlePlanToggle}
-                  type={isClient ? 22 : 23}
-                >
-                  {isClient ? 'Ativar Plano' : 'Desativar Plano'}
-                </Btn>
-              )}
-              <Button
-                alignItems={'center'}
-                w={140}
-                type="button"
-                onClick={handleEditing}
-                // mt="6"
-                colorScheme="green"
-                bg={theme.colors.green[700]}
-                // size="lg"
-                isLoading={loadingButton}
-                color={theme.colors.gray[100]}
+          </Flex>
+
+          {/* Botões */}
+          <Flex
+            flexDir={{ base: 'row-reverse', md: 'row' }}
+            alignItems={'center'}
+            justifyContent={'end'}
+            gap={5}
+            mt={4}
+          >
+            <Button
+              w={140}
+              colorScheme="green"
+              bg={theme.colors.green[700]}
+              fontSize={"md"}
+              isLoading={loadingButton}
+              color={theme.colors.gray[100]}
+              onClick={handleEditing}
+            >
+              Salvar
+            </Button>
+
+            {token && (
+              <Btn
+                isLoading={loadingPlan}
+                onClick={handlePlanToggle}
+                type={isClient ? 22 : 23}
               >
-                Salvar
-              </Button>
-            </Flex>
+                {isClient ? 'Ativar Plano' : 'Desativar Plano'}
+              </Btn>
+            )}
           </Flex>
         </Flex>
       </Flex>
-    </>
-  )
+    </Flex>
+  </>
+);
 }

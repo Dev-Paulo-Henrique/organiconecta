@@ -16,11 +16,12 @@ export function FloattingButton() {
   //Paginas que não devem aparecer o carrinho
   const hiddenRoutes = [
     '/login',
-    '/cadastro',
+    '/cadastro/cliente',
     '/recuperar-senha',
     '/carrinho',
     '/cadastro/loja',
     '/perfil',
+    '',
   ];
 
   //Verifica se a rota atual esta na lista
