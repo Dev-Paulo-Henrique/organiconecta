@@ -20,11 +20,15 @@ import {
   IconButton,
   Button,
   HStack,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 import { IoEyeOutline } from 'react-icons/io5'
 import { PiTrash } from 'react-icons/pi'
+import { IoIosArrowBack } from "react-icons/io"; //
+import { IoIosArrowForward } from "react-icons/io"; // 
 import { Spline } from '~components/Grafico'
 import { FiEdit3 } from 'react-icons/fi'
+import { MdOpenInNew } from "react-icons/md";
 import { Header } from '~components/Header'
 import { Viewer } from '~components/Modal'
 import { useEffect, useState } from 'react'
@@ -61,6 +65,28 @@ export default function Clientes() {
   const [produtos, setProdutos] = useState<any[]>([])
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [itemsPerPage, setItemsPerPage] = useState<number>(5)
+
+  const isMobile = useBreakpointValue({ base: true, md: false })
+
+  const buttonProduct = useBreakpointValue({
+    base: <MdOpenInNew />, // Apenas o ícone em dispositivos móveis
+    md: "Mues Produtos",   // Apenas o texto em dispositivos desktop
+  });
+
+  const buttonLoja = useBreakpointValue({
+    base: <MdOpenInNew />, // Apenas o ícone em dispositivos móveis
+    md: "Ver Lojas",   // Apenas o texto em dispositivos desktop
+  });
+
+  const buttonFlow = useBreakpointValue({
+    base: <IoIosArrowForward />,
+    md: "Proxima"
+  });
+
+  const buttonBack = useBreakpointValue({
+    base: <IoIosArrowBack />,
+    md: "Anterior"
+  });
 
   useEffect(() => {
     const fetchCounts = async () => {
@@ -199,7 +225,7 @@ export default function Clientes() {
   }
 
   const paginatedProducts = produtos.slice(
-    (currentPage - 1) * itemsPerPage, 
+    (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
 
@@ -219,170 +245,204 @@ export default function Clientes() {
   const totalPages = Math.ceil(produtos.length / itemsPerPage)
 
   // console.log(produtos)
+
   return (
+
     <>
       <Header />
       <Title name="Administração" />
       <Box bg={bg} p={5} px={10} minH="100vh">
         <Flex flexDirection={'column'}>
           <Flex>
-            <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"}>
+            <Text fontSize={isMobile ? 30 : 40} fontWeight={"bold"} textTransform={"uppercase"}>
               Dashboard
             </Text>
           </Flex>
-          <Flex justifyContent={'space-between'} py={10}>
-          <BoxRelatorio
-            src="/images/IconTime.png"
-            alt="Usuários Ao Vivo"
-            total={1} // Contagem de clientes
-            atualizacao="Nesse exato momento"
-          >
-            Usuários Ao Vivo
-          </BoxRelatorio>
-          <BoxRelatorio
-            src="/images/IconPessoa.png"
-            alt="Total de Clientes"
-            total={clienteCount} // Contagem de clientes
-            atualizacao="Desde o último mês"
-          >
-            Total de Clientes
-          </BoxRelatorio>
-          <BoxRelatorio
-            src="/images/IconPessoa.png"
-            alt="Total de Produtores"
-            total={produtorCount} // Contagem de produtores
-            atualizacao="Desde o último mês"
-          >
-            Total de Produtores
-          </BoxRelatorio>
-          <BoxRelatorio
-            src="/images/IconBox.png"
-            alt="Total de Lojas"
-            total={lojaCount}
-            atualizacao="Desde o último mês"
-          >
-            Total de Lojas
-          </BoxRelatorio>
-          <BoxRelatorio
-            src="/images/IconNivel.png"
-            alt="Total de Produtos"
-            total={produtoCount}
-            atualizacao="Desde o último mês"
-          >
-            Total de Produtos
-          </BoxRelatorio>
-        </Flex>
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(5, 1fr)' }} gap={4} py={10}>
+            <BoxRelatorio
+              src="/images/IconTime.png"
+              alt="Usuários Ao Vivo"
+              total={1} // Contagem de clientes
+              atualizacao="Nesse exato momento"
+            >
+              Usuários Ao Vivo
+            </BoxRelatorio>
+            <BoxRelatorio
+              src="/images/IconPessoa.png"
+              alt="Total de Clientes"
+              total={clienteCount} // Contagem de clientes
+              atualizacao="Desde o último mês"
+            >
+              Total de Clientes
+            </BoxRelatorio>
+            <BoxRelatorio
+              src="/images/IconPessoa.png"
+              alt="Total de Produtores"
+              total={produtorCount} // Contagem de produtores
+              atualizacao="Desde o último mês"
+            >
+              Total de Produtores
+            </BoxRelatorio>
+            <BoxRelatorio
+              src="/images/IconBox.png"
+              alt="Total de Lojas"
+              total={lojaCount}
+              atualizacao="Desde o último mês"
+            >
+              Total de Lojas
+            </BoxRelatorio>
+            <BoxRelatorio
+              src="/images/IconNivel.png"
+              alt="Total de Produtos"
+              total={produtoCount}
+              atualizacao="Desde o último mês"
+            >
+              Total de Produtos
+            </BoxRelatorio>
+          </Grid>
         </Flex>
         <Box p={5} bg={"white"} rounded={5}>
           <Flex alignItems={"center"} justifyContent={"space-between"} mb={4} p={5}>
-        <Text fontSize={40} fontWeight={"bold"}>
-          Lojas
-        </Text>
-        <Button bg={"green.500"} colorScheme='green' onClick={() => router.push("/lojas")}>Ver Lojas</Button>
-          </Flex>
-        {lojas.length > 0 ? (
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Loja</Th>
-                <Th>Administrador</Th>
-                <Th>CPF</Th>
-                <Th>Telefone</Th>
-                <Th>Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {lojas.map((loja: any) => (
-                <Tr key={loja.id} onClick={() => router.push(`/loja/${loja.id}`)} cursor={"pointer"} _hover={{ bg: "gray.100" }} transitionDuration={"0.1s"}>
-                  <Td>{loja.nomeLoja}</Td>
-                  <Td>{loja.cliente.nome}</Td>
-                  <Td>{loja.cliente.cpf}</Td>
-                  <Td>{loja.cliente.telefone}</Td>
-                  <Td>
-                    <IconButton
-                      aria-label="Deletar loja"
-                      icon={<PiTrash />}
-                      colorScheme="red"
-                      onClick={() => deleteLoja(loja.id)}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        ) : (
-          <Text>Nenhuma loja cadastrada.</Text>
-        )}
-      </Box>
-        <Box p={5} bg={"white"} mt={10} rounded={5}>
-        <Flex alignItems={"center"} justifyContent={"space-between"} mb={4} p={5}>
-        <Text fontSize={40} fontWeight={"bold"}>
-          Produtos
-        </Text>
-        <Button bg={"green.500"} colorScheme='green' onClick={() => router.push("/admin/produtos")}>Meus Produtos</Button>
-        </Flex>
-        {produtos.length > 0 ? (
-          <Table variant="simple">
-            <Thead>
-              <Tr>
-                <Th>Produto</Th>
-                <Th>Loja</Th>
-                <Th>Categoria</Th>
-                <Th>Preço</Th>
-                <Th>Quantidade</Th>
-                <Th>Ações</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {paginatedProducts.map((produto: any) => (
-                <Tr key={produto.id} onClick={() => router.push(`/produto?id=${produto.id}`)} cursor={"pointer"} _hover={{ bg: "gray.100" }} transitionDuration={"0.1s"}>
-                  <Td>{produto.produtoNome}</Td>
-                  <Td>{produto.lojas.nomeLoja}</Td>
-                  <Td>{produto.produtoCategoria}</Td>
-                  <Td>{new Intl.NumberFormat('pt-BR', {
-              style: 'currency',
-              currency: 'BRL',
-            }).format(produto.produtoPreco)}</Td>
-                  <Td>{produto.produtoQuantidade}</Td>
-                  <Td>
-                    <IconButton
-                      aria-label="Deletar produto"
-                      icon={<PiTrash />}
-                      colorScheme="red"
-                      onClick={() => deleteProduto(produto.id)}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        ) : (
-          <Text>Nenhum produto cadastrado.</Text>
-        )}
-        <HStack spacing={4} mt={4} justify="center">
-          <Button 
-            isDisabled={currentPage === 1} 
-            onClick={() => handlePageChange(currentPage - 1)}
-            bg={"green.500"}
-            color={"white"}
-            colorScheme='green'
+            <Text fontSize={isMobile ? 30 : 40} fontWeight={"bold"}>
+              Lojas
+            </Text>
+            <Button
+              bg={"green.500"}
+              colorScheme='green'
+              onClick={() => router.push("/lojas")}
             >
-            Anterior
-          </Button>
-          <Text>
-            Página {currentPage} de {totalPages}
-          </Text>
-          <Button 
-            isDisabled={currentPage === totalPages} 
-            onClick={() => handlePageChange(currentPage + 1)}
-            bg={"green.500"}
-            color={"white"}
-            colorScheme='green'
-          >
-            Próxima
-          </Button>
-        </HStack>
-      </Box>
+              {buttonLoja}
+            </Button>
+          </Flex>
+          {lojas.length > 0 ? (
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Loja</Th>
+                    <Th>Administrador</Th>
+                    {!isMobile && (
+                      <>
+                        <Th>CPF</Th>
+                        <Th>Telefone</Th>
+                        <Th>Ações</Th>
+                      </>
+                    )}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {lojas.map((loja: any) => (
+                    <Tr key={loja.id} onClick={() => router.push(`/loja/${loja.id}`)} cursor={"pointer"} _hover={{ bg: "gray.100" }} transitionDuration={"0.1s"}>
+                      <Td>{loja.nomeLoja}</Td>
+                      <Td>{loja.cliente.nome}</Td>
+                      {!isMobile && (
+                        <>
+                          <Td>{loja.cliente.cpf}</Td>
+                          <Td>{loja.cliente.telefone}</Td>
+                          <Td>
+                            <IconButton
+                              aria-label="Deletar loja"
+                              icon={<PiTrash />}
+                              colorScheme="red"
+                              onClick={() => deleteLoja(loja.id)}
+                            />
+                          </Td>
+                        </>
+                      )}
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          ) : (
+            <Text>Nenhuma loja cadastrada.</Text>
+          )}
+        </Box>
+        <Box p={5} bg={"white"} mt={10} rounded={5}>
+          <Flex alignItems={"center"} justifyContent={"space-between"} mb={4} gap={4}>
+            <Text fontSize={isMobile ? 30 : 40} fontWeight={"bold"}>
+              Produtos
+            </Text>
+            <Button
+              bg={"green.500"}
+              colorScheme='green'
+              onClick={() => router.push("/admin/produtos")}
+            >
+              {buttonProduct}
+            </Button>
+          </Flex>
+          {produtos.length > 0 ? (
+            <Box overflowX="auto">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Produto</Th>
+                    <Th>Loja</Th>
+                    {!isMobile && (
+                      <>
+                        <Th>Categoria</Th>
+                        <Th>Preço</Th>
+                        <Th>Quantidade</Th>
+                        <Th>Ações</Th>
+                      </>
+                    )}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {paginatedProducts.map((produto: any) => (
+                    <Tr key={produto.id} onClick={() => router.push(`/produto?id=${produto.id}`)} cursor={"pointer"} _hover={{ bg: "gray.100" }} transitionDuration={"0.1s"}>
+                      <Td>{produto.produtoNome}</Td>
+                      <Td>{produto.lojas.nomeLoja}</Td>
+                      {!isMobile && (
+                        <>
+                          <Td>{produto.produtoCategoria}</Td>
+                          <Td>{new Intl.NumberFormat('pt-BR', {
+                            style: 'currency',
+                            currency: 'BRL',
+                          }).format(produto.produtoPreco)}</Td>
+                          <Td>{produto.produtoQuantidade}</Td>
+                          <Td>
+                            <IconButton
+                              aria-label="Deletar produto"
+                              icon={<PiTrash />}
+                              colorScheme="red"
+                              onClick={() => deleteProduto(produto.id)}
+                            />
+                          </Td>
+                        </>
+                      )}
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </Box>
+          ) : (
+            <Text>Nenhum produto cadastrado.</Text>
+          )}
+          <HStack spacing={4} mt={4} justify="center">
+            <Button
+              isDisabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+              bg={"green.500"}
+              color={"white"}
+              colorScheme='green'
+            >
+              {buttonBack}
+            </Button>
+            <Text display={{ base: 'none', md: 'block' }}>
+              Página {currentPage} de {totalPages}
+            </Text>
+            <Button
+              isDisabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+              bg={"green.500"}
+              color={"white"}
+              colorScheme='green'
+            >
+              {buttonFlow}
+            </Button>
+          </HStack>
+        </Box>
       </Box>
     </>
   )

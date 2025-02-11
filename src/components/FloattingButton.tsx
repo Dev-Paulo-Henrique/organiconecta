@@ -21,7 +21,9 @@ export function FloattingButton() {
     '/carrinho',
     '/cadastro/loja',
     '/perfil',
-    '',
+    '/admin/clientes',
+    '/admin/pedidos',
+    '/admin/dashboard',
   ];
 
   //Verifica se a rota atual esta na lista

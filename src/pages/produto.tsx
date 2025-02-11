@@ -89,7 +89,7 @@ export default function Produto() {
     <>
       <Header />
       <Title name={product.produtoNome} />
-      <Box px={10} py={"auto"} h={"100%"} bg={"gray.100"}>
+      <Box px={[4, 6, 10]} py={[4, 6, "auto"]} h={"100%"} bg={"gray.100"}>
         <ProductDetails
           img={product.produtoImagens[0]}
           alt={`Imagem de ${product.produtoNome}`}
@@ -108,7 +108,7 @@ export default function Produto() {
             });
           }}
         >
-          <Text fontSize={60} fontWeight="bold" textTransform={"uppercase"}>
+          <Text fontSize={[40, 50, 60]} fontWeight="bold" textTransform={"uppercase"}>
             {product.produtoNome}
           </Text>
           <Flex alignItems={"center"} mt={1} mb={3}>
@@ -118,11 +118,11 @@ export default function Produto() {
             <FaStar color="gold" size={22} />
             <FaStar color="gold" size={22} />
             <Text mx={3}>•</Text>
-            <Text fontSize="18" color={"gray.600"}>
+            <Text fontSize={["14", "16", "18"]} color={"gray.600"}>
               {product.produtoCategoria}
             </Text>
           </Flex>
-          <Text fontSize={24} fontWeight="thin">
+          <Text fontSize={[18, 20, 24]} fontWeight="thin">
             {product.produtoDescricao}
           </Text>
         </ProductDetails>
@@ -138,7 +138,7 @@ export default function Produto() {
               mt={8}
             >
               <Text
-                fontSize={55}
+                fontSize={[35, 45, 55]}
                 fontWeight="bold"
                 textTransform="uppercase"
                 mr={4}
@@ -156,3 +156,5 @@ export default function Produto() {
     </>
   );
 }
+
+
