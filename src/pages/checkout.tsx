@@ -135,6 +135,7 @@ export default function Checkout() {
           p={5}
           borderWidth={1}
           borderRadius="lg"
+          border={"1px solid gray"}
           bg="white"
           boxShadow="lg"
           mb={5}

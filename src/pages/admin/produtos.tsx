@@ -71,6 +71,8 @@ export default function Product() {
             },
           })
 
+          // console.log(response.data)
+
           // Filtra os produtos pela loja (usando o ID da loja)
           const filteredProducts = response.data.filter(
             (produto: any) => produto.lojas.cliente.id === user?.id
@@ -86,7 +88,7 @@ export default function Product() {
 
       carregarProdutos()
     }
-  }, [token])
+  }, [token, user?.id])
 
   // console.log(products)
 
@@ -131,7 +133,8 @@ export default function Product() {
       <Header />
       <Title name="Cadastrar produto" />
       <Box bg={bg} p={8} minH="100vh">
-        <Grid templateAreas={`"main"`} gap="4">
+        <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5}>Meus produtos</Text>
+        <Grid templateAreas={`"main"`} gap="4" border={"1px solid gray"}>
           <GridItem area="main">
             <Flex
               as="form"

@@ -78,10 +78,10 @@ export function Header() {
   const isProducerLinks = [
     { href: '/', label: 'Início' },
     loja ? { href: `/admin/produtos`, label: 'Produtos' } : {},
-    { href: '/admin/clientes', label: 'Clientes' },
+    // { href: '/admin/clientes', label: 'Clientes' },
     { href: '/admin/pedidos', label: 'Pedidos' },
     { href: '/perfil', label: 'Perfil' },
-    loja ? { href: `/loja/${loja.id}`, label: 'Loja' } : {},
+    loja ? { href: `/loja/${loja.id}`, label: 'Minha Loja' } : {},
   ]
 
   const isClientLinks = [

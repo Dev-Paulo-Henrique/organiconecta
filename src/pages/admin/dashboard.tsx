@@ -301,7 +301,7 @@ export default function Clientes() {
             </BoxRelatorio>
           </Grid>
         </Flex>
-        <Box p={5} bg={"white"} rounded={5}>
+        <Box p={5} bg={"white"} rounded={5} border={"1px solid gray"}>
           <Flex alignItems={"center"} justifyContent={"space-between"} mb={4} p={5}>
             <Text fontSize={isMobile ? 30 : 40} fontWeight={"bold"}>
               Lojas
@@ -358,7 +358,7 @@ export default function Clientes() {
             <Text>Nenhuma loja cadastrada.</Text>
           )}
         </Box>
-        <Box p={5} bg={"white"} mt={10} rounded={5}>
+        <Box p={5} bg={"white"} mt={10} rounded={5} border={"1px solid gray"}>
           <Flex alignItems={"center"} justifyContent={"space-between"} mb={4} gap={4}>
             <Text fontSize={isMobile ? 30 : 40} fontWeight={"bold"}>
               Produtos

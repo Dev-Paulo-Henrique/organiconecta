@@ -191,7 +191,7 @@ export default function App() {
           <Button type={20} />
         </Box>
       </Grid> */}
-      <CardsEndScreen />
+      {/* <CardsEndScreen /> */}
       <Footer />
     </Box>
   );

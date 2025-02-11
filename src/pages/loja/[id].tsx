@@ -216,6 +216,7 @@ export default function Loja() {
                   <Text
                     fontSize={{ base: 'md', md: 'lg' }}
                     fontWeight="bold"
+                    noOfLines={1}
                     mt={{ base: 2, md: 4 }}> {/* Tamanho de fonte menor no mobile */}
                     {produto.produtoNome}
                   </Text>

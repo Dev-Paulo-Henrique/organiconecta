@@ -89,7 +89,8 @@ export default function Pedidos() {
       <Header />
       <Title name="Pedidos" />
       <Box bg={bg} p={[4, 8]} minH="100vh">
-        <Grid templateAreas={`"main"`} gap="4">
+      <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5}>Meus produtos</Text>
+        <Grid templateAreas={`"main"`} gap="4" border={"1px solid gray"}>
           <GridItem area="main">
             <Flex
               as="form"

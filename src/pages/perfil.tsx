@@ -362,10 +362,18 @@ return (
                 cursor={'pointer'}
                 mt={3}
                 w={{ base: '100%', md: 'auto' }}
+                onClick={() => {}}
                 isLoading={progresspercent > 0 && progresspercent !== 100}
               >
                 {progresspercent === 100 ? 'Completo' : 'Alterar Foto'}
               </Button>
+              <input
+                id="imageUpload"
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                style={{ display: 'none' }}
+                onChange={handleProfileImageUpload} // Função de upload
+              />
             </label>
 
             {progresspercent > 0 && progresspercent < 100 && (
@@ -569,7 +577,7 @@ return (
                 onClick={handlePlanToggle}
                 type={isClient ? 22 : 23}
               >
-                {isClient ? 'Ativar Plano' : 'Desativar Plano'}
+                {isClient ? 'Quero ser Produtor' : 'Acessar como cliente'}
               </Btn>
             )}
           </Flex>

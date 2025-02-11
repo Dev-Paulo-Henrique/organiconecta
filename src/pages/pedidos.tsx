@@ -162,7 +162,7 @@ export default function Pedidos() {
                       }).format(pedido.valorTotal)}
                     </Text>
                     <Text textAlign="start" flex="2">
-                      {format(new Date(pedido.dataCompra), "dd/MM/yyyy" )}
+                      {format(new Date(pedido.dataCompra), "MM/dd/yyyy" )}
                     </Text>
                     <Flex gap="2">
                       {/* <Icon

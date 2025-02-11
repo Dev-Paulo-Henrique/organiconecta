@@ -100,6 +100,7 @@ export default function Carrinho() {
                   p={{ base: 3, md: 4 }}
                   borderWidth="1px"
                   borderRadius="lg"
+                  border={"1px solid gray"}
                   alignItems="center"
                   flexDir={{ base: 'column', md: 'row' }}
                 >
@@ -173,6 +174,7 @@ export default function Carrinho() {
             p={{ base: 4, md: 6 }}
             borderWidth="1px"
             borderRadius="lg"
+            border={"1px solid gray"}
             bg={useColorModeValue('white', 'gray.700')}
           >
             <Heading size={{ base: 'sm', md: 'md' }} mb={4}>
