@@ -78,9 +78,9 @@ export default function Pedidos() {
     return <Loading />
   }
 
-  if (!isClient) {
-    return <NotPermission />
-  }
+  // if (!isClient) {
+  //   return <NotPermission />
+  // }
 
   return (
     <>

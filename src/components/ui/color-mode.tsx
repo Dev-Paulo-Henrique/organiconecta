@@ -54,8 +54,8 @@ export const ColorModeButton = forwardRef<
   ColorModeButtonProps
 >(function ColorModeButton(props, ref) {
   const { toggleColorMode } = useColorMode()
-  const color = useColorModeValue('gray.100', 'gray.800')
-  const bg = useColorModeValue('gray.800', 'gray.100')
+  const color = useColorModeValue('white', 'gray.800')
+  const bg = useColorModeValue('gray.800', 'white')
   return (
     <IconButton
       onClick={toggleColorMode}

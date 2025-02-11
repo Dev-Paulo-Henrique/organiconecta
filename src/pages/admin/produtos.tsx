@@ -133,8 +133,8 @@ export default function Product() {
       <Header />
       <Title name="Cadastrar produto" />
       <Box bg={bg} p={8} minH="100vh">
-        <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5}>Meus produtos</Text>
-        <Grid templateAreas={`"main"`} gap="4" border={"1px solid gray"}>
+        <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5} textAlign={"center"}>Meus produtos</Text>
+        <Grid templateAreas={`"main"`} gap="4">
           <GridItem area="main">
             <Flex
               as="form"

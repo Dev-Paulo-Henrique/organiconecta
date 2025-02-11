@@ -89,8 +89,8 @@ export default function Pedidos() {
       <Header />
       <Title name="Pedidos" />
       <Box bg={bg} p={[4, 8]} minH="100vh">
-      <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5}>Meus produtos</Text>
-        <Grid templateAreas={`"main"`} gap="4" border={"1px solid gray"}>
+      <Text fontSize={40} fontWeight={"bold"} textTransform={"uppercase"} my={5} textAlign={"center"}>Meus produtos</Text>
+        <Grid templateAreas={`"main"`} gap="4">
           <GridItem area="main">
             <Flex
               as="form"
@@ -100,6 +100,7 @@ export default function Pedidos() {
               flexDir="column"
               maxW="1200px"
               mx="auto"
+              bg={"white"}
             >
 
               {/* Tabela para desktop (oculta em mobile) */}

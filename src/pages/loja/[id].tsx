@@ -168,7 +168,7 @@ export default function Loja() {
         </Flex>
 
         {/* Botão para seguir */}
-        <Button
+        {/* <Button
           mr={{ base: 4, md: 40 }} // Margem menor no mobile
           zIndex={2}
           position="absolute"
@@ -181,7 +181,7 @@ export default function Loja() {
           color="white"
         >
           + SEGUIR
-        </Button>
+        </Button> */}
       </Box>
 
       {/* Seção de produtos */}

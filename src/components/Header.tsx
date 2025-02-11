@@ -62,7 +62,7 @@ export function Header() {
     }
   }, [token, user?.id])
 
-  console.log(loja)
+  // console.log(loja)
 
   // if (loading) return <Loading />
   // if (!isProducer || !loja) return <NotPermission />

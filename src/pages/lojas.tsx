@@ -185,7 +185,7 @@ import { useRouter } from 'next/router'
                   display="flex"
                   alignItems="center"
                   flexWrap="wrap"
-                  justifyContent="center"
+                  // justifyContent="center"
                 >
                   Avaliações:
                   <Flex mx={2}>
